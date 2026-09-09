@@ -84,9 +84,22 @@ async def global_exception_handler(request: Request, exc: Exception):
 
 
 # ── Routers ──────────────────────────────────────────────────────────────────
+from fastapi import APIRouter
+
+# Support both /api/v1 and root prefixes for maximum frontend flexibility
+api_v1 = APIRouter(prefix="/api/v1")
+api_v1.include_router(public.router, tags=["Public"])
+api_v1.include_router(recommendations.router, tags=["Discovery & Recommendations"])
+api_v1.include_router(traveler.router, prefix="/me", tags=["Traveler"])
+api_v1.include_router(itinerary.router, tags=["Itinerary"])
+api_v1.include_router(physics.router, tags=["Physics & Finance"])
+api_v1.include_router(provider.router, prefix="/providers", tags=["Provider"])
+
+app.include_router(api_v1)
 app.include_router(public.router, tags=["Public"])
 app.include_router(recommendations.router, tags=["Discovery & Recommendations"])
 app.include_router(traveler.router, prefix="/me", tags=["Traveler"])
 app.include_router(itinerary.router, tags=["Itinerary"])
 app.include_router(physics.router, tags=["Physics & Finance"])
 app.include_router(provider.router, prefix="/providers", tags=["Provider"])
+

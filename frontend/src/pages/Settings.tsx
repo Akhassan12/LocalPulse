@@ -313,6 +313,7 @@ export default function Settings() {
                   type="number"
                   step="1"
                   min={0}
+                  variant="glass"
                   {...register('preferred_budget_min')}
                 />
                 <Input
@@ -320,10 +321,11 @@ export default function Settings() {
                   type="number"
                   step="1"
                   min={0}
+                  variant="glass"
                   {...register('preferred_budget_max')}
                 />
                 <div>
-                  <label className="text-sm font-medium text-white block mb-2">Home Currency</label>
+                  <label className="text-sm font-medium text-white/90 block mb-2">Home Currency</label>
                   <select
                     className="w-full rounded-[10px] border border-white/20 bg-white/10 text-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C9A84C]/50 focus:border-[#C9A84C]"
                     {...register('home_currency')}
@@ -357,6 +359,7 @@ export default function Settings() {
                   min={0}
                   max={100}
                   hint="Upper weight limit for your gear"
+                  variant="glass"
                   {...register('max_carry_capacity_kg')}
                 />
                 <Input
@@ -365,6 +368,7 @@ export default function Settings() {
                   step="0.1"
                   min={0}
                   hint="Weight currently carried"
+                  variant="glass"
                   {...register('current_carried_weight_kg')}
                 />
                 <Input
@@ -373,6 +377,7 @@ export default function Settings() {
                   step="1"
                   min={0}
                   hint="Cash in wallet / local currency"
+                  variant="glass"
                   {...register('liquid_cash')}
                 />
                 <Input
@@ -381,6 +386,7 @@ export default function Settings() {
                   step="1"
                   min={0}
                   hint="Expected daily burn rate"
+                  variant="glass"
                   {...register('average_daily_spend')}
                 />
                 <Input
@@ -389,6 +395,7 @@ export default function Settings() {
                   step="1"
                   min={0}
                   hint="Remaining days"
+                  variant="glass"
                   {...register('remaining_travel_days')}
                 />
                 <Input
@@ -397,6 +404,7 @@ export default function Settings() {
                   step="1"
                   min={0}
                   hint="Untouchable safety cushion"
+                  variant="glass"
                   {...register('minimum_emergency_reserve')}
                 />
               </div>

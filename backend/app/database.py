@@ -28,17 +28,24 @@ if raw_url.startswith("postgres://"):
 elif raw_url.startswith("postgresql://") and not raw_url.startswith("postgresql+asyncpg://"):
     raw_url = raw_url.replace("postgresql://", "postgresql+asyncpg://", 1)
 
-# Check if PostgreSQL is actually connectable; if not, fallback to sqlite+aiosqlite:///localpulse.db
+# Strip sslmode parameter if present (asyncpg doesn't support sslmode as query param)
+if "sslmode=" in raw_url:
+    import re
+    raw_url = re.sub(r"([?&])sslmode=[^&]*(&?)", lambda m: m.group(1) if m.group(2) else "", raw_url).rstrip("?&")
+
+# Determine final db_url:
+# Only attempt local SQLite fallback when pointing to localhost in development
 db_url = raw_url
-if "postgresql" in raw_url:
-    sync_check_url = raw_url.replace("postgresql+asyncpg://", "postgresql://", 1)
+is_local_host = "localhost" in raw_url or "127.0.0.1" in raw_url
+if is_local_host and settings.APP_ENV != "production":
     try:
+        sync_check_url = raw_url.replace("postgresql+asyncpg://", "postgresql://", 1)
         test_engine = create_sync_engine(sync_check_url, connect_args={"connect_timeout": 1})
         with test_engine.connect():
             pass
         test_engine.dispose()
     except Exception:
-        # Fallback to local SQLite database if PG is unreachable
+        # Fallback to local SQLite database if local PG is unreachable
         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         sqlite_path = os.path.join(base_dir, "localpulse.db")
         db_url = f"sqlite+aiosqlite:///{sqlite_path.replace(os.sep, '/')}"

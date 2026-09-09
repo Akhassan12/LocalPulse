@@ -51,10 +51,12 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins_list,
+    allow_origin_regex=r"https://.*\.vercel\.app|http://localhost:\d+",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 
 # ── Structured request logging middleware ────────────────────────────────────
@@ -102,4 +104,12 @@ app.include_router(traveler.router, prefix="/me", tags=["Traveler"])
 app.include_router(itinerary.router, tags=["Itinerary"])
 app.include_router(physics.router, tags=["Physics & Finance"])
 app.include_router(provider.router, prefix="/providers", tags=["Provider"])
+ 
+ 
+if __name__ == "__main__":
+    import os
+    import uvicorn
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=False)
+
 

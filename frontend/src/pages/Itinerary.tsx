@@ -153,25 +153,25 @@ export default function Itinerary() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FAF5EB] text-[#0D1B2A]">
+    <div className="min-h-screen bg-[#061423] text-white selection:bg-[#C9A84C]/30 flex flex-col">
       <Navbar />
 
-      <main className="pt-24 pb-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <main className="pt-24 lg:pt-28 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-1 w-full">
         {/* Header Bar */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-8 border-b border-[#0D1B2A]/10">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-8 border-b border-white/10">
           <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#E0EFC7] text-[#2D6A4F]">
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-[#C9A84C]/20 text-[#E5C365] border border-[#C9A84C]/30">
                 Constraint-Balanced
               </span>
-              <span className="text-xs text-[#1A2B3C]/60">
+              <span className="text-xs font-mono text-white/60">
                 {localItems.length} Experience{localItems.length !== 1 ? 's' : ''} Planned
               </span>
             </div>
-            <h1 className="text-3xl sm:text-4xl font-display font-extrabold tracking-tight text-[#0D1B2A]">
-              My Expedition Itinerary
+            <h1 className="text-3xl sm:text-4xl font-serif font-bold tracking-tight text-white">
+              Expedition Itinerary
             </h1>
-            <p className="text-xs sm:text-sm text-[#1A2B3C]/70 mt-1">
+            <p className="text-xs sm:text-sm text-white/70 mt-1">
               Sequence, cumulative time duration, budget runway consumption & transit balance.
             </p>
           </div>
@@ -181,15 +181,17 @@ export default function Itinerary() {
             {localItems.length > 0 && (
               <>
                 <button
+                  type="button"
                   onClick={handleExportText}
-                  className="px-4 py-2.5 rounded-xl bg-white border border-[#0D1B2A]/15 text-[#0D1B2A] font-semibold text-xs flex items-center gap-1.5 hover:bg-[#FAF5EB] transition-colors shadow-sm"
+                  className="px-4 py-2.5 rounded-xl bg-white/[0.08] hover:bg-white/[0.15] border border-white/15 text-white font-semibold text-xs flex items-center gap-2 transition-all shadow-sm cursor-pointer"
                 >
-                  <FileText className="w-4 h-4 text-[#2D6A4F]" />
-                  {isExportCopied ? 'Copied to Clipboard!' : 'Export Summary'}
+                  <FileText className="w-4 h-4 text-[#4EC9B0]" />
+                  <span>{isExportCopied ? 'Copied to Clipboard!' : 'Export Summary'}</span>
                 </button>
                 <button
+                  type="button"
                   onClick={clearItinerary}
-                  className="p-2.5 rounded-xl bg-white border border-[#0D1B2A]/15 text-[#1A2B3C]/70 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                  className="p-2.5 rounded-xl bg-white/[0.08] hover:bg-rose-500/20 border border-white/15 text-white/70 hover:text-rose-400 transition-colors cursor-pointer"
                   title="Clear all"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -198,28 +200,30 @@ export default function Itinerary() {
             )}
             <Link
               to="/discover"
-              className="px-4 py-2.5 rounded-xl bg-[#2D6A4F] text-white font-semibold text-xs flex items-center gap-1.5 hover:bg-[#245640] transition-colors shadow-sm"
+              className="px-4 py-2.5 rounded-xl bg-[#C9A84C] hover:bg-[#E5C365] active:bg-[#B8933E] text-[#0D1B2A] font-bold text-xs flex items-center gap-1.5 transition-all shadow-[0_0_16px_rgba(201,168,76,0.3)] cursor-pointer"
             >
-              <Plus className="w-4 h-4" /> Explore More
+              <Plus className="w-4 h-4" />
+              <span>Explore More</span>
             </Link>
           </div>
         </div>
 
         {/* Empty State */}
         {localItems.length === 0 ? (
-          <div className="py-20 text-center max-w-md mx-auto">
-            <div className="w-16 h-16 rounded-2xl bg-[#E0EFC7]/60 flex items-center justify-center mx-auto mb-4 border border-[#2D6A4F]/20">
-              <Compass className="w-8 h-8 text-[#2D6A4F]" />
+          <div className="py-24 text-center max-w-lg mx-auto">
+            <div className="w-20 h-20 rounded-3xl bg-[#C9A84C]/10 border border-[#C9A84C]/30 flex items-center justify-center mx-auto mb-5 shadow-[0_0_30px_rgba(201,168,76,0.15)]">
+              <Compass className="w-10 h-10 text-[#C9A84C] animate-pulse" />
             </div>
-            <h2 className="text-xl font-display font-bold text-[#0D1B2A]">Your Itinerary is Empty</h2>
-            <p className="text-xs text-[#1A2B3C]/70 mt-2 mb-6 leading-relaxed">
+            <h2 className="text-2xl font-serif font-bold text-white">Your Itinerary is Empty</h2>
+            <p className="text-xs sm:text-sm text-white/70 mt-2 mb-8 leading-relaxed max-w-md mx-auto">
               Explore hidden craft workshops, ancestral kitchens, and sacred ruins in the Discovery feed to start building your constraint-aware journey.
             </p>
             <Link
               to="/discover"
-              className="px-6 py-3 rounded-xl bg-[#2D6A4F] text-white font-bold text-xs inline-flex items-center gap-2 hover:bg-[#245640] shadow-md transition-all"
+              className="px-6 py-3.5 rounded-xl bg-[#C9A84C] hover:bg-[#E5C365] text-[#0D1B2A] font-bold text-xs inline-flex items-center gap-2 shadow-[0_0_20px_rgba(201,168,76,0.35)] transition-all cursor-pointer"
             >
-              Discover Local Experiences <ArrowRight className="w-4 h-4" />
+              <span>Discover Local Experiences</span>
+              <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         ) : (
@@ -227,91 +231,83 @@ export default function Itinerary() {
             {/* LEFT COLUMN: Itinerary Items Sequence (7 cols) */}
             <div className="lg:col-span-7 xl:col-span-8 space-y-4">
               <div className="flex items-center justify-between">
-                <h2 className="text-sm font-bold text-[#0D1B2A] flex items-center gap-2">
+                <h2 className="text-sm font-bold text-white flex items-center gap-2">
                   <Layers className="w-4 h-4 text-[#C9A84C]" />
                   Sequential Schedule Order
                 </h2>
-                <span className="text-[11px] text-[#1A2B3C]/60 italic">
+                <span className="text-[11px] font-mono text-white/50 italic">
                   Use arrows to optimize your walking path
                 </span>
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-3.5">
                 {localItems.map((item, index) => (
                   <div
                     key={item.experienceId}
-                    className="bg-white rounded-2xl p-4 sm:p-5 border border-[#0D1B2A]/10 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-[#2D6A4F]/30 transition-all"
+                    className="bg-[#0A1420]/80 backdrop-blur-xl rounded-2xl p-4 sm:p-5 border border-white/10 shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-[#C9A84C]/40 transition-all"
                   >
                     {/* Left: Stop Number & Info */}
-                    <div className="flex items-start gap-3.5 min-w-0">
-                      <div className="w-8 h-8 rounded-xl bg-[#0D1B2A] text-[#FAF5EB] font-mono text-xs font-bold flex items-center justify-center flex-shrink-0 shadow-sm">
+                    <div className="flex items-start gap-4 min-w-0">
+                      <div className="w-9 h-9 rounded-xl bg-[#C9A84C] text-[#0D1B2A] font-mono text-xs font-bold flex items-center justify-center flex-shrink-0 shadow-md">
                         #{index + 1}
                       </div>
 
-                      <div className="min-w-0 space-y-1">
+                      <div className="min-w-0 space-y-1.5">
                         <div className="flex items-center gap-2">
-                          <span className="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-[#FAF5EB] text-[#2D6A4F] border border-[#0D1B2A]/5">
+                          <span className="px-2 py-0.5 rounded-md text-[9px] font-mono font-bold uppercase tracking-wider bg-white/[0.08] text-[#4EC9B0] border border-[#4EC9B0]/30">
                             {item.category?.replace('_', ' ')}
                           </span>
-                          <span className="text-[11px] text-[#1A2B3C]/50">{item.city}</span>
+                          <span className="text-[11px] font-mono text-white/50">{item.city}</span>
                         </div>
 
                         <Link
                           to={`/experiences/${item.experienceId}`}
-                          className="font-bold text-[#0D1B2A] text-sm hover:text-[#2D6A4F] hover:underline flex items-center gap-1 group"
+                          className="font-serif font-bold text-white text-base hover:text-[#C9A84C] transition-colors flex items-center gap-1.5 group"
                         >
                           <span className="truncate">{item.title}</span>
-                          <ExternalLink className="w-3 h-3 text-[#1A2B3C]/40 group-hover:text-[#2D6A4F] flex-shrink-0" />
+                          <ExternalLink className="w-3.5 h-3.5 text-white/40 group-hover:text-[#C9A84C] flex-shrink-0" />
                         </Link>
 
-                        <div className="flex flex-wrap items-center gap-3 text-xs text-[#1A2B3C]/70 pt-0.5">
-                          <span className="flex items-center gap-1 font-semibold text-[#0D1B2A]">
-                            <Clock className="w-3.5 h-3.5 text-[#2D6A4F]" />
+                        <div className="flex flex-wrap items-center gap-3 text-xs text-white/70 pt-0.5">
+                          <span className="flex items-center gap-1 font-semibold text-white">
+                            <Clock className="w-3.5 h-3.5 text-[#4EC9B0]" />
                             {formatDuration(item.durationMinutes || 120)}
                           </span>
-                          <span className="flex items-center gap-1 font-semibold text-[#0D1B2A]">
+                          <span className="flex items-center gap-1 font-mono font-bold text-[#E5C365]">
                             <DollarSign className="w-3.5 h-3.5 text-[#C9A84C]" />
                             ${item.price || '0'}
                           </span>
                         </div>
-
-                        {/* Optional custom note input */}
-                        <div className="pt-2">
-                          <input
-                            type="text"
-                            placeholder="Add timing notes e.g., 'Arrive 10:30 AM before crowds'..."
-                            value={notes[item.experienceId] || ''}
-                            onChange={(e) =>
-                              setNotes({ ...notes, [item.experienceId]: e.target.value })
-                            }
-                            className="w-full text-[11px] bg-[#FAF5EB] border border-[#0D1B2A]/10 rounded-lg px-2.5 py-1 text-[#0D1B2A] placeholder:text-[#1A2B3C]/40 focus:outline-none focus:ring-1 focus:ring-[#2D6A4F]"
-                          />
-                        </div>
                       </div>
                     </div>
 
-                    {/* Right: Reorder & Delete buttons */}
-                    <div className="flex items-center gap-1.5 self-end sm:self-center border-t sm:border-t-0 pt-2 sm:pt-0 border-[#0D1B2A]/5">
+                    {/* Right: Reorder & Remove Actions */}
+                    <div className="flex items-center gap-1.5 self-end sm:self-auto border-t sm:border-t-0 pt-2 sm:pt-0 border-white/5">
                       <button
+                        type="button"
                         onClick={() => moveUp(index)}
                         disabled={index === 0}
-                        className="p-2 rounded-lg border border-[#0D1B2A]/10 bg-white text-[#1A2B3C]/70 hover:text-[#0D1B2A] hover:bg-[#FAF5EB] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                        title="Move stop earlier"
+                        title="Move earlier"
+                        className="p-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] disabled:opacity-30 disabled:cursor-not-allowed text-white transition-colors cursor-pointer"
                       >
                         <ArrowUp className="w-3.5 h-3.5" />
                       </button>
+
                       <button
+                        type="button"
                         onClick={() => moveDown(index)}
                         disabled={index === localItems.length - 1}
-                        className="p-2 rounded-lg border border-[#0D1B2A]/10 bg-white text-[#1A2B3C]/70 hover:text-[#0D1B2A] hover:bg-[#FAF5EB] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                        title="Move stop later"
+                        title="Move later"
+                        className="p-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] disabled:opacity-30 disabled:cursor-not-allowed text-white transition-colors cursor-pointer"
                       >
                         <ArrowDown className="w-3.5 h-3.5" />
                       </button>
+
                       <button
+                        type="button"
                         onClick={() => handleRemove(item.experienceId)}
-                        className="p-2 rounded-lg border border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-100 transition-colors ml-1"
-                        title="Remove from itinerary"
+                        title="Remove stop"
+                        className="p-2 rounded-xl bg-white/[0.06] hover:bg-rose-500/20 text-white/60 hover:text-rose-400 transition-colors cursor-pointer"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
@@ -325,12 +321,12 @@ export default function Itinerary() {
             <div className="lg:col-span-5 xl:col-span-4 space-y-6">
               {/* Warnings Banner */}
               {impact && impact.warnings.length > 0 && (
-                <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 space-y-2">
-                  <div className="flex items-center gap-2 text-xs font-bold text-amber-900">
-                    <AlertTriangle className="w-4 h-4 text-amber-600 flex-shrink-0" />
+                <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 space-y-2">
+                  <div className="flex items-center gap-2 text-xs font-bold text-amber-300">
+                    <AlertTriangle className="w-4 h-4 text-amber-400 flex-shrink-0" />
                     <span>Constraint Overload Warnings</span>
                   </div>
-                  <ul className="text-xs text-amber-800 space-y-1.5 list-disc list-inside">
+                  <ul className="text-xs text-amber-200/90 space-y-1.5 list-disc list-inside">
                     {impact.warnings.map((warn, i) => (
                       <li key={i} className="leading-snug">
                         {warn}
@@ -342,26 +338,26 @@ export default function Itinerary() {
 
               {/* Cumulative Summary Card */}
               {impact && (
-                <div className="bg-white rounded-2xl p-6 border border-[#0D1B2A]/10 shadow-sm space-y-5">
-                  <div className="flex items-center justify-between pb-3 border-b border-[#0D1B2A]/5">
+                <div className="bg-[#0A1420]/85 backdrop-blur-xl rounded-2xl p-6 border border-white/10 shadow-2xl space-y-5">
+                  <div className="flex items-center justify-between pb-3 border-b border-white/10">
                     <div>
-                      <h3 className="text-sm font-bold text-[#0D1B2A]">Cumulative Day Impact</h3>
-                      <p className="text-[11px] text-[#1A2B3C]/60">Aggregated travel physics & finance</p>
+                      <h3 className="text-sm font-serif font-bold text-white">Cumulative Day Impact</h3>
+                      <p className="text-[11px] text-white/60 font-mono">Aggregated travel physics & finance</p>
                     </div>
                     <span
                       className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border flex items-center gap-1 ${
                         impact.is_balanced
-                          ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
-                          : 'bg-amber-50 text-amber-900 border-amber-200'
+                          ? 'bg-[#4EC9B0]/15 text-[#4EC9B0] border-[#4EC9B0]/30'
+                          : 'bg-amber-500/15 text-amber-300 border-amber-500/30'
                       }`}
                     >
                       {impact.is_balanced ? (
                         <>
-                          <CheckCircle2 className="w-3 h-3 text-emerald-600" /> Balanced Day
+                          <CheckCircle2 className="w-3 h-3 text-[#4EC9B0]" /> Balanced Day
                         </>
                       ) : (
                         <>
-                          <AlertTriangle className="w-3 h-3 text-amber-600" /> Dense Day
+                          <AlertTriangle className="w-3 h-3 text-amber-400" /> Dense Day
                         </>
                       )}
                     </span>
@@ -369,55 +365,55 @@ export default function Itinerary() {
 
                   {/* Metrics Grid */}
                   <div className="grid grid-cols-2 gap-3 text-center">
-                    <div className="bg-[#FAF5EB] p-3 rounded-xl">
-                      <span className="block text-[10px] text-[#1A2B3C]/60 flex items-center justify-center gap-1 mb-1">
-                        <Clock className="w-3 h-3 text-[#2D6A4F]" /> Total Time
+                    <div className="bg-white/[0.04] border border-white/5 p-3.5 rounded-xl">
+                      <span className="block text-[10px] text-white/60 flex items-center justify-center gap-1 mb-1">
+                        <Clock className="w-3 h-3 text-[#4EC9B0]" /> Total Time
                       </span>
-                      <span className="text-base font-bold text-[#0D1B2A]">
+                      <span className="text-base font-mono font-bold text-white">
                         {formatDuration(impact.total_duration_minutes)}
                       </span>
                     </div>
 
-                    <div className="bg-[#FAF5EB] p-3 rounded-xl">
-                      <span className="block text-[10px] text-[#1A2B3C]/60 flex items-center justify-center gap-1 mb-1">
-                        <DollarSign className="w-3 h-3 text-[#C9A84C]" /> Cash Outflow
+                    <div className="bg-white/[0.04] border border-white/5 p-3.5 rounded-xl">
+                      <span className="block text-[10px] text-white/60 flex items-center justify-center gap-1 mb-1">
+                        <DollarSign className="w-3.5 h-3.5 text-[#C9A84C]" /> Cash Outflow
                       </span>
-                      <span className="text-base font-bold text-[#0D1B2A]">
+                      <span className="text-base font-mono font-bold text-[#E5C365]">
                         ${impact.total_cost_min.toFixed(0)}
                       </span>
                     </div>
 
-                    <div className="bg-[#FAF5EB] p-3 rounded-xl">
-                      <span className="block text-[10px] text-[#1A2B3C]/60 flex items-center justify-center gap-1 mb-1">
-                        <Compass className="w-3 h-3 text-[#2D6A4F]" /> Transfer Transit
+                    <div className="bg-white/[0.04] border border-white/5 p-3.5 rounded-xl">
+                      <span className="block text-[10px] text-white/60 flex items-center justify-center gap-1 mb-1">
+                        <Compass className="w-3 h-3 text-[#4EC9B0]" /> Transfer Transit
                       </span>
-                      <span className="text-base font-bold text-[#0D1B2A]">
+                      <span className="text-base font-mono font-bold text-white">
                         ~{impact.estimated_walk_distance_km} km
                       </span>
                     </div>
 
-                    <div className="bg-[#FAF5EB] p-3 rounded-xl">
-                      <span className="block text-[10px] text-[#1A2B3C]/60 flex items-center justify-center gap-1 mb-1">
-                        <Sparkles className="w-3 h-3 text-[#C9A84C]" /> Runway Burn
+                    <div className="bg-white/[0.04] border border-white/5 p-3.5 rounded-xl">
+                      <span className="block text-[10px] text-white/60 flex items-center justify-center gap-1 mb-1">
+                        <Sparkles className="w-3.5 h-3.5 text-[#C9A84C]" /> Runway Burn
                       </span>
-                      <span className="text-base font-bold text-[#0D1B2A]">
+                      <span className="text-base font-mono font-bold text-white">
                         {impact.days_of_runway_consumed} days
                       </span>
                     </div>
                   </div>
 
                   {/* Sequence Map Visualizer Box */}
-                  <div className="pt-2 border-t border-[#0D1B2A]/5 space-y-2">
-                    <span className="block text-xs font-bold text-[#0D1B2A] flex items-center gap-1.5">
-                      <MapPin className="w-3.5 h-3.5 text-[#2D6A4F]" /> Route Sequence Waypoints
+                  <div className="pt-2 border-t border-white/10 space-y-2.5">
+                    <span className="block text-xs font-bold text-white flex items-center gap-1.5">
+                      <MapPin className="w-3.5 h-3.5 text-[#C9A84C]" /> Route Sequence Waypoints
                     </span>
-                    <div className="p-3 bg-[#FAF5EB] rounded-xl border border-[#0D1B2A]/5 space-y-2 text-xs">
+                    <div className="p-3 bg-white/[0.03] rounded-xl border border-white/5 space-y-2 text-xs">
                       {localItems.map((item, i) => (
-                        <div key={item.experienceId} className="flex items-center gap-2">
-                          <span className="w-5 h-5 rounded-full bg-[#2D6A4F] text-white text-[10px] font-bold flex items-center justify-center flex-shrink-0">
+                        <div key={item.experienceId} className="flex items-center gap-2.5">
+                          <span className="w-5 h-5 rounded-md bg-[#C9A84C] text-[#0D1B2A] text-[10px] font-mono font-bold flex items-center justify-center flex-shrink-0 shadow-sm">
                             {i + 1}
                           </span>
-                          <span className="font-semibold text-[#0D1B2A] truncate text-[11px]">
+                          <span className="font-medium text-white/90 truncate text-[11px]">
                             {item.title}
                           </span>
                         </div>

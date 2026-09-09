@@ -120,57 +120,55 @@ export const ExperienceCard: React.FC<ExperienceCardProps> = ({
     <div
       id={`experience-${experience.id}`}
       onClick={handleCardClick}
-      className={`group relative bg-white rounded-2xl border transition-all duration-300 overflow-hidden cursor-pointer ${
+      className={`group relative rounded-2xl border transition-all duration-300 overflow-hidden cursor-pointer backdrop-blur-xl ${
         isSelected
-          ? 'border-[#C9A84C] ring-2 ring-[#C9A84C]/40 shadow-xl -translate-y-1'
-          : 'border-[#0D1B2A]/10 hover:border-[#C9A84C]/50 hover:shadow-lg hover:-translate-y-0.5'
+          ? 'bg-[#132030] border-[#C9A84C] ring-2 ring-[#C9A84C]/40 shadow-2xl -translate-y-1'
+          : 'bg-[#0A1420]/80 hover:bg-[#132030]/90 border-white/10 hover:border-[#C9A84C]/50 hover:shadow-xl hover:-translate-y-0.5'
       }`}
     >
       {/* Top Banner Image with gradient */}
-      <div className="relative h-44 w-full overflow-hidden bg-[#0D1B2A]/5">
+      <div className="relative h-48 w-full overflow-hidden bg-[#0A1420]">
         <img
           src={imageUrl}
           alt={experience.title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           loading="lazy"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0A1420] via-black/20 to-transparent" />
 
         {/* Top Badges: Category & Shortlist Button */}
         <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
-          <span className="px-2.5 py-1 rounded-full text-[11px] font-semibold tracking-wide uppercase bg-black/50 backdrop-blur-md text-white border border-white/20">
-            {experience.category}
+          <span className="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold tracking-wider uppercase bg-[#0D1B2A]/80 backdrop-blur-md text-[#4EC9B0] border border-[#4EC9B0]/30 shadow-sm">
+            {experience.category?.replace('_', ' ')}
           </span>
 
-          <div className="flex items-center gap-1.5">
-            <button
-              type="button"
-              onClick={handleToggleShortlist}
-              title={shortlisted ? 'Remove from Itinerary' : 'Add to Itinerary'}
-              className={`p-2 rounded-full backdrop-blur-md transition-colors ${
-                shortlisted
-                  ? 'bg-[#C9A84C] text-[#0D1B2A] shadow-md'
-                  : 'bg-black/40 text-white hover:bg-black/70'
-              }`}
-            >
-              {shortlisted ? <BookmarkCheck className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={handleToggleShortlist}
+            title={shortlisted ? 'Remove from Itinerary' : 'Add to Itinerary'}
+            className={`p-2 rounded-xl backdrop-blur-md transition-all shadow-md ${
+              shortlisted
+                ? 'bg-[#C9A84C] text-[#0D1B2A] ring-2 ring-[#C9A84C]/60 scale-105'
+                : 'bg-black/50 text-white/80 hover:text-white hover:bg-black/80 border border-white/10'
+            }`}
+          >
+            {shortlisted ? <BookmarkCheck className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}
+          </button>
         </div>
 
         {/* Bottom Image Overlay: City & Rating */}
         <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white text-xs">
-          <div className="flex items-center gap-1 text-white/90">
+          <div className="flex items-center gap-1.5 text-white/90 bg-black/40 backdrop-blur-md px-2.5 py-1 rounded-lg border border-white/10">
             <MapPin className="w-3.5 h-3.5 text-[#C9A84C]" />
-            <span className="font-medium">{experience.city}</span>
+            <span className="font-medium text-xs">{experience.city}</span>
           </div>
 
           {experience.rating_avg && Number(experience.rating_avg) > 0 && (
-            <div className="flex items-center gap-1 bg-black/40 backdrop-blur-md px-2 py-0.5 rounded-full border border-white/20">
+            <div className="flex items-center gap-1.5 bg-black/50 backdrop-blur-md px-2.5 py-1 rounded-lg border border-white/10">
               <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
-              <span className="font-semibold">{Number(experience.rating_avg).toFixed(1)}</span>
+              <span className="font-bold text-xs">{Number(experience.rating_avg).toFixed(1)}</span>
               {experience.rating_count && (
-                <span className="text-white/70 text-[10px]">({experience.rating_count})</span>
+                <span className="text-white/60 text-[10px]">({experience.rating_count})</span>
               )}
             </div>
           )}
@@ -178,10 +176,10 @@ export const ExperienceCard: React.FC<ExperienceCardProps> = ({
       </div>
 
       {/* Card Body */}
-      <div className="p-4 flex flex-col justify-between">
+      <div className="p-5 flex flex-col justify-between space-y-4">
         <div>
-          <div className="flex items-start justify-between gap-2 mb-1.5">
-            <h3 className="font-display text-lg font-bold text-[#0D1B2A] leading-snug group-hover:text-[#C9A84C] transition-colors line-clamp-1">
+          <div className="flex items-start justify-between gap-3 mb-2">
+            <h3 className="font-serif text-lg font-bold text-white leading-snug group-hover:text-[#C9A84C] transition-colors line-clamp-2">
               {experience.title}
             </h3>
             {/* Fit Score Dial */}
@@ -191,17 +189,17 @@ export const ExperienceCard: React.FC<ExperienceCardProps> = ({
           </div>
 
           {/* Quick Metrics Bar */}
-          <div className="flex flex-wrap items-center gap-3 text-xs text-[#1A2B3C]/70 mb-3">
+          <div className="flex flex-wrap items-center gap-2.5 text-xs text-white/70 mb-3">
             <span className="flex items-center gap-1">
-              <Clock className="w-3.5 h-3.5 text-[#0D1B2A]/50" />
-              {experience.duration_minutes} mins
+              <Clock className="w-3.5 h-3.5 text-[#C9A84C]" />
+              {experience.duration_minutes}m
             </span>
-            <span className="w-1 h-1 rounded-full bg-[#0D1B2A]/20" />
-            <span className="font-medium text-[#0D1B2A]">{formatPrice()}</span>
+            <span className="w-1 h-1 rounded-full bg-white/30" />
+            <span className="font-mono font-bold text-[#E5C365]">{formatPrice()}</span>
             {walking_distance_km !== undefined && (
               <>
-                <span className="w-1 h-1 rounded-full bg-[#0D1B2A]/20" />
-                <span className="flex items-center gap-1 text-emerald-700">
+                <span className="w-1 h-1 rounded-full bg-white/30" />
+                <span className="flex items-center gap-1 text-[#4EC9B0] font-mono text-[11px]">
                   <Footprints className="w-3.5 h-3.5" />
                   {Number(walking_distance_km).toFixed(1)} km (~{estimated_walk_minutes}m walk)
                 </span>
@@ -209,21 +207,21 @@ export const ExperienceCard: React.FC<ExperienceCardProps> = ({
             )}
           </div>
 
-          {/* AI Explanation Pill (Why It Fits) */}
+          {/* AI Explanation Pill */}
           {explanation && (
-            <div className="mb-3 px-2.5 py-1.5 rounded-lg bg-[#FAF5EB] border border-[#C9A84C]/20 text-[11px] text-[#1A2B3C]/90 flex items-start gap-1.5">
+            <div className="mb-3 px-3 py-2 rounded-xl bg-white/[0.04] border border-[#C9A84C]/25 text-[11px] text-[#F5EDD6]/90 flex items-start gap-2 leading-relaxed">
               <Sparkles className="w-3.5 h-3.5 text-[#C9A84C] flex-shrink-0 mt-0.5" />
-              <span className="line-clamp-2 leading-relaxed italic">{explanation}</span>
+              <span className="line-clamp-2 italic">{explanation}</span>
             </div>
           )}
 
           {/* Tags */}
           {experience.tags && experience.tags.length > 0 && (
-            <div className="flex flex-wrap gap-1 mb-3">
+            <div className="flex flex-wrap gap-1.5">
               {experience.tags.slice(0, 3).map((tag, idx) => (
                 <span
                   key={idx}
-                  className="px-2 py-0.5 rounded-md text-[10px] font-medium bg-[#0D1B2A]/5 text-[#1A2B3C]/75"
+                  className="px-2 py-0.5 rounded-md text-[10px] font-mono uppercase bg-white/[0.05] text-white/70 border border-white/5"
                 >
                   #{tag}
                 </span>
@@ -232,28 +230,38 @@ export const ExperienceCard: React.FC<ExperienceCardProps> = ({
           )}
         </div>
 
-        {/* Footer actions */}
-        <div className="pt-2 border-t border-[#0D1B2A]/5 flex items-center justify-between">
+        {/* Footer Actions: Prominent Aligned Dual Buttons */}
+        <div className="pt-3 border-t border-white/10 flex items-center gap-2.5">
+          <button
+            type="button"
+            onClick={handleToggleShortlist}
+            className={`flex-1 py-2.5 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-md ${
+              shortlisted
+                ? 'bg-[#4EC9B0] hover:bg-[#38b39a] text-[#0D1B2A] shadow-[0_0_12px_rgba(78,201,176,0.3)]'
+                : 'bg-[#C9A84C] hover:bg-[#E5C365] active:bg-[#B8933E] text-[#0D1B2A] shadow-[0_0_12px_rgba(201,168,76,0.25)]'
+            }`}
+          >
+            {shortlisted ? (
+              <>
+                <BookmarkCheck className="w-4 h-4" />
+                <span>In Itinerary</span>
+              </>
+            ) : (
+              <>
+                <Bookmark className="w-4 h-4" />
+                <span>Add to Itinerary</span>
+              </>
+            )}
+          </button>
+
           <Link
             to={`/experiences/${experience.id}`}
             onClick={(e) => e.stopPropagation()}
-            className="text-xs font-semibold text-[#0D1B2A] hover:text-[#C9A84C] flex items-center gap-1 transition-colors"
+            className="py-2.5 px-3.5 rounded-xl text-xs font-semibold bg-white/[0.07] hover:bg-white/[0.14] border border-white/15 text-white hover:text-[#4EC9B0] transition-all flex items-center justify-center gap-1 cursor-pointer"
           >
-            Explore details
+            <span>Details</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
           </Link>
-
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation()
-              setSelectedExperienceId(experience.id)
-            }}
-            className="text-[11px] font-medium px-2.5 py-1 rounded-lg bg-[#0D1B2A]/5 hover:bg-[#C9A84C]/20 text-[#0D1B2A] transition-colors flex items-center gap-1"
-          >
-            <Compass className="w-3 h-3 text-[#C9A84C]" />
-            Locate
-          </button>
         </div>
       </div>
     </div>

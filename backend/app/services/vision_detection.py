@@ -153,29 +153,49 @@ class ItemDetectionService:
     ) -> DetectedItemResult:
         """
         Detect item details from raw image bytes.
-        Uses OpenRouter (minimax/hailuo-3) if OPENROUTER_API_KEY / GOOGLE_API_KEY is configured;
-        otherwise reliably falls back to deterministic mock catalog using content hash.
+        Dual AI vision detection engine:
+        1. Attempts OpenRouter (minimax/hailuo-3) if OPENROUTER_API_KEY is configured.
+        2. Attempts Google Gemini if GOOGLE_API_KEY / GEMINI_API_KEY is configured.
+        3. Falls back gracefully to deterministic market catalog if keys are absent or rate-limited.
         """
-        api_key = (
+        openrouter_key = (
             getattr(settings, "OPENROUTER_API_KEY", None)
-            or getattr(settings, "GOOGLE_API_KEY", None)
             or os.environ.get("OPENROUTER_API_KEY")
+        )
+        google_key = (
+            getattr(settings, "GOOGLE_API_KEY", None)
+            or getattr(settings, "GEMINI_API_KEY", None)
             or os.environ.get("GOOGLE_API_KEY")
+            or os.environ.get("GEMINI_API_KEY")
         )
 
-        if api_key and len(api_key.strip()) > 10:
+        # 1. Try OpenRouter (minimax/hailuo-3)
+        if openrouter_key and openrouter_key.startswith("sk-or-v1-"):
             try:
                 result = await ItemDetectionService._call_openrouter_vision(
                     image_bytes=image_bytes,
-                    api_key=api_key,
+                    api_key=openrouter_key,
                     city_hint=city_hint,
                 )
                 if result:
                     return result
             except Exception as e:
-                print(f"[ItemDetectionService] OpenRouter call failed, using demo mode: {e}")
+                print(f"[ItemDetectionService] OpenRouter vision attempt failed: {e}")
 
-        # Fallback: Hash image bytes to pick a deterministic item from catalog
+        # 2. Try Google Gemini
+        if google_key and len(google_key.strip()) > 10:
+            try:
+                result = await ItemDetectionService._call_gemini_vision(
+                    image_bytes=image_bytes,
+                    api_key=google_key.strip(),
+                    city_hint=city_hint,
+                )
+                if result:
+                    return result
+            except Exception as e:
+                print(f"[ItemDetectionService] Google Gemini vision attempt failed: {e}")
+
+        # 3. Fallback: Hash image bytes to pick a deterministic item from catalog
         return ItemDetectionService._get_deterministic_mock(image_bytes, filename, city_hint)
 
     @staticmethod
@@ -277,6 +297,106 @@ class ItemDetectionService:
         except Exception as err:
             print(f"[OpenRouter vision error]: {err}")
             return None
+
+    @staticmethod
+    async def _call_gemini_vision(
+        image_bytes: bytes,
+        api_key: str,
+        city_hint: Optional[str] = None,
+    ) -> Optional[DetectedItemResult]:
+        """Calls Google Gemini Vision API (gemini-1.5-flash / gemini-2.5-flash) with structured JSON prompt."""
+        try:
+            b64_image = base64.b64encode(image_bytes).decode("utf-8")
+            
+            prompt = (
+                "You are an expert appraiser and cultural guide for travelers in local markets. "
+                "Analyze the item in this image. Estimate its fair market retail value (in USD), "
+                "a realistic suggested opening bid for polite haggling (typically 60-70% of fair value), "
+                "estimated physical weight in kg, category, and 2-3 authentic local bargaining phrases "
+                "(native text, romanized phonetic pronunciation, and English meaning). "
+                f"Location context: {city_hint or 'local marketplace'}. "
+                "Respond ONLY with valid JSON matching this schema exactly:\n"
+                "{\n"
+                '  "item_name": "string",\n'
+                '  "category": "string",\n'
+                '  "fair_market_value": 35.00,\n'
+                '  "currency": "USD",\n'
+                '  "suggested_opening_bid": 22.00,\n'
+                '  "estimated_weight_kg": 0.35,\n'
+                '  "confidence_score": 0.92,\n'
+                '  "description": "string",\n'
+                '  "bargaining_phrases": [\n'
+                '    {"native": "string", "phonetic": "string", "meaning": "string"}\n'
+                "  ]\n"
+                "}"
+            )
+
+            payload = {
+                "contents": [
+                    {
+                        "parts": [
+                            {"text": prompt},
+                            {
+                                "inline_data": {
+                                    "mime_type": "image/jpeg",
+                                    "data": b64_image,
+                                }
+                            },
+                        ]
+                    }
+                ],
+                "generationConfig": {
+                    "temperature": 0.2,
+                    "maxOutputTokens": 1024,
+                    "responseMimeType": "application/json",
+                },
+            }
+
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
+            async with httpx.AsyncClient(timeout=30.0) as client:
+                res = await client.post(url, json=payload)
+                res.raise_for_status()
+                data = res.json()
+
+            candidates = data.get("candidates", [])
+            if not candidates:
+                return None
+            parts = candidates[0].get("content", {}).get("parts", [])
+            if not parts:
+                return None
+
+            text = parts[0].get("text", "").strip()
+            if "```json" in text:
+                text = text.split("```json")[1].split("```")[0].strip()
+            elif "```" in text:
+                text = text.split("```")[1].split("```")[0].strip()
+
+            parsed = json.loads(text)
+            phrases = [
+                BargainingPhrase(
+                    native=p.get("native", ""),
+                    phonetic=p.get("phonetic", ""),
+                    meaning=p.get("meaning", ""),
+                )
+                for p in parsed.get("bargaining_phrases", [])
+            ]
+
+            return DetectedItemResult(
+                item_name=parsed.get("item_name", "Handcrafted Market Item"),
+                category=parsed.get("category", "handicraft"),
+                fair_market_value=Decimal(str(parsed.get("fair_market_value", 30.00))).quantize(Decimal("0.01")),
+                currency=parsed.get("currency", "USD"),
+                suggested_opening_bid=Decimal(str(parsed.get("suggested_opening_bid", 20.00))).quantize(Decimal("0.01")),
+                estimated_weight_kg=Decimal(str(parsed.get("estimated_weight_kg", 0.4))).quantize(Decimal("0.01")),
+                confidence_score=float(parsed.get("confidence_score", 0.9)),
+                bargaining_phrases=phrases,
+                detection_source="live_ai_gemini",
+                description=parsed.get("description"),
+            )
+        except Exception as err:
+            print(f"[Gemini vision error]: {err}")
+            return None
+
 
     @staticmethod
     def _get_deterministic_mock(

@@ -45,14 +45,14 @@ export const ContextBar: React.FC = () => {
   }
 
   return (
-    <div className="bg-white/90 backdrop-blur-md border border-[#0D1B2A]/10 rounded-2xl p-4 shadow-sm transition-all duration-300">
+    <div className="bg-[#0A1420]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-4 shadow-xl transition-all duration-300">
       {/* Header / Summary row */}
       <div className="flex items-center justify-between gap-4">
         {/* City selection pills */}
         <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
-          <div className="flex items-center gap-1.5 text-xs font-semibold text-[#0D1B2A] mr-1">
+          <div className="flex items-center gap-1.5 text-xs font-semibold text-white/80 mr-1">
             <MapPin className="w-4 h-4 text-[#C9A84C]" />
-            <span className="hidden sm:inline">Destination:</span>
+            <span className="hidden sm:inline font-mono uppercase tracking-wider text-[11px]">Destination:</span>
           </div>
           {PRESET_CITIES.map((c) => {
             const active = currentCityName.toLowerCase().includes(c.name.toLowerCase())
@@ -61,10 +61,10 @@ export const ContextBar: React.FC = () => {
                 key={c.name}
                 type="button"
                 onClick={() => handleSelectCity(c)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                   active
-                    ? 'bg-[#0D1B2A] text-[#F5EDD6] shadow-sm'
-                    : 'bg-[#0D1B2A]/5 text-[#1A2B3C]/80 hover:bg-[#0D1B2A]/10'
+                    ? 'bg-[#C9A84C] text-[#0D1B2A] shadow-[0_0_12px_rgba(201,168,76,0.35)]'
+                    : 'bg-white/[0.06] text-white/75 hover:bg-white/[0.12] border border-white/10'
                 }`}
               >
                 {c.name}, {c.country}
@@ -79,7 +79,7 @@ export const ContextBar: React.FC = () => {
             type="button"
             onClick={resetContext}
             title="Reset to default constraints"
-            className="p-1.5 rounded-lg text-[#1A2B3C]/60 hover:text-[#0D1B2A] hover:bg-[#0D1B2A]/5 transition-colors"
+            className="p-1.5 rounded-xl text-white/50 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
           >
             <RotateCcw className="w-4 h-4" />
           </button>
@@ -87,14 +87,14 @@ export const ContextBar: React.FC = () => {
           <button
             type="button"
             onClick={toggleContextBar}
-            className="flex items-center gap-1 text-xs font-semibold text-[#0D1B2A] px-2.5 py-1.5 rounded-xl bg-[#0D1B2A]/5 hover:bg-[#0D1B2A]/10 transition-colors"
+            className="flex items-center gap-1.5 text-xs font-semibold text-white px-3 py-1.5 rounded-xl bg-white/[0.08] hover:bg-white/[0.15] border border-white/10 transition-all cursor-pointer"
           >
             <SlidersHorizontal className="w-3.5 h-3.5 text-[#C9A84C]" />
             <span>Constraints</span>
             {contextBarExpanded ? (
-              <ChevronUp className="w-3.5 h-3.5" />
+              <ChevronUp className="w-3.5 h-3.5 text-[#C9A84C]" />
             ) : (
-              <ChevronDown className="w-3.5 h-3.5" />
+              <ChevronDown className="w-3.5 h-3.5 text-[#C9A84C]" />
             )}
           </button>
         </div>
@@ -102,15 +102,15 @@ export const ContextBar: React.FC = () => {
 
       {/* Expanded Controls Drawer */}
       {contextBarExpanded && (
-        <div className="mt-4 pt-4 border-t border-[#0D1B2A]/10 grid grid-cols-1 sm:grid-cols-3 gap-5 animate-fade-in text-xs text-[#1A2B3C]">
+        <div className="mt-4 pt-4 border-t border-white/10 grid grid-cols-1 sm:grid-cols-3 gap-6 animate-fade-in text-xs text-white/90">
           {/* Available Time Control */}
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             <div className="flex items-center justify-between">
-              <span className="font-semibold text-[#0D1B2A] flex items-center gap-1.5">
-                <Clock className="w-3.5 h-3.5 text-blue-600" />
+              <span className="font-semibold text-white flex items-center gap-1.5">
+                <Clock className="w-3.5 h-3.5 text-[#4EC9B0]" />
                 Available Time
               </span>
-              <span className="font-bold text-[#0D1B2A]">
+              <span className="font-mono font-bold text-[#E5C365]">
                 {Math.floor(context.availableMinutes / 60)}h {context.availableMinutes % 60}m
               </span>
             </div>
@@ -131,10 +131,10 @@ export const ContextBar: React.FC = () => {
                   key={p.value}
                   type="button"
                   onClick={() => setContext({ availableMinutes: p.value })}
-                  className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${
+                  className={`px-2 py-1 rounded-lg text-[10px] font-mono transition-all cursor-pointer ${
                     context.availableMinutes === p.value
-                      ? 'bg-[#C9A84C] text-[#0D1B2A] font-bold'
-                      : 'bg-[#0D1B2A]/5 text-[#1A2B3C]/70 hover:bg-[#0D1B2A]/10'
+                      ? 'bg-[#C9A84C] text-[#0D1B2A] font-bold shadow-sm'
+                      : 'bg-white/[0.05] text-white/70 hover:bg-white/[0.1] border border-white/5'
                   }`}
                 >
                   {p.label}
@@ -144,13 +144,13 @@ export const ContextBar: React.FC = () => {
           </div>
 
           {/* Remaining Budget Control */}
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             <div className="flex items-center justify-between">
-              <span className="font-semibold text-[#0D1B2A] flex items-center gap-1.5">
-                <DollarSign className="w-3.5 h-3.5 text-emerald-600" />
+              <span className="font-semibold text-white flex items-center gap-1.5">
+                <DollarSign className="w-3.5 h-3.5 text-[#4EC9B0]" />
                 Remaining Budget
               </span>
-              <span className="font-bold text-[#0D1B2A]">
+              <span className="font-mono font-bold text-[#4EC9B0]">
                 ${Number(context.remainingBudget || 0).toFixed(0)} USD
               </span>
             </div>
@@ -162,7 +162,7 @@ export const ContextBar: React.FC = () => {
               step="10"
               value={Number(context.remainingBudget) || 100}
               onChange={(e) => setContext({ remainingBudget: e.target.value })}
-              className="w-full accent-[#10B981] cursor-pointer"
+              className="w-full accent-[#4EC9B0] cursor-pointer"
             />
 
             <div className="flex items-center justify-between gap-1 pt-1">
@@ -171,10 +171,10 @@ export const ContextBar: React.FC = () => {
                   key={b}
                   type="button"
                   onClick={() => setContext({ remainingBudget: `${b}` })}
-                  className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${
+                  className={`px-2 py-1 rounded-lg text-[10px] font-mono transition-all cursor-pointer ${
                     Number(context.remainingBudget) === b
-                      ? 'bg-emerald-600 text-white font-bold'
-                      : 'bg-[#0D1B2A]/5 text-[#1A2B3C]/70 hover:bg-[#0D1B2A]/10'
+                      ? 'bg-[#4EC9B0] text-[#0D1B2A] font-bold shadow-sm'
+                      : 'bg-white/[0.05] text-white/70 hover:bg-white/[0.1] border border-white/5'
                   }`}
                 >
                   ${b}
@@ -184,22 +184,22 @@ export const ContextBar: React.FC = () => {
           </div>
 
           {/* Group Size & Preferences */}
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             <div className="flex items-center justify-between">
-              <span className="font-semibold text-[#0D1B2A] flex items-center gap-1.5">
-                <Users className="w-3.5 h-3.5 text-purple-600" />
+              <span className="font-semibold text-white flex items-center gap-1.5">
+                <Users className="w-3.5 h-3.5 text-[#C9A84C]" />
                 Group Size
               </span>
-              <span className="font-bold text-[#0D1B2A]">
+              <span className="font-bold text-white">
                 {context.groupSize === 1
-                  ? 'Solo Traveler'
+                  ? 'Solo Explorer'
                   : context.groupSize === 2
                   ? 'Couple (2)'
-                  : `${context.groupSize} Travelers`}
+                  : `${context.groupSize} Explorers`}
               </span>
             </div>
 
-            <div className="grid grid-cols-4 gap-1 pt-1">
+            <div className="grid grid-cols-4 gap-1.5 pt-1">
               {[
                 { label: 'Solo', val: 1 },
                 { label: 'Pair', val: 2 },
@@ -210,10 +210,10 @@ export const ContextBar: React.FC = () => {
                   key={g.val}
                   type="button"
                   onClick={() => setContext({ groupSize: g.val })}
-                  className={`py-2 rounded-xl text-center text-xs font-semibold transition-all ${
+                  className={`py-2 rounded-xl text-center text-xs font-bold transition-all cursor-pointer ${
                     context.groupSize === g.val
-                      ? 'bg-[#0D1B2A] text-white'
-                      : 'bg-[#0D1B2A]/5 text-[#1A2B3C]/70 hover:bg-[#0D1B2A]/10'
+                      ? 'bg-[#C9A84C] text-[#0D1B2A] shadow-sm'
+                      : 'bg-white/[0.05] text-white/70 hover:bg-white/[0.1] border border-white/5'
                   }`}
                 >
                   {g.label}

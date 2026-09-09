@@ -198,12 +198,12 @@ export default function ExperienceDetail() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#FAF5EB]">
+      <div className="min-h-screen bg-[#061423] text-white">
         <Navbar />
         <main className="pt-24 max-w-7xl mx-auto px-4 py-12 flex items-center justify-center min-h-[60vh]">
           <div className="text-center space-y-3">
-            <div className="w-10 h-10 border-4 border-[#2D6A4F] border-t-transparent rounded-full animate-spin mx-auto" />
-            <p className="text-sm font-semibold text-[#0D1B2A]">Loading authentic experience details...</p>
+            <div className="w-10 h-10 border-4 border-[#C9A84C] border-t-transparent rounded-full animate-spin mx-auto" />
+            <p className="text-sm font-semibold text-white/80">Loading authentic experience details...</p>
           </div>
         </main>
       </div>
@@ -212,17 +212,17 @@ export default function ExperienceDetail() {
 
   if (!experience) {
     return (
-      <div className="min-h-screen bg-[#FAF5EB]">
+      <div className="min-h-screen bg-[#061423] text-white">
         <Navbar />
         <main className="pt-24 max-w-7xl mx-auto px-4 py-12 text-center">
-          <AlertCircle className="w-12 h-12 text-amber-600 mx-auto mb-3" />
-          <h2 className="text-2xl font-display font-bold text-[#0D1B2A]">Experience Not Found</h2>
-          <p className="text-sm text-[#1A2B3C]/70 mt-1 mb-6">
+          <AlertCircle className="w-12 h-12 text-rose-400 mx-auto mb-3" />
+          <h2 className="text-2xl font-serif font-bold text-white">Experience Not Found</h2>
+          <p className="text-sm text-white/70 mt-1 mb-6">
             The requested experience could not be loaded or has been retired.
           </p>
           <Link
             to="/discover"
-            className="px-6 py-2.5 rounded-xl bg-[#2D6A4F] text-white font-semibold text-xs inline-flex items-center gap-2 hover:bg-[#245640]"
+            className="px-6 py-2.5 rounded-xl bg-[#C9A84C] text-[#0D1B2A] font-bold text-xs inline-flex items-center gap-2 hover:bg-[#E5C365] cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" /> Back to Discover
           </Link>
@@ -236,21 +236,21 @@ export default function ExperienceDetail() {
   ]
 
   return (
-    <div className="min-h-screen bg-[#FAF5EB] text-[#0D1B2A]">
+    <div className="min-h-screen bg-[#061423] text-white selection:bg-[#C9A84C]/30 flex flex-col">
       <Navbar />
 
-      <main className="pt-24 lg:pt-28 pb-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <main className="pt-24 lg:pt-28 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-1 w-full">
         {/* Navigation Breadcrumb */}
-        <div className="py-4 flex items-center justify-between text-xs text-[#1A2B3C]/70">
+        <div className="py-4 flex items-center justify-between text-xs text-white/60">
           <Link
             to="/discover"
-            className="inline-flex items-center gap-1.5 font-semibold text-[#2D6A4F] hover:underline"
+            className="inline-flex items-center gap-1.5 font-semibold text-[#E5C365] hover:underline"
           >
             <ArrowLeft className="w-4 h-4" /> Back to Discover
           </Link>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 font-mono">
             <span className="capitalize">{experience.city}</span>
-            <ChevronRight className="w-3 h-3 text-[#1A2B3C]/40" />
+            <ChevronRight className="w-3 h-3 text-white/40" />
             <span className="capitalize">{experience.category?.replace('_', ' ')}</span>
           </div>
         </div>
@@ -258,47 +258,51 @@ export default function ExperienceDetail() {
         {/* Top Header & Actions */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6">
           <div>
-            <div className="flex items-center gap-2 mb-1.5">
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#E0EFC7] text-[#2D6A4F]">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-[#4EC9B0]/15 text-[#4EC9B0] border border-[#4EC9B0]/30">
                 {experience.category?.replace('_', ' ')}
               </span>
-              <div className="flex items-center gap-1 text-xs font-bold text-[#0D1B2A]">
+              <div className="flex items-center gap-1 text-xs font-bold text-white">
                 <Star className="w-3.5 h-3.5 fill-[#C9A84C] text-[#C9A84C]" />
                 <span>{experience.rating_avg ? Number(experience.rating_avg).toFixed(2) : '4.9'}</span>
-                <span className="text-[#1A2B3C]/50 font-normal">({experience.rating_count || 32} verified reviews)</span>
+                <span className="text-white/50 font-normal">({experience.rating_count || 32} verified reviews)</span>
               </div>
             </div>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-display font-extrabold tracking-tight text-[#0D1B2A]">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold tracking-tight text-white">
               {experience.title}
             </h1>
-            <p className="text-xs sm:text-sm text-[#1A2B3C]/70 flex items-center gap-1.5 mt-1.5">
+            <p className="text-xs sm:text-sm text-white/70 flex items-center gap-1.5 mt-1.5 font-mono">
               <MapPin className="w-3.5 h-3.5 text-[#C9A84C]" />
               {experience.address || `${experience.city}, ${experience.country}`}
             </p>
           </div>
 
           {/* Call to action buttons */}
-          <div className="flex items-center gap-2.5 self-start md:self-auto">
+          <div className="flex items-center gap-3 self-start md:self-auto">
             <button
+              type="button"
               onClick={handleBookmarkToggle}
-              className={`px-4 py-2.5 rounded-xl font-semibold text-xs flex items-center gap-2 transition-all shadow-sm ${
+              className={`px-5 py-3 rounded-xl font-bold text-xs flex items-center gap-2 transition-all cursor-pointer shadow-md ${
                 isBookmarked
-                  ? 'bg-[#2D6A4F] text-white hover:bg-[#245640]'
-                  : 'bg-white border border-[#0D1B2A]/15 text-[#0D1B2A] hover:bg-[#FAF5EB]'
+                  ? 'bg-[#4EC9B0] text-[#0D1B2A] hover:bg-[#38b39a] shadow-[0_0_16px_rgba(78,201,176,0.3)]'
+                  : 'bg-[#C9A84C] hover:bg-[#E5C365] active:bg-[#B8933E] text-[#0D1B2A] shadow-[0_0_16px_rgba(201,168,76,0.35)]'
               }`}
             >
               {isBookmarked ? (
                 <>
-                  <BookmarkCheck className="w-4 h-4 text-[#C9A84C]" /> Saved to Itinerary
+                  <BookmarkCheck className="w-4 h-4" />
+                  <span>Saved to Itinerary</span>
                 </>
               ) : (
                 <>
-                  <Bookmark className="w-4 h-4" /> Save to Itinerary
+                  <Bookmark className="w-4 h-4" />
+                  <span>Add to Itinerary</span>
                 </>
               )}
             </button>
 
             <button
+              type="button"
               onClick={() => {
                 if (navigator.share) {
                   navigator.share({ title: experience.title, url: window.location.href })
@@ -307,7 +311,7 @@ export default function ExperienceDetail() {
                   alert('Link copied to clipboard!')
                 }
               }}
-              className="p-2.5 rounded-xl bg-white border border-[#0D1B2A]/15 text-[#0D1B2A] hover:bg-[#FAF5EB] transition-colors"
+              className="p-3 rounded-xl bg-white/[0.08] hover:bg-white/[0.15] border border-white/15 text-white transition-colors cursor-pointer"
               title="Share experience"
             >
               <Share2 className="w-4 h-4" />
@@ -316,25 +320,26 @@ export default function ExperienceDetail() {
         </div>
 
         {/* Photo Gallery Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-3 mb-8">
-          <div className="md:col-span-3 rounded-2xl overflow-hidden aspect-[16/10] bg-[#0D1B2A]/5 relative shadow-md">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-3.5 mb-8">
+          <div className="md:col-span-3 rounded-2xl overflow-hidden aspect-[16/10] bg-[#0A1420] relative shadow-2xl border border-white/10">
             <img
               src={images[activeImageIndex] || images[0]}
               alt={experience.title}
-              className="w-full h-full object-cover transition-all duration-300"
+              className="w-full h-full object-cover transition-all duration-500"
             />
-            <div className="absolute top-3 left-3 bg-[#0D1B2A]/80 backdrop-blur-sm text-[#FAF5EB] text-[10px] font-semibold px-2.5 py-1 rounded-full flex items-center gap-1.5">
-              <Sparkles className="w-3 h-3 text-[#C9A84C]" /> Artisan Heritage Verified
+            <div className="absolute top-3 left-3 bg-[#0D1B2A]/80 backdrop-blur-md text-[#FAF5EB] text-[10px] font-mono font-bold px-3 py-1 rounded-full flex items-center gap-1.5 border border-white/10 shadow-sm">
+              <Sparkles className="w-3.5 h-3.5 text-[#C9A84C]" /> Artisan Heritage Verified
             </div>
           </div>
 
-          <div className="grid grid-cols-3 md:grid-cols-1 gap-2.5">
+          <div className="grid grid-cols-3 md:grid-cols-1 gap-3">
             {images.map((img: string, idx: number) => (
               <button
                 key={idx}
+                type="button"
                 onClick={() => setActiveImageIndex(idx)}
-                className={`rounded-xl overflow-hidden aspect-video relative border-2 transition-all ${
-                  activeImageIndex === idx ? 'border-[#2D6A4F] ring-2 ring-[#2D6A4F]/20' : 'border-transparent opacity-75 hover:opacity-100'
+                className={`rounded-xl overflow-hidden aspect-video relative border-2 transition-all cursor-pointer ${
+                  activeImageIndex === idx ? 'border-[#C9A84C] ring-2 ring-[#C9A84C]/40' : 'border-white/10 opacity-60 hover:opacity-100'
                 }`}
               >
                 <img src={img} alt="" className="w-full h-full object-cover" />
@@ -346,57 +351,57 @@ export default function ExperienceDetail() {
         {/* TWO-COLUMN CONTENT LAYOUT */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* LEFT COLUMN: Narrative, Key Constraints, Accessibility (8 cols) */}
-          <div className="lg:col-span-7 xl:col-span-8 space-y-8">
+          <div className="lg:col-span-7 xl:col-span-8 space-y-6">
             {/* Quick Constraint Highlights Bar */}
-            <div className="bg-white rounded-2xl p-5 border border-[#0D1B2A]/10 shadow-sm grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
-              <div className="border-r border-[#0D1B2A]/5 last:border-none">
-                <span className="block text-[11px] text-[#1A2B3C]/60 flex items-center justify-center gap-1 mb-1">
-                  <Clock className="w-3.5 h-3.5 text-[#2D6A4F]" /> Duration
+            <div className="bg-[#0A1420]/80 backdrop-blur-xl rounded-2xl p-5 border border-white/10 shadow-lg grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+              <div className="border-r border-white/10 last:border-none">
+                <span className="block text-[11px] text-white/60 flex items-center justify-center gap-1 mb-1">
+                  <Clock className="w-3.5 h-3.5 text-[#4EC9B0]" /> Duration
                 </span>
-                <span className="text-base font-bold text-[#0D1B2A]">
-                  {experience.duration_minutes || 120} mins
+                <span className="text-base font-mono font-bold text-white">
+                  {experience.duration_minutes || 120}m
                 </span>
               </div>
-              <div className="border-r border-[#0D1B2A]/5 last:border-none">
-                <span className="block text-[11px] text-[#1A2B3C]/60 flex items-center justify-center gap-1 mb-1">
+              <div className="border-r border-white/10 last:border-none">
+                <span className="block text-[11px] text-white/60 flex items-center justify-center gap-1 mb-1">
                   <DollarSign className="w-3.5 h-3.5 text-[#C9A84C]" /> Cost Range
                 </span>
-                <span className="text-base font-bold text-[#0D1B2A]">
+                <span className="text-base font-mono font-bold text-[#E5C365]">
                   ${experience.price_min || 0} - ${experience.price_max || experience.price_min || 50}
                 </span>
               </div>
-              <div className="border-r border-[#0D1B2A]/5 last:border-none">
-                <span className="block text-[11px] text-[#1A2B3C]/60 flex items-center justify-center gap-1 mb-1">
-                  <Layers className="w-3.5 h-3.5 text-[#2D6A4F]" /> Group Size
+              <div className="border-r border-white/10 last:border-none">
+                <span className="block text-[11px] text-white/60 flex items-center justify-center gap-1 mb-1">
+                  <Layers className="w-3.5 h-3.5 text-[#4EC9B0]" /> Group Size
                 </span>
-                <span className="text-base font-bold text-[#0D1B2A]">
-                  Max {experience.capacity || 6} people
+                <span className="text-base font-bold text-white">
+                  Max {experience.capacity || 6}
                 </span>
               </div>
               <div>
-                <span className="block text-[11px] text-[#1A2B3C]/60 flex items-center justify-center gap-1 mb-1">
+                <span className="block text-[11px] text-white/60 flex items-center justify-center gap-1 mb-1">
                   <Compass className="w-3.5 h-3.5 text-[#C9A84C]" /> Effort Level
                 </span>
-                <span className="text-base font-bold text-[#0D1B2A]">Moderate</span>
+                <span className="text-base font-bold text-white">Moderate</span>
               </div>
             </div>
 
             {/* Cultural Narrative & Story */}
-            <div className="bg-white rounded-2xl p-6 border border-[#0D1B2A]/10 shadow-sm space-y-4">
-              <h2 className="text-lg font-bold text-[#0D1B2A] flex items-center gap-2">
+            <div className="bg-[#0A1420]/80 backdrop-blur-xl rounded-2xl p-6 border border-white/10 shadow-lg space-y-4">
+              <h2 className="text-lg font-serif font-bold text-white flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-[#C9A84C]" /> Cultural Narrative & Tradition
               </h2>
-              <p className="text-sm text-[#1A2B3C]/80 leading-relaxed whitespace-pre-line">
+              <p className="text-sm text-white/80 leading-relaxed whitespace-pre-line">
                 {experience.description}
               </p>
 
               {/* Tags */}
               {experience.tags && experience.tags.length > 0 && (
-                <div className="flex flex-wrap gap-1.5 pt-3 border-t border-[#0D1B2A]/5">
+                <div className="flex flex-wrap gap-1.5 pt-3 border-t border-white/10">
                   {experience.tags.map((tag: string, i: number) => (
                     <span
                       key={i}
-                      className="px-2.5 py-1 rounded-lg text-xs font-medium bg-[#FAF5EB] text-[#1A2B3C]/80 border border-[#0D1B2A]/5"
+                      className="px-2.5 py-1 rounded-lg text-xs font-mono bg-white/[0.05] text-white/80 border border-white/10"
                     >
                       #{tag}
                     </span>
@@ -406,35 +411,35 @@ export default function ExperienceDetail() {
             </div>
 
             {/* Practical Details & Accessibility */}
-            <div className="bg-white rounded-2xl p-6 border border-[#0D1B2A]/10 shadow-sm space-y-4">
-              <h2 className="text-lg font-bold text-[#0D1B2A] flex items-center gap-2">
-                <Shield className="w-4 h-4 text-[#2D6A4F]" /> Accessibility & Practical Notes
+            <div className="bg-[#0A1420]/80 backdrop-blur-xl rounded-2xl p-6 border border-white/10 shadow-lg space-y-4">
+              <h2 className="text-lg font-serif font-bold text-white flex items-center gap-2">
+                <Shield className="w-4 h-4 text-[#4EC9B0]" /> Accessibility & Practical Notes
               </h2>
 
               {experience.accessibility_tags && experience.accessibility_tags.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   {experience.accessibility_tags.map((item: string, i: number) => (
-                    <div key={i} className="flex items-center gap-2 text-xs text-[#0D1B2A] bg-[#FAF5EB] p-2.5 rounded-xl border border-[#0D1B2A]/5">
-                      <CheckCircle2 className="w-4 h-4 text-[#2D6A4F] flex-shrink-0" />
+                    <div key={i} className="flex items-center gap-2 text-xs text-white bg-white/[0.04] p-3 rounded-xl border border-white/5">
+                      <CheckCircle2 className="w-4 h-4 text-[#4EC9B0] flex-shrink-0" />
                       <span>{item}</span>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p className="text-xs text-[#1A2B3C]/60">Standard accessibility guidelines apply. Contact host for special requirements.</p>
+                <p className="text-xs text-white/60">Standard accessibility guidelines apply. Contact host for special requirements.</p>
               )}
 
               {/* Opening hours snippet */}
               {experience.opening_hours && Object.keys(experience.opening_hours).length > 0 && (
-                <div className="pt-3 border-t border-[#0D1B2A]/5">
-                  <span className="block text-xs font-bold text-[#0D1B2A] mb-2 flex items-center gap-1.5">
+                <div className="pt-3 border-t border-white/10">
+                  <span className="block text-xs font-bold text-white mb-2 flex items-center gap-1.5">
                     <Calendar className="w-3.5 h-3.5 text-[#C9A84C]" /> Operating Schedule
                   </span>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-[11px]">
                     {Object.entries(experience.opening_hours).map(([day, hours]) => (
-                      <div key={day} className="bg-[#FAF5EB] p-2 rounded-lg">
-                        <span className="block font-semibold capitalize text-[#0D1B2A]">{day}</span>
-                        <span className="text-[#1A2B3C]/70">{String(hours)}</span>
+                      <div key={day} className="bg-white/[0.04] p-2.5 rounded-lg border border-white/5">
+                        <span className="block font-semibold capitalize text-white">{day}</span>
+                        <span className="text-white/70 font-mono">{String(hours)}</span>
                       </div>
                     ))}
                   </div>
@@ -442,22 +447,22 @@ export default function ExperienceDetail() {
               )}
             </div>
 
-            {/* Location & Map Preview */}
-            <div className="bg-white rounded-2xl p-6 border border-[#0D1B2A]/10 shadow-sm space-y-3">
-              <h2 className="text-lg font-bold text-[#0D1B2A] flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-[#C9A84C]" /> Location & Directions
+            {/* Location & Map Coordinates */}
+            <div className="bg-[#0A1420]/80 backdrop-blur-xl rounded-2xl p-6 border border-white/10 shadow-lg space-y-3">
+              <h2 className="text-lg font-serif font-bold text-white flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-[#C9A84C]" /> Location & Coordinates
               </h2>
-              <p className="text-xs text-[#1A2B3C]/80">
+              <p className="text-xs text-white/80 font-mono">
                 {experience.address || `${experience.city}, ${experience.country}`}
               </p>
-              <div className="w-full h-48 rounded-xl bg-[#FAF5EB] border border-[#0D1B2A]/10 overflow-hidden relative flex items-center justify-center">
+              <div className="w-full h-36 rounded-xl bg-white/[0.03] border border-white/10 overflow-hidden relative flex items-center justify-center">
                 <div className="text-center p-4">
-                  <div className="w-8 h-8 rounded-full bg-[#2D6A4F] text-white flex items-center justify-center mx-auto mb-2 shadow-md">
+                  <div className="w-8 h-8 rounded-full bg-[#C9A84C] text-[#0D1B2A] flex items-center justify-center mx-auto mb-2 shadow-md font-bold">
                     <MapPin className="w-4 h-4" />
                   </div>
-                  <span className="text-xs font-bold text-[#0D1B2A] block">{experience.title}</span>
-                  <span className="text-[10px] text-[#1A2B3C]/60">
-                    Lat: {Number(experience.lat).toFixed(4)}, Lng: {Number(experience.lng).toFixed(4)}
+                  <span className="text-xs font-bold text-white block">{experience.title}</span>
+                  <span className="text-[11px] font-mono text-[#4EC9B0]">
+                    GPS: {Number(experience.lat).toFixed(4)}° N, {Number(experience.lng).toFixed(4)}° E
                   </span>
                 </div>
               </div>
@@ -467,11 +472,11 @@ export default function ExperienceDetail() {
           {/* RIGHT COLUMN: Fit Score Dial + BazaarLink Scan Panel (5 cols) */}
           <div className="lg:col-span-5 xl:col-span-4 space-y-6">
             {/* Fit Score Dial Card */}
-            <div className="bg-white rounded-2xl p-5 border border-[#0D1B2A]/10 shadow-sm">
+            <div className="bg-[#0A1420]/85 backdrop-blur-xl rounded-2xl p-6 border border-white/10 shadow-2xl">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <h3 className="text-sm font-bold text-[#0D1B2A]">Traveler Constraint Match</h3>
-                  <p className="text-[11px] text-[#1A2B3C]/60">Weighted against your budget, time, and pace</p>
+                  <h3 className="text-sm font-serif font-bold text-white">Traveler Constraint Match</h3>
+                  <p className="text-[11px] text-white/60 font-mono">Weighted against your budget, time, and pace</p>
                 </div>
                 <FitScoreDial
                   score={experience.fit_score || 92}
@@ -482,33 +487,33 @@ export default function ExperienceDetail() {
               </div>
 
               {/* Constraint breakdown bars */}
-              <div className="space-y-2 pt-3 border-t border-[#0D1B2A]/5 text-xs">
+              <div className="space-y-3 pt-3 border-t border-white/10 text-xs">
                 <div>
                   <div className="flex justify-between text-[11px] mb-1">
-                    <span className="text-[#1A2B3C]/70">Time & Duration Fit</span>
-                    <span className="font-bold text-[#2D6A4F]">94%</span>
+                    <span className="text-white/70">Time & Duration Fit</span>
+                    <span className="font-mono font-bold text-[#4EC9B0]">94%</span>
                   </div>
-                  <div className="w-full h-1.5 bg-[#FAF5EB] rounded-full overflow-hidden">
-                    <div className="h-full bg-[#2D6A4F] rounded-full" style={{ width: '94%' }} />
+                  <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+                    <div className="h-full bg-[#4EC9B0] rounded-full" style={{ width: '94%' }} />
                   </div>
                 </div>
 
                 <div>
                   <div className="flex justify-between text-[11px] mb-1">
-                    <span className="text-[#1A2B3C]/70">Budget Runway Fit</span>
-                    <span className="font-bold text-[#2D6A4F]">89%</span>
+                    <span className="text-white/70">Budget Runway Fit</span>
+                    <span className="font-mono font-bold text-[#4EC9B0]">89%</span>
                   </div>
-                  <div className="w-full h-1.5 bg-[#FAF5EB] rounded-full overflow-hidden">
-                    <div className="h-full bg-[#2D6A4F] rounded-full" style={{ width: '89%' }} />
+                  <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+                    <div className="h-full bg-[#4EC9B0] rounded-full" style={{ width: '89%' }} />
                   </div>
                 </div>
 
                 <div>
                   <div className="flex justify-between text-[11px] mb-1">
-                    <span className="text-[#1A2B3C]/70">Cultural Authenticity</span>
-                    <span className="font-bold text-[#C9A84C]">98%</span>
+                    <span className="text-white/70">Cultural Authenticity</span>
+                    <span className="font-mono font-bold text-[#E5C365]">98%</span>
                   </div>
-                  <div className="w-full h-1.5 bg-[#FAF5EB] rounded-full overflow-hidden">
+                  <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
                     <div className="h-full bg-[#C9A84C] rounded-full" style={{ width: '98%' }} />
                   </div>
                 </div>
@@ -518,13 +523,14 @@ export default function ExperienceDetail() {
             {/* BazaarLink™ Decision Engine Panel */}
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-[#0D1B2A] uppercase tracking-wider flex items-center gap-1.5">
+                <span className="text-xs font-mono font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
                   <Sparkles className="w-3.5 h-3.5 text-[#C9A84C]" />
                   Market & Craft Scanner
                 </span>
                 <button
+                  type="button"
                   onClick={() => setShowBazaarScanner(!showBazaarScanner)}
-                  className="text-xs text-[#2D6A4F] font-semibold hover:underline"
+                  className="text-xs text-[#4EC9B0] font-semibold hover:underline cursor-pointer"
                 >
                   {showBazaarScanner ? 'Collapse' : 'Expand'}
                 </button>

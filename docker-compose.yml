@@ -1,0 +1,54 @@
+version: '3.9'
+
+services:
+  # ─── PostgreSQL ─────────────────────────────────────────────
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: localpulse
+      POSTGRES_USER: localpulse
+      POSTGRES_PASSWORD: localpulse_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U localpulse"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ─── FastAPI Backend ────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file: ./backend/.env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://localpulse:localpulse_dev@db:5432/localpulse
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+  # ─── React Frontend (dev) ───────────────────────────────────
+  frontend:
+    image: node:20-alpine
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    command: npm run dev -- --host 0.0.0.0
+    depends_on:
+      - backend
+
+volumes:
+  pg_data:

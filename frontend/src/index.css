@@ -1,0 +1,180 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+
+/* ─── Tailwind v4 Theme Tokens ─────────────────────────────────────────────── */
+@theme {
+  --color-navy:           #0D1B2A;
+  --color-navy-dark:      #070E17;
+  --color-navy-surface:   #132438;
+  --color-navy-80:        rgba(13, 27, 42, 0.8);
+  --color-navy-40:        rgba(13, 27, 42, 0.4);
+
+  --color-brass:          #C9A84C;
+  --color-brass-light:    #DFC272;
+  --color-brass-dark:     #A58632;
+  --color-brass-80:       rgba(201, 168, 76, 0.8);
+  --color-brass-20:       rgba(201, 168, 76, 0.2);
+
+  --color-teal:           #4EC9B0;
+  --color-teal-dark:      #38B39A;
+  --color-teal-20:        rgba(78, 201, 176, 0.2);
+
+  --color-parchment:      #F5EDD6;
+  --color-parchment-light:#FAF5EB;
+  --color-parchment-80:   rgba(245, 237, 214, 0.8);
+
+  --color-ink:            #1A2B3C;
+  --color-mist:           #E8F0F7;
+  --color-mist-40:        rgba(232, 240, 247, 0.4);
+
+  --color-success:        #22C55E;
+  --color-warning:        #F59E0B;
+  --color-danger:         #EF4444;
+
+  --font-display:         'Playfair Display', Georgia, serif;
+  --font-body:            'Inter', system-ui, -apple-system, sans-serif;
+  --font-sans:            'Inter', system-ui, -apple-system, sans-serif;
+
+  --radius-sm:            6px;
+  --radius-md:            12px;
+  --radius-lg:            20px;
+  --radius-xl:            32px;
+
+  --shadow-card:          0 4px 24px rgba(13, 27, 42, 0.10);
+  --shadow-glow:          0 0 32px rgba(201, 168, 76, 0.28);
+  --shadow-deep:          0 12px 48px rgba(13, 27, 42, 0.32);
+}
+
+/* ─── CSS Variables fallback & Reset ────────────────────────────────────────── */
+:root {
+  --color-navy:     #0D1B2A;
+  --color-brass:    #C9A84C;
+  --color-teal:     #4EC9B0;
+  --color-parchment:#F5EDD6;
+  --color-ink:      #1A2B3C;
+  --color-mist:     #E8F0F7;
+  --font-display:   'Playfair Display', Georgia, serif;
+  --font-body:      'Inter', system-ui, sans-serif;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-parchment);
+  color: var(--color-ink);
+  line-height: 1.6;
+  min-height: 100dvh;
+}
+
+/* ─── Typography Helpers ────────────────────────────────────────────────────── */
+.font-display { font-family: var(--font-display); }
+.font-body    { font-family: var(--font-body); }
+
+h1, h2, h3, .heading {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+/* ─── Scrollbar Styling ─────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: rgba(13, 27, 42, 0.05); }
+::-webkit-scrollbar-thumb { background: #C9A84C; border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: #A58632; }
+
+/* ─── Focus Rings (Accessibility) ───────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid #C9A84C;
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+/* ─── Glassmorphism Utilities ───────────────────────────────────────────────── */
+.glass {
+  background: rgba(13, 27, 42, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(201, 168, 76, 0.22);
+}
+
+.glass-card {
+  background: rgba(19, 36, 56, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(201, 168, 76, 0.20);
+  box-shadow: 0 16px 40px rgba(7, 14, 23, 0.45);
+}
+
+.glass-light {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(13, 27, 42, 0.08);
+}
+
+/* ─── Animations ────────────────────────────────────────────────────────────── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes pulse-brass {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(201, 168, 76, 0.45); }
+  50%       { box-shadow: 0 0 0 14px rgba(201, 168, 76, 0); }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes float-subtle {
+  0%, 100% { transform: translateY(0px); }
+  50%      { transform: translateY(-6px); }
+}
+
+.animate-fade-in-up  { animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.animate-fade-in     { animation: fadeIn 0.35s ease-out both; }
+.animate-pulse-brass { animation: pulse-brass 2.2s infinite; }
+.animate-spin-slow   { animation: spin-slow 24s linear infinite; }
+.animate-float       { animation: float-subtle 4s ease-in-out infinite; }
+
+/* ─── Leaflet Overrides ─────────────────────────────────────────────────────── */
+.leaflet-container {
+  font-family: var(--font-body) !important;
+  border-radius: 16px;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 14px !important;
+  box-shadow: 0 16px 36px rgba(13, 27, 42, 0.25) !important;
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+.leaflet-popup-content {
+  margin: 0 !important;
+  line-height: 1.4 !important;
+}

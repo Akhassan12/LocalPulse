@@ -1,0 +1,56 @@
+# ── Environment & Secrets ──────────────────────────────────────
+.env
+.env.*
+*.env
+!.env.example
+!*.env.example
+
+# ── Dependencies ───────────────────────────────────────────────
+node_modules/
+package-lock.json
+
+# ── Build outputs ──────────────────────────────────────────────
+dist/
+dist-ssr/
+build/
+*.tsbuildinfo
+
+# ── Python & Testing ───────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+.venv/
+venv/
+env/
+
+# ── Databases & Local state ────────────────────────────────────
+*.db
+*.sqlite
+*.sqlite3
+localpulse.db
+backend/localpulse.db
+
+# ── Large Media & Screen Recordings ────────────────────────────
+*.mp4
+*.mov
+*.webm
+*.mkv
+*.avi
+20260909-1816-19.8624396.mp4
+
+# ── Temporary, IDE & Scratch files ─────────────────────────────
+.agents/
+16a0c4a2-a23a-4fc7-8c44-d76cfa50a43d/
+seed_gen.sql
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

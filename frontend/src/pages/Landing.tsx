@@ -1,13 +1,12 @@
-import React from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from '../components/layout/Navbar'
 import Footer from '../components/layout/Footer'
 import { useContextStore } from '../store/contextStore'
 import {
-  Compass, Clock, Wallet, ChevronDown, ArrowRight,
+  Wallet, ChevronDown, ArrowRight,
   Backpack, ShoppingBag, Star, MapPin, Users, Zap,
   Coffee, Mountain, UtensilsCrossed, ShoppingCart, Palette, Leaf,
-  Quote, CheckCircle2, TrendingUp, Sparkles, Heart,
+  Quote, CheckCircle2, TrendingUp, Sparkles,
 } from 'lucide-react'
 
 /* ── Data ─────────────────────────────────────────────────────────────────── */

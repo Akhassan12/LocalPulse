@@ -19,9 +19,6 @@ import {
   AlertCircle,
   Shield,
   Loader2,
-  Tag,
-  Scale,
-  DollarSign,
   Languages,
 } from 'lucide-react'
 import { api } from '../../lib/api'

@@ -3,7 +3,7 @@
  * High-visual circular fit score dial with animated arc and breakdown popover tooltip.
  */
 import React, { useState } from 'react'
-import { Info, Sparkles, Clock, DollarSign, MapPin, Star, ShieldCheck, Backpack } from 'lucide-react'
+import { Sparkles, Clock, DollarSign, MapPin, Star, ShieldCheck, Backpack } from 'lucide-react'
 
 export interface FitBreakdownData {
   interest_score?: number | string

@@ -8,13 +8,12 @@
  * - BazaarLink™ Scan & Decide decision panel
  * - Itinerary Store sync & interactive map preview
  */
-import React, { useState, useEffect } from 'react'
-import { useParams, Link, useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useParams, Link } from 'react-router-dom'
 import {
   ArrowLeft,
   Star,
   Clock,
-  DollarSign,
   MapPin,
   Calendar,
   Share2,
@@ -23,7 +22,6 @@ import {
   CheckCircle2,
   AlertCircle,
   Sparkles,
-  Info,
   Shield,
   Compass,
   Layers,
@@ -122,7 +120,6 @@ const FALLBACK_CATALOG: Record<string, any> = {
 
 export default function ExperienceDetail() {
   const { id } = useParams<{ id: string }>()
-  const navigate = useNavigate()
   const [experience, setExperience] = useState<any>(null)
   const [loading, setLoading] = useState<boolean>(true)
   const [activeImageIndex, setActiveImageIndex] = useState<number>(0)

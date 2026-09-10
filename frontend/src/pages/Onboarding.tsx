@@ -4,15 +4,15 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import {
-  User, Globe, Backpack, CheckCircle2, ChevronRight,
-  ChevronLeft, SkipForward, Map, Wallet, Clock, Users,
-  Tag as TagIcon, Heart, Accessibility, Scale,
+  User, Backpack, CheckCircle2, ChevronRight,
+  ChevronLeft, SkipForward, Map, Wallet,
+  Tag as TagIcon, Heart, Accessibility,
 } from 'lucide-react'
 import Button from '../components/ui/Button'
 import Input from '../components/ui/Input'
 import Tag from '../components/ui/Tag'
 import Badge from '../components/ui/Badge'
-import { apiPost, apiPut } from '../lib/api'
+import { apiPut } from '../lib/api'
 
 /* ── Types ───────────────────────────────────────────────────────────────── */
 const TRAVELER_TYPES = [

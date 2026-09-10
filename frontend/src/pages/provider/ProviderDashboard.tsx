@@ -7,7 +7,7 @@
  * - Real-time Traveler Demand Signals & In-Demand Barter Requests modal
  */
 import React, { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import {
   Store,
   Plus,
@@ -16,16 +16,11 @@ import {
   TrendingUp,
   Users,
   Package,
-  DollarSign,
   Clock,
-  Sparkles,
-  AlertCircle,
-  Eye,
   CheckCircle2,
   BarChart3,
   X,
   Compass,
-  ArrowRight,
 } from 'lucide-react'
 import Navbar from '../../components/layout/Navbar'
 import Footer from '../../components/layout/Footer'
@@ -74,7 +69,6 @@ interface DemandSignals {
 }
 
 export default function ProviderDashboard() {
-  const navigate = useNavigate()
   const [provider, setProvider] = useState<ProviderProfile | null>(null)
   const [experiences, setExperiences] = useState<Experience[]>([])
   const [loading, setLoading] = useState(true)

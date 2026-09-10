@@ -11,7 +11,6 @@ import {
   Map as MapIcon,
   List as ListIcon,
   Search,
-  SlidersHorizontal,
   Sparkles,
   AlertCircle,
   RefreshCw,
@@ -56,7 +55,6 @@ export default function Discover() {
   const [showMineModal, setShowMineModal] = useState(false)
   const [mineCity, setMineCity] = useState('')
   const [mineCountry, setMineCountry] = useState('')
-  const [mineCategory, setMineCategory] = useState('All')
   const [isMining, setIsMining] = useState(false)
   const [miningStatus, setMiningStatus] = useState<string | null>(null)
   const [mineSuccessMsg, setMineSuccessMsg] = useState<string | null>(null)
@@ -77,7 +75,6 @@ export default function Discover() {
       const res = await apiPost<{ status: string; count: number; experiences: any[] }>('/experiences/mine', {
         city: city.trim(),
         country: country.trim() || undefined,
-        category: mineCategory === 'All' ? undefined : mineCategory,
         count: 4,
       })
       if (res.experiences && res.experiences.length > 0) {

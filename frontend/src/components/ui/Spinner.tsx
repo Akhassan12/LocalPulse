@@ -1,5 +1,3 @@
-import React from 'react'
-
 interface SpinnerProps {
   size?: 'sm' | 'md' | 'lg'
   variant?: 'terra' | 'forest' | 'brass' | 'teal' | 'white'

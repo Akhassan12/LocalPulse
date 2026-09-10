@@ -43,7 +43,6 @@ export const CarryingImpactCard: React.FC<CarryingImpactCardProps> = ({ data, cl
     Icon = AlertTriangle
   }
 
-  const currentKg = Number(data.current_weight_kg).toFixed(1)
   const itemKg = Number(data.item_weight_kg).toFixed(2)
   const maxKg = Number(data.max_capacity_kg).toFixed(1)
   const remAfterKg = Number(data.remaining_after_kg).toFixed(1)

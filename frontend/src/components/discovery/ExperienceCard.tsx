@@ -11,7 +11,6 @@ import {
   Star,
   Bookmark,
   BookmarkCheck,
-  Compass,
   ArrowUpRight,
   Footprints,
   Sparkles,

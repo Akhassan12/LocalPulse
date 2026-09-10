@@ -3,7 +3,7 @@
  * Lists optimized barter combinations from the traveler's inventory.
  */
 import React, { useState } from 'react'
-import { ArrowLeftRight, Check, Sparkles, Scale, Info, CheckCircle2 } from 'lucide-react'
+import { ArrowLeftRight, Check, Scale, Info, CheckCircle2 } from 'lucide-react'
 
 export interface BarterPackageItem {
   item_id?: string | null

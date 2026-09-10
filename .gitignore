@@ -43,6 +43,8 @@ backend/localpulse.db
 20260909-1816-19.8624396.mp4
 
 # ── Temporary, IDE & Scratch files ─────────────────────────────
+scratch/
+walkthrough.md
 .agents/
 16a0c4a2-a23a-4fc7-8c44-d76cfa50a43d/
 seed_gen.sql

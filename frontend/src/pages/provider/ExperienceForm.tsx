@@ -8,13 +8,6 @@ import React, { useState, useEffect } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import {
   ArrowLeft,
-  Sparkles,
-  DollarSign,
-  Clock,
-  MapPin,
-  Users,
-  CheckCircle2,
-  Layers,
   Save,
 } from 'lucide-react'
 import Navbar from '../../components/layout/Navbar'

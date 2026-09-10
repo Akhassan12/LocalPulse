@@ -103,6 +103,11 @@ export default function Discover() {
     }
   }
 
+  // Scroll to top on initial page mount
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   // Initialize coordinates to Jaipur, India if not set
   useEffect(() => {
     if (!context.lat || !context.lng) {
@@ -113,6 +118,7 @@ export default function Discover() {
       })
     }
   }, [context.lat, context.lng, setContext])
+
 
   // Sync URL search param ?city=...
   const [searchParams] = useSearchParams()

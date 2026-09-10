@@ -1,18 +1,28 @@
+import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import Landing from './pages/Landing'
-import Discover from './pages/Discover'
-import ExperienceDetail from './pages/ExperienceDetail'
-import Itinerary from './pages/Itinerary'
-import Settings from './pages/Settings'
-import Onboarding from './pages/Onboarding'
-import ProviderDashboard from './pages/provider/ProviderDashboard'
-import ExperienceForm from './pages/provider/ExperienceForm'
 import AuthModal from './components/auth/AuthModal'
-import Auth from './pages/Auth'
-
 import ProtectedRoute from './components/auth/ProtectedRoute'
 import AIConciergeModal from './components/concierge/AIConciergeModal'
+import Spinner from './components/ui/Spinner'
+
+const Landing = lazy(() => import('./pages/Landing'))
+const Discover = lazy(() => import('./pages/Discover'))
+const ExperienceDetail = lazy(() => import('./pages/ExperienceDetail'))
+const Itinerary = lazy(() => import('./pages/Itinerary'))
+const Settings = lazy(() => import('./pages/Settings'))
+const Onboarding = lazy(() => import('./pages/Onboarding'))
+const ProviderDashboard = lazy(() => import('./pages/provider/ProviderDashboard'))
+const ExperienceForm = lazy(() => import('./pages/provider/ExperienceForm'))
+const Auth = lazy(() => import('./pages/Auth'))
+
+function PageLoader() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-[#FDFBF7]">
+      <Spinner size="lg" variant="terra" label="Loading..." />
+    </div>
+  )
+}
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -32,7 +42,8 @@ export default function App() {
         {/* Conversational AI Concierge Drawer */}
         <AIConciergeModal />
 
-        <Routes>
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Auth defaultTab="login" />} />
           <Route path="/signin" element={<Auth defaultTab="login" />} />
@@ -83,6 +94,7 @@ export default function App() {
           />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+        </Suspense>
       </BrowserRouter>
     </QueryClientProvider>
   )

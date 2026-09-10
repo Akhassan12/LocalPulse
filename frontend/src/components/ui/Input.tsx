@@ -31,11 +31,11 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     const labelClass = isDark
       ? 'text-sm font-medium text-white/90'
-      : 'text-sm font-medium text-[#1A2B3C]'
+      : 'text-xs font-bold uppercase tracking-wider text-[#36363D]'
 
     const baseInputClass = isDark
       ? 'w-full rounded-[10px] border border-white/20 bg-white/10 px-4 py-3 text-white text-base transition-all duration-150 placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-[#C9A84C]/50 focus:border-[#C9A84C]'
-      : 'w-full rounded-[10px] border border-[#E8F0F7] bg-white px-4 py-3 text-[#1A2B3C] text-base transition-all duration-150 placeholder:text-[#1A2B3C]/40 hover:border-[#C9A84C]/40 focus:outline-none focus:ring-2 focus:ring-[#C9A84C]/50 focus:border-[#C9A84C]'
+      : 'w-full rounded-xl border border-[#E6E0D6] bg-[#F5F2EB]/60 px-3.5 py-2.5 text-[#1A1A1E] text-sm transition-all duration-150 placeholder:text-[#9E9DA3] hover:border-[#D4CCC0] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#E05A38]/20 focus:border-[#E05A38]'
 
     const errorClass = error
       ? 'border-[#EF4444] focus:ring-[#EF4444]/30'
@@ -43,14 +43,14 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     const hintClass = isDark
       ? 'text-xs text-white/50'
-      : 'text-xs text-[#1A2B3C]/50'
+      : 'text-xs text-[#75747A]'
 
     return (
       <div className={['flex flex-col gap-1.5', containerClassName].join(' ')}>
         {label && (
           <label htmlFor={inputId} className={labelClass}>
             {label}
-            {props.required && <span className="text-[#C9A84C] ml-1" aria-hidden>*</span>}
+            {props.required && <span className="text-[#E05A38] ml-1" aria-hidden>*</span>}
           </label>
         )}
         <div className="relative">

@@ -153,7 +153,7 @@ export default function Itinerary() {
     <div className="min-h-screen bg-[#FBF9F5] text-[#1A1A1E] flex flex-col">
       <Navbar />
 
-      <main className="pt-28 lg:pt-32 pb-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-1 w-full">
+      <main className="pt-32 lg:pt-36 pb-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-1 w-full">
         {/* Header Bar */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-8 border-b border-[#E6E0D6]">
           <div>

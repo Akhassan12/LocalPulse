@@ -1,6 +1,6 @@
 import React from 'react'
 
-type BadgeVariant = 'brass' | 'teal' | 'navy' | 'success' | 'warning' | 'danger' | 'ghost'
+type BadgeVariant = 'terra' | 'forest' | 'brass' | 'teal' | 'navy' | 'success' | 'warning' | 'danger' | 'ghost'
 
 interface BadgeProps {
   variant?: BadgeVariant
@@ -11,6 +11,8 @@ interface BadgeProps {
 }
 
 const variantClasses: Record<BadgeVariant, string> = {
+  terra:   'bg-[#FDEEE9] text-[#E05A38] border border-[#E05A38]/30',
+  forest:  'bg-[#EDF2EF] text-[#3B5249] border border-[#6B8E7B]/30',
   brass:   'bg-[#C9A84C]/20 text-[#b8933e] border border-[#C9A84C]/40',
   teal:    'bg-[#4EC9B0]/20 text-[#38b39a] border border-[#4EC9B0]/40',
   navy:    'bg-[#0D1B2A]/10 text-[#0D1B2A] border border-[#0D1B2A]/20',

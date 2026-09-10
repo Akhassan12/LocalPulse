@@ -2,15 +2,17 @@ import React from 'react'
 
 interface SpinnerProps {
   size?: 'sm' | 'md' | 'lg'
-  variant?: 'brass' | 'teal' | 'white'
+  variant?: 'terra' | 'forest' | 'brass' | 'teal' | 'white'
   label?: string
 }
 
 const sizeMap = { sm: 20, md: 32, lg: 48 }
 const colorMap = {
-  brass: { track: '#C9A84C26', fill: '#C9A84C' },
-  teal:  { track: '#4EC9B026', fill: '#4EC9B0' },
-  white: { track: 'rgba(255,255,255,0.2)', fill: 'white' },
+  terra:  { track: 'rgba(224, 90, 56, 0.15)', fill: '#E05A38' },
+  forest: { track: 'rgba(59, 82, 73, 0.15)', fill: '#3B5249' },
+  brass:  { track: '#C9A84C26', fill: '#C9A84C' },
+  teal:   { track: '#4EC9B026', fill: '#4EC9B0' },
+  white:  { track: 'rgba(255,255,255,0.2)', fill: 'white' },
 }
 
 export function Spinner({ size = 'md', variant = 'brass', label = 'Loading…' }: SpinnerProps) {

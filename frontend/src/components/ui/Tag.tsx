@@ -14,10 +14,10 @@ export function Tag({ children, onRemove, active = false, onClick, className = '
     <span
       onClick={onClick}
       className={[
-        'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-150',
+        'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-150',
         active
-          ? 'bg-[#C9A84C] text-[#0D1B2A] shadow-[0_0_12px_rgba(201,168,76,0.4)]'
-          : 'bg-[#E8F0F7] text-[#1A2B3C] hover:bg-[#C9A84C]/15 hover:text-[#b8933e]',
+          ? 'bg-[#E05A38] text-white shadow-sm ring-1 ring-[#E05A38]'
+          : 'bg-[#F5F2EB] text-[#36363D] hover:bg-[#EDE8DF] border border-[#E6E0D6]',
         onClick ? 'cursor-pointer select-none' : '',
         className,
       ].join(' ')}

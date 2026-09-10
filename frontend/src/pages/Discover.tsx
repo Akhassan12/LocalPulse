@@ -261,7 +261,7 @@ export default function Discover() {
     <div className="min-h-screen bg-[#FBF9F5] text-[#1A1A1E] flex flex-col">
       <Navbar />
 
-      <main className="pt-28 lg:pt-32 pb-36 px-4 sm:px-6 lg:px-8 flex-1 max-w-7xl w-full mx-auto flex flex-col gap-6">
+      <main className="pt-32 lg:pt-36 pb-36 px-4 sm:px-6 lg:px-8 flex-1 max-w-7xl w-full mx-auto flex flex-col gap-6">
         {/* Top interactive live context bar */}
         <ContextBar />
 

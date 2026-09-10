@@ -28,6 +28,7 @@ import {
   ArrowRight,
 } from 'lucide-react'
 import Navbar from '../../components/layout/Navbar'
+import Footer from '../../components/layout/Footer'
 import { api } from '../../lib/api'
 
 interface Experience {
@@ -209,10 +210,10 @@ export default function ProviderDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FBF9F5] text-[#1A1A1E]">
+    <div className="min-h-screen bg-[#FBF9F5] text-[#1A1A1E] flex flex-col">
       <Navbar />
 
-      <main className="pt-24 pb-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <main className="pt-32 pb-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex-1">
         {loading ? (
           <div className="py-24 text-center">
             <div className="w-10 h-10 border-3 border-[#E05A38] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
@@ -517,6 +518,8 @@ export default function ProviderDashboard() {
           </div>
         )}
       </main>
+
+      <Footer />
     </div>
   )
 }

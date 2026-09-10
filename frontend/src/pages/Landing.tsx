@@ -144,7 +144,7 @@ export default function Landing() {
 
       {/* ═══════════════════════════════════════════════════════ HOW IT WORKS */}
       <section className="py-24 bg-[#FBF9F5]" aria-labelledby="how-it-works-heading">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
           <div className="text-center mb-16">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-[#FDEEE9] text-[#E05A38] border border-[#E05A38]/20 mb-4">
               How It Works
@@ -181,7 +181,7 @@ export default function Landing() {
 
       {/* ═══════════════════════════════════════════════════════ DESTINATIONS */}
       <section className="py-24 bg-[#EDE8DF]/40 border-y border-[#E6E0D6]" aria-labelledby="destinations-heading">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
             <div>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-[#EDF2EF] text-[#3B5249] border border-[#6B8E7B]/30 mb-4">
@@ -259,7 +259,7 @@ export default function Landing() {
 
       {/* ═══════════════════════════════════════════════════════ BAZAARLINK SPOTLIGHT */}
       <section className="py-24 bg-[#FBF9F5] overflow-hidden" aria-labelledby="bazaarlink-heading">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Left: Interactive Mockup Panel */}
             <div className="relative order-2 lg:order-1 flex flex-col gap-5">
@@ -377,7 +377,7 @@ export default function Landing() {
 
       {/* ═══════════════════════════════════════════════════════ CATEGORIES */}
       <section className="py-24 bg-[#EDE8DF]/30 border-y border-[#E6E0D6]" aria-labelledby="categories-heading">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
           <div className="text-center mb-16">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-[#EDF2EF] text-[#3B5249] border border-[#6B8E7B]/30 mb-4">
               Curated Taxonomy
@@ -428,7 +428,7 @@ export default function Landing() {
 
       {/* ═══════════════════════════════════════════════════════ TESTIMONIALS */}
       <section className="py-24 bg-[#FBF9F5]" aria-labelledby="testimonials-heading">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
           <div className="text-center mb-16">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-[#EDF2EF] text-[#3B5249] border border-[#6B8E7B]/30 mb-4">
               Real Explorers
@@ -486,7 +486,7 @@ export default function Landing() {
           <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#3B5249]/8 rounded-full blur-3xl" />
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
+        <div className="relative w-full max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
           <div className="bg-white border border-[#E6E0D6] rounded-3xl shadow-[0_8px_32px_rgba(26,26,30,0.06)] p-8 sm:p-14 text-center max-w-4xl mx-auto">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-[#EDF2EF] text-[#3B5249] border border-[#6B8E7B]/30 mb-6">
               <Users size={12} /> For Experience Providers

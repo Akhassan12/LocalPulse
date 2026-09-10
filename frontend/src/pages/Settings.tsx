@@ -153,22 +153,22 @@ export default function Settings() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0D1B2A] text-white selection:bg-[#C9A84C]/30 flex flex-col">
+    <div className="min-h-screen bg-[#FBF9F5] text-[#1A1A1E] flex flex-col">
       <Navbar />
 
-      <main className="flex-1 pt-28 pb-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full">
+      <main className="flex-1 pt-32 pb-24 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-8 border-b border-white/10 mb-10">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-8 border-b border-[#E6E0D6] mb-10">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <span className="p-2 rounded-xl bg-[#C9A84C]/10 border border-[#C9A84C]/30 text-[#C9A84C]">
-                <Compass size={24} />
+              <span className="w-11 h-11 rounded-2xl bg-[#FDEEE9] border border-[#E05A38]/20 flex items-center justify-center text-[#E05A38]">
+                <Compass size={22} />
               </span>
-              <h1 className="font-display text-3xl sm:text-4xl text-white font-bold">
+              <h1 className="font-display text-3xl sm:text-4xl text-[#1A1A1E] font-extrabold tracking-tight">
                 Expedition Settings
               </h1>
             </div>
-            <p className="text-white/60 text-sm sm:text-base">
+            <p className="text-[#75747A] text-sm sm:text-base">
               Manage your traveler baseline, physical backpack thresholds, and runway metrics.
             </p>
           </div>
@@ -178,7 +178,7 @@ export default function Settings() {
               variant="secondary"
               size="sm"
               onClick={handleSignOut}
-              className="border-white/20 text-white/80 hover:text-white hover:bg-white/10"
+              className="text-[#75747A] hover:text-[#EF4444] hover:bg-[#EF4444]/10 hover:border-[#EF4444]/30"
             >
               <LogOut size={16} className="mr-2" />
               Sign Out
@@ -187,7 +187,6 @@ export default function Settings() {
               variant="primary"
               size="sm"
               onClick={() => navigate('/discover')}
-              className="bg-[#C9A84C] text-[#0D1B2A] font-semibold"
             >
               Go to Discover
               <ArrowRight size={16} className="ml-2" />
@@ -197,30 +196,30 @@ export default function Settings() {
 
         {/* Notifications */}
         {successMsg && (
-          <div className="mb-6 p-4 rounded-xl bg-[#4EC9B0]/10 border border-[#4EC9B0]/30 text-[#4EC9B0] flex items-center gap-3 text-sm animate-in fade-in">
-            <CheckCircle2 size={18} />
-            <span>{successMsg}</span>
+          <div className="mb-6 p-4 rounded-2xl bg-[#EDF2EF] border border-[#3B5249]/30 text-[#3B5249] flex items-center gap-3 text-sm animate-in fade-in shadow-sm">
+            <CheckCircle2 size={18} className="text-[#3B5249] shrink-0" />
+            <span className="font-medium">{successMsg}</span>
           </div>
         )}
         {errorMsg && (
-          <div className="mb-6 p-4 rounded-xl bg-[#EF4444]/10 border border-[#EF4444]/30 text-[#EF4444] flex items-center gap-3 text-sm animate-in fade-in">
-            <AlertCircle size={18} />
-            <span>{errorMsg}</span>
+          <div className="mb-6 p-4 rounded-2xl bg-[#FEE2E2] border border-[#EF4444]/30 text-[#DC2626] flex items-center gap-3 text-sm animate-in fade-in shadow-sm">
+            <AlertCircle size={18} className="text-[#DC2626] shrink-0" />
+            <span className="font-medium">{errorMsg}</span>
           </div>
         )}
 
         {isLoading ? (
           <div className="py-24 flex flex-col items-center justify-center gap-4">
-            <Spinner size="lg" variant="brass" />
-            <p className="text-white/50 text-sm">Loading your expedition profile...</p>
+            <Spinner size="lg" variant="terra" />
+            <p className="text-[#75747A] text-sm font-medium">Loading your expedition profile...</p>
           </div>
         ) : (
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-10">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
             {/* Section 1: Traveler Profile */}
-            <div className="glass rounded-2xl p-6 sm:p-8 border border-white/10 space-y-6">
-              <div className="flex items-center gap-3 pb-4 border-b border-white/10">
-                <User size={20} className="text-[#C9A84C]" />
-                <h2 className="font-display text-xl text-white font-semibold">Traveler Persona</h2>
+            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#E6E0D6] shadow-[0_4px_24px_rgba(26,26,30,0.06)] space-y-6">
+              <div className="flex items-center gap-3 pb-4 border-b border-[#E6E0D6]">
+                <User size={20} className="text-[#E05A38]" />
+                <h2 className="font-display text-xl text-[#1A1A1E] font-bold">Traveler Persona</h2>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -232,25 +231,25 @@ export default function Settings() {
                 />
 
                 <div>
-                  <label className="text-sm font-medium text-white block mb-2">
+                  <label className="text-xs font-bold uppercase tracking-wider text-[#36363D] block mb-1.5">
                     Traveler Type
                   </label>
                   <select
-                    className="w-full rounded-[10px] border border-white/20 bg-white/10 text-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C9A84C]/50 focus:border-[#C9A84C]"
+                    className="w-full rounded-xl border border-[#E6E0D6] bg-[#F5F2EB]/60 px-3.5 py-2.5 text-[#1A1A1E] text-sm focus:outline-none focus:ring-2 focus:ring-[#E05A38]/20 focus:border-[#E05A38] focus:bg-white transition-all cursor-pointer"
                     {...register('traveler_type')}
                   >
-                    <option value="solo" className="bg-[#0D1B2A]">Solo Explorer</option>
-                    <option value="couple" className="bg-[#0D1B2A]">Couple</option>
-                    <option value="family" className="bg-[#0D1B2A]">Family with Kids</option>
-                    <option value="backpacker" className="bg-[#0D1B2A]">Ultra-light Backpacker</option>
-                    <option value="business" className="bg-[#0D1B2A]">Business & Leisure</option>
+                    <option value="solo">Solo Explorer</option>
+                    <option value="couple">Couple</option>
+                    <option value="family">Family with Kids</option>
+                    <option value="backpacker">Ultra-light Backpacker</option>
+                    <option value="business">Business & Leisure</option>
                   </select>
                 </div>
               </div>
 
               {/* Interests */}
               <div>
-                <label className="text-sm font-medium text-white block mb-3">
+                <label className="text-xs font-bold uppercase tracking-wider text-[#36363D] block mb-2.5">
                   Discovery Interests
                 </label>
                 <div className="flex flex-wrap gap-2">
@@ -269,7 +268,7 @@ export default function Settings() {
               {/* Dietary & Accessibility */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
                 <div>
-                  <label className="text-sm font-medium text-white block mb-2">Dietary Restrictions</label>
+                  <label className="text-xs font-bold uppercase tracking-wider text-[#36363D] block mb-2">Dietary Restrictions</label>
                   <div className="flex flex-wrap gap-2">
                     {DIETARY_OPTIONS.map((item) => (
                       <Tag
@@ -284,7 +283,7 @@ export default function Settings() {
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-white block mb-2">Accessibility Needs</label>
+                  <label className="text-xs font-bold uppercase tracking-wider text-[#36363D] block mb-2">Accessibility Needs</label>
                   <div className="flex flex-wrap gap-2">
                     {ACCESSIBILITY_OPTIONS.map((item) => (
                       <Tag
@@ -301,10 +300,10 @@ export default function Settings() {
             </div>
 
             {/* Section 2: Budget & Spending Range */}
-            <div className="glass rounded-2xl p-6 sm:p-8 border border-white/10 space-y-6">
-              <div className="flex items-center gap-3 pb-4 border-b border-white/10">
-                <Wallet size={20} className="text-[#4EC9B0]" />
-                <h2 className="font-display text-xl text-white font-semibold">Budget & Currency</h2>
+            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#E6E0D6] shadow-[0_4px_24px_rgba(26,26,30,0.06)] space-y-6">
+              <div className="flex items-center gap-3 pb-4 border-b border-[#E6E0D6]">
+                <Wallet size={20} className="text-[#3B5249]" />
+                <h2 className="font-display text-xl text-[#1A1A1E] font-bold">Budget & Currency</h2>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
@@ -313,7 +312,6 @@ export default function Settings() {
                   type="number"
                   step="1"
                   min={0}
-                  variant="glass"
                   {...register('preferred_budget_min')}
                 />
                 <Input
@@ -321,17 +319,16 @@ export default function Settings() {
                   type="number"
                   step="1"
                   min={0}
-                  variant="glass"
                   {...register('preferred_budget_max')}
                 />
                 <div>
-                  <label className="text-sm font-medium text-white/90 block mb-2">Home Currency</label>
+                  <label className="text-xs font-bold uppercase tracking-wider text-[#36363D] block mb-1.5">Home Currency</label>
                   <select
-                    className="w-full rounded-[10px] border border-white/20 bg-white/10 text-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C9A84C]/50 focus:border-[#C9A84C]"
+                    className="w-full rounded-xl border border-[#E6E0D6] bg-[#F5F2EB]/60 px-3.5 py-2.5 text-[#1A1A1E] text-sm focus:outline-none focus:ring-2 focus:ring-[#E05A38]/20 focus:border-[#E05A38] focus:bg-white transition-all cursor-pointer"
                     {...register('home_currency')}
                   >
                     {CURRENCIES.map((c) => (
-                      <option key={c} value={c} className="bg-[#0D1B2A]">{c}</option>
+                      <option key={c} value={c}>{c}</option>
                     ))}
                   </select>
                 </div>
@@ -339,16 +336,16 @@ export default function Settings() {
             </div>
 
             {/* Section 3: BazaarLink Constraints */}
-            <div className="glass rounded-2xl p-6 sm:p-8 border border-white/10 space-y-6">
-              <div className="flex items-center justify-between pb-4 border-b border-white/10">
+            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#E6E0D6] shadow-[0_4px_24px_rgba(26,26,30,0.06)] space-y-6">
+              <div className="flex items-center justify-between pb-4 border-b border-[#E6E0D6]">
                 <div className="flex items-center gap-3">
-                  <Backpack size={20} className="text-[#C9A84C]" />
+                  <Backpack size={20} className="text-[#E05A38]" />
                   <div>
-                    <h2 className="font-display text-xl text-white font-semibold">BazaarLink Constraints</h2>
-                    <p className="text-white/50 text-xs">Used for real-time physical capacity and cash runway evaluations</p>
+                    <h2 className="font-display text-xl text-[#1A1A1E] font-bold">BazaarLink Constraints</h2>
+                    <p className="text-[#75747A] text-xs">Used for real-time physical capacity and cash runway evaluations</p>
                   </div>
                 </div>
-                <Badge variant="brass" size="sm">Physical Engine</Badge>
+                <Badge variant="terra" size="sm">Physical Engine</Badge>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -359,7 +356,6 @@ export default function Settings() {
                   min={0}
                   max={100}
                   hint="Upper weight limit for your gear"
-                  variant="glass"
                   {...register('max_carry_capacity_kg')}
                 />
                 <Input
@@ -368,7 +364,6 @@ export default function Settings() {
                   step="0.1"
                   min={0}
                   hint="Weight currently carried"
-                  variant="glass"
                   {...register('current_carried_weight_kg')}
                 />
                 <Input
@@ -377,7 +372,6 @@ export default function Settings() {
                   step="1"
                   min={0}
                   hint="Cash in wallet / local currency"
-                  variant="glass"
                   {...register('liquid_cash')}
                 />
                 <Input
@@ -386,7 +380,6 @@ export default function Settings() {
                   step="1"
                   min={0}
                   hint="Expected daily burn rate"
-                  variant="glass"
                   {...register('average_daily_spend')}
                 />
                 <Input
@@ -395,7 +388,6 @@ export default function Settings() {
                   step="1"
                   min={0}
                   hint="Remaining days"
-                  variant="glass"
                   {...register('remaining_travel_days')}
                 />
                 <Input
@@ -404,16 +396,15 @@ export default function Settings() {
                   step="1"
                   min={0}
                   hint="Untouchable safety cushion"
-                  variant="glass"
                   {...register('minimum_emergency_reserve')}
                 />
               </div>
             </div>
 
             {/* Save bar */}
-            <div className="sticky bottom-6 z-20 glass rounded-2xl p-4 sm:p-6 border border-[#C9A84C]/30 flex items-center justify-between shadow-2xl backdrop-blur-xl">
-              <div className="flex items-center gap-2 text-sm text-white/70">
-                <Sparkles size={16} className="text-[#C9A84C]" />
+            <div className="sticky bottom-6 z-20 bg-white/95 backdrop-blur-xl rounded-2xl p-4 sm:p-5 border border-[#E6E0D6] flex flex-col sm:flex-row items-center justify-between gap-4 shadow-[0_12px_36px_rgba(26,26,30,0.10)]">
+              <div className="flex items-center gap-2 text-xs sm:text-sm text-[#75747A]">
+                <Sparkles size={16} className="text-[#E05A38] shrink-0" />
                 <span>Changes will calibrate recommendation fit scores immediately.</span>
               </div>
               <Button
@@ -421,7 +412,7 @@ export default function Settings() {
                 variant="primary"
                 loading={isSubmitting || updateMutation.isPending}
                 disabled={!isDirty && !updateMutation.isPending}
-                className="bg-[#C9A84C] text-[#0D1B2A] font-semibold px-6 shadow-lg shadow-[#C9A84C]/20"
+                className="w-full sm:w-auto px-6 shadow-md"
               >
                 <Save size={16} className="mr-2" />
                 Save Preferences

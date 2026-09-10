@@ -13,6 +13,7 @@ import AuthModal from './components/auth/AuthModal'
 import Auth from './pages/Auth'
 
 import ProtectedRoute from './components/auth/ProtectedRoute'
+import AIConciergeModal from './components/concierge/AIConciergeModal'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -29,6 +30,8 @@ export default function App() {
       <BrowserRouter>
         {/* Global auth modal — rendered outside Routes so it persists across pages */}
         <AuthModal />
+        {/* Conversational AI Concierge Drawer */}
+        <AIConciergeModal />
 
         <Routes>
           <Route path="/" element={<Landing />} />

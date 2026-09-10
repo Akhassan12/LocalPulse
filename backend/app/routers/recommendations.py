@@ -18,7 +18,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.auth import AuthUser, get_current_user
+from app.auth import AuthUser, get_current_user, get_optional_user
 from app.config import settings
 from app.database import get_db
 from app.models import Experience as ExperienceModel, RecommendationLog, TravelerProfile as TravelerProfileModel
@@ -98,71 +98,114 @@ async def _get_or_create_traveler_profile(
 )
 async def get_recommendations(
     context: LiveContext,
-    user: AuthUser = Depends(get_current_user),
+    user: Optional[AuthUser] = Depends(get_optional_user),
     session: AsyncSession = Depends(get_db),
 ):
     """
     Evaluate candidate experiences using the multi-factor RankingEngine.
-    Includes spatial bounding-box prefilter, capacity constraint penalty,
-    and persistent audit logging to recommendation_logs.
+    Includes spatial/city bounding-box prefilter, circumstance adaptation,
+    capacity constraint penalty, and graceful guest access.
     """
-    check_recommendations_rate_limit(user.user_id)
+    user_id = user.user_id if user else "guest-traveler"
+    check_recommendations_rate_limit(user_id)
 
     # 1. Resolve traveler profile
-    profile_orm = await _get_or_create_traveler_profile(user, session)
+    profile_orm = None
+    if user:
+        try:
+            profile_orm = await _get_or_create_traveler_profile(user, session)
+            profile_base = TravelerProfileBase(
+                display_name=profile_orm.display_name,
+                traveler_type=context.traveler_type or profile_orm.traveler_type,
+                interests=context.interests if context.interests else profile_orm.interests,
+                dietary_preferences=profile_orm.dietary_preferences,
+                accessibility_needs=context.accessibility_needs if context.accessibility_needs else profile_orm.accessibility_needs,
+                preferred_budget_min=profile_orm.preferred_budget_min,
+                preferred_budget_max=profile_orm.preferred_budget_max,
+                home_currency=profile_orm.home_currency,
+                max_carry_capacity_kg=profile_orm.max_carry_capacity_kg,
+                current_carried_weight_kg=profile_orm.current_carried_weight_kg,
+                liquid_cash=profile_orm.liquid_cash,
+                average_daily_spend=profile_orm.average_daily_spend,
+                remaining_travel_days=profile_orm.remaining_travel_days,
+                minimum_emergency_reserve=profile_orm.minimum_emergency_reserve,
+            )
+        except Exception:
+            profile_orm = None
 
-    profile_base = TravelerProfileBase(
-        display_name=profile_orm.display_name,
-        traveler_type=profile_orm.traveler_type,
-        interests=profile_orm.interests,
-        dietary_preferences=profile_orm.dietary_preferences,
-        accessibility_needs=profile_orm.accessibility_needs,
-        preferred_budget_min=profile_orm.preferred_budget_min,
-        preferred_budget_max=profile_orm.preferred_budget_max,
-        home_currency=profile_orm.home_currency,
-        max_carry_capacity_kg=profile_orm.max_carry_capacity_kg,
-        current_carried_weight_kg=profile_orm.current_carried_weight_kg,
-        liquid_cash=profile_orm.liquid_cash,
-        average_daily_spend=profile_orm.average_daily_spend,
-        remaining_travel_days=profile_orm.remaining_travel_days,
-        minimum_emergency_reserve=profile_orm.minimum_emergency_reserve,
-    )
-
-    # 2. Bounding box prefilter
-    # Maximum reasonable reach (assuming e.g. 50 km radius or context duration)
-    # 1 deg latitude ≈ 111 km, 1 deg longitude ≈ 111 * cos(lat) km
-    radius_km = 60.0
-    lat_delta = radius_km / 111.0
-    cos_lat = math.cos(math.radians(context.lat))
-    lng_delta = radius_km / (111.0 * cos_lat if abs(cos_lat) > 0.01 else 111.0)
-
-    min_lat, max_lat = context.lat - lat_delta, context.lat + lat_delta
-    min_lng, max_lng = context.lng - lng_delta, context.lng + lng_delta
-
-    # Spatial prefilter query
-    query = (
-        select(ExperienceModel)
-        .where(
-            ExperienceModel.is_active == True,
-            ExperienceModel.lat >= min_lat,
-            ExperienceModel.lat <= max_lat,
-            ExperienceModel.lng >= min_lng,
-            ExperienceModel.lng <= max_lng,
+    if profile_orm is None:
+        traveler_type = context.traveler_type or "solo"
+        accessibility = context.accessibility_needs or []
+        interests = context.interests or ["Cultural Experiences", "Hidden Places", "Local Food", "Artisan Workshops", "Heritage"]
+        profile_base = TravelerProfileBase(
+            display_name="Guest Explorer",
+            traveler_type=traveler_type,
+            interests=interests,
+            dietary_preferences=["None"],
+            accessibility_needs=accessibility,
+            preferred_budget_min=Decimal("50.0"),
+            preferred_budget_max=Decimal(str(context.remaining_budget)),
+            home_currency="INR",
+            max_carry_capacity_kg=Decimal("15.0"),
+            current_carried_weight_kg=Decimal("2.0"),
+            liquid_cash=Decimal("10000.0"),
+            average_daily_spend=Decimal("2000.0"),
+            remaining_travel_days=5,
+            minimum_emergency_reserve=Decimal("500.0"),
         )
-        .limit(100)
-    )
-    result = await session.execute(query)
-    candidates_orm = result.scalars().all()
 
-    # Fallback: if user is not physically near seeded coordinates, load all active experiences
-    if len(candidates_orm) < 5:
+    # 2. Candidate Selection (City-first, then Spatial bounding box)
+    candidates_orm = []
+    if context.city:
+        city_query = (
+            select(ExperienceModel)
+            .where(
+                ExperienceModel.is_active == True,
+                ExperienceModel.city.ilike(f"%{context.city.strip()}%"),
+            )
+            .limit(100)
+        )
+        res = await session.execute(city_query)
+        candidates_orm = list(res.scalars().all())
+
+    # If no city or not enough candidates found by city name, use spatial bounding box
+    if len(candidates_orm) < 3:
+        radius_km = 60.0
+        lat_delta = radius_km / 111.0
+        cos_lat = math.cos(math.radians(context.lat))
+        lng_delta = radius_km / (111.0 * cos_lat if abs(cos_lat) > 0.01 else 111.0)
+
+        min_lat, max_lat = context.lat - lat_delta, context.lat + lat_delta
+        min_lng, max_lng = context.lng - lng_delta, context.lng + lng_delta
+
+        spatial_query = (
+            select(ExperienceModel)
+            .where(
+                ExperienceModel.is_active == True,
+                ExperienceModel.lat >= min_lat,
+                ExperienceModel.lat <= max_lat,
+                ExperienceModel.lng >= min_lng,
+                ExperienceModel.lng <= max_lng,
+            )
+            .limit(100)
+        )
+        spatial_res = await session.execute(spatial_query)
+        spatial_candidates = list(spatial_res.scalars().all())
+        # Merge without duplicates
+        existing_ids = {c.id for c in candidates_orm}
+        for sc in spatial_candidates:
+            if sc.id not in existing_ids:
+                candidates_orm.append(sc)
+
+    # Fallback: if still few candidates, load active Indian experiences or all active experiences
+    if len(candidates_orm) < 3:
         fallback_query = (
             select(ExperienceModel)
             .where(ExperienceModel.is_active == True)
             .limit(100)
         )
         fallback_res = await session.execute(fallback_query)
-        candidates_orm = fallback_res.scalars().all()
+        candidates_orm = list(fallback_res.scalars().all())
 
     # 3. Transform ORM models to Pydantic models
     candidate_schemas: list[ExperienceSchema] = []
@@ -205,32 +248,37 @@ async def get_recommendations(
         context=context,
     )
 
-    # 5. Record recommendation log
-    try:
-        ranked_ids = [str(r.experience.id) for r in ranked[:20]]
-        log_entry = RecommendationLog(
-            id=uuid.uuid4(),
-            traveler_id=profile_orm.id,
-            context_snapshot={
-                "lat": context.lat,
-                "lng": context.lng,
-                "available_minutes": context.available_minutes,
-                "remaining_budget": str(context.remaining_budget),
-                "group_size": context.group_size,
-                "timestamp": context.current_time.isoformat(),
-            },
-            ranked_experience_ids=ranked_ids,
-        )
-        session.add(log_entry)
-        await session.commit()
-    except Exception as e:
-        log.warning("recommendation_log.failed", error=str(e))
-        # Non-critical: do not fail client response if log commit fails
+    # 5. Record recommendation log if traveler profile exists
+    if profile_orm is not None:
+        try:
+            ranked_ids = [str(r.experience.id) for r in ranked[:20]]
+            log_entry = RecommendationLog(
+                id=uuid.uuid4(),
+                traveler_id=profile_orm.id,
+                context_snapshot={
+                    "lat": context.lat,
+                    "lng": context.lng,
+                    "city": context.city,
+                    "circumstance_mode": context.circumstance_mode,
+                    "available_minutes": context.available_minutes,
+                    "remaining_budget": str(context.remaining_budget),
+                    "group_size": context.group_size,
+                    "timestamp": context.current_time.isoformat(),
+                },
+                ranked_experience_ids=ranked_ids,
+            )
+            session.add(log_entry)
+            await session.commit()
+        except Exception as e:
+            log.warning("recommendation_log.failed", error=str(e))
 
     log.info(
         "recommendations.generated",
-        user_id=user.user_id,
+        user_id=user_id,
+        city=context.city,
+        circumstance_mode=context.circumstance_mode,
         count=len(ranked),
         top_experience=ranked[0].experience.title if ranked else None,
     )
     return ranked
+

@@ -16,8 +16,12 @@ import {
   AlertCircle,
   RefreshCw,
   ArrowRight,
+  X,
+  Loader2,
+  Globe,
+  MapPin,
 } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 
 import Navbar from '../components/layout/Navbar'
 import ContextBar from '../components/discovery/ContextBar'
@@ -48,18 +52,91 @@ export default function Discover() {
   const [searchQuery, setSearchQuery] = useState('')
   const [sortBy, setSortBy] = useState<'fit' | 'distance' | 'duration' | 'price'>('fit')
 
+  // AI Mining state
+  const [showMineModal, setShowMineModal] = useState(false)
+  const [mineCity, setMineCity] = useState('')
+  const [mineCountry, setMineCountry] = useState('')
+  const [mineCategory, setMineCategory] = useState('All')
+  const [isMining, setIsMining] = useState(false)
+  const [miningStatus, setMiningStatus] = useState<string | null>(null)
+  const [mineSuccessMsg, setMineSuccessMsg] = useState<string | null>(null)
+
   const cardListRef = useRef<HTMLDivElement>(null)
 
-  // Initialize coordinates to Tokyo if not set
+  const handleMineDestination = async (e?: React.FormEvent, targetCity?: string, targetCountry?: string) => {
+    if (e) e.preventDefault()
+    const city = targetCity || mineCity
+    const country = targetCountry || mineCountry
+    if (!city.trim()) return
+
+    setIsMining(true)
+    setMiningStatus(`Google Gemini AI is scouting authentic hidden gems & geo-coordinates in ${city}...`)
+    setMineSuccessMsg(null)
+
+    try {
+      const res = await apiPost<{ status: string; count: number; experiences: any[] }>('/experiences/mine', {
+        city: city.trim(),
+        country: country.trim() || undefined,
+        category: mineCategory === 'All' ? undefined : mineCategory,
+        count: 4,
+      })
+      if (res.experiences && res.experiences.length > 0) {
+        const first = res.experiences[0]
+        setContext({
+          locationLabel: city.trim(),
+          lat: Number(first.lat) || context.lat,
+          lng: Number(first.lng) || context.lng,
+        })
+        setMineSuccessMsg(`Successfully mined ${res.experiences.length} authentic hidden gems for ${city}! Pins added to map.`)
+        setTimeout(() => {
+          setShowMineModal(false)
+          setMineCity('')
+          setMiningStatus(null)
+          setMineSuccessMsg(null)
+        }, 1200)
+        refetch()
+      }
+    } catch (err: any) {
+      setMiningStatus(`Mining note: ${err.message || 'Error communicating with AI engine'}`)
+    } finally {
+      setIsMining(false)
+    }
+  }
+
+  // Initialize coordinates to Jaipur, India if not set
   useEffect(() => {
     if (!context.lat || !context.lng) {
       setContext({
-        lat: 35.6762,
-        lng: 139.6503,
-        locationLabel: 'Tokyo',
+        lat: 26.9124,
+        lng: 75.7873,
+        locationLabel: 'Jaipur',
       })
     }
   }, [context.lat, context.lng, setContext])
+
+  // Sync URL search param ?city=...
+  const [searchParams] = useSearchParams()
+  const cityParam = searchParams.get('city')
+  useEffect(() => {
+    if (cityParam && cityParam.toLowerCase() !== (context.locationLabel || '').toLowerCase()) {
+      const cityMap: Record<string, [number, number]> = {
+        jaipur: [26.9124, 75.7873],
+        varanasi: [25.3176, 82.9739],
+        delhi: [28.6562, 77.2410],
+        mumbai: [18.9220, 72.8347],
+        kochi: [9.9656, 76.2421],
+        udaipur: [24.5854, 73.7125],
+        kolkata: [22.5726, 88.3639],
+        goa: [15.2993, 74.1240],
+      }
+      const coords = cityMap[cityParam.toLowerCase()]
+      setContext({
+        locationLabel: cityParam.charAt(0).toUpperCase() + cityParam.slice(1),
+        lat: coords ? coords[0] : context.lat,
+        lng: coords ? coords[1] : context.lng,
+      })
+    }
+  }, [cityParam, context.locationLabel, setContext])
 
   // Fetch ranked recommendations with debouncing via react-query
   const {
@@ -78,13 +155,18 @@ export default function Discover() {
       context.remainingBudget,
       context.groupSize,
       context.locationLabel,
+      context.circumstanceMode,
+      context.travelerType,
     ],
     queryFn: async () => {
       const payload = {
-        lat: context.lat ?? 35.6762,
-        lng: context.lng ?? 139.6503,
+        lat: context.lat ?? 26.9124,
+        lng: context.lng ?? 75.7873,
+        city: context.locationLabel || 'Jaipur',
+        circumstance_mode: context.circumstanceMode || 'normal',
+        traveler_type: context.travelerType || 'solo',
         available_minutes: context.availableMinutes,
-        remaining_budget: context.remainingBudget,
+        remaining_budget: Number(context.remainingBudget) || 2000,
         group_size: context.groupSize,
         current_time: new Date().toISOString(),
         show_closed: true,
@@ -109,11 +191,11 @@ export default function Discover() {
         experience: exp,
         fit_score: exp.uniqueness_score ? Number(exp.uniqueness_score) * 10 : 85,
         breakdown: {
-          interest_score: 0.85,
-          time_score: 0.9,
-          budget_score: 0.88,
-          distance_score: 0.8,
-          quality_score: exp.rating_avg ? Number(exp.rating_avg) / 5 : 0.9,
+          interest_score: 85,
+          time_score: 90,
+          budget_score: 88,
+          distance_score: 80,
+          quality_score: exp.rating_avg ? (Number(exp.rating_avg) / 5) * 100 : 90,
         },
         explanation: `Curated local experience in ${exp.city} matching your available time and group preferences.`,
         walking_distance_km: 1.2,
@@ -170,15 +252,16 @@ export default function Discover() {
   }
 
   return (
-    <div className="min-h-screen bg-[#061423] text-white flex flex-col selection:bg-[#C9A84C]/30">
+    <div className="min-h-screen bg-[#FBF9F5] text-[#1A1A1E] flex flex-col">
       <Navbar />
 
-      <main className="pt-24 lg:pt-28 pb-28 flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col gap-6">
+      <main className="pt-28 lg:pt-32 pb-28 px-4 sm:px-6 lg:px-8 flex-1 max-w-7xl w-full mx-auto flex flex-col gap-5">
         {/* Top interactive live context bar */}
         <ContextBar />
 
+
         {/* Discovery Filter & Search Toolbar */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#0A1420]/85 backdrop-blur-xl p-3 rounded-2xl border border-white/10 shadow-xl">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white border border-[#E6E0D6] p-3 rounded-2xl shadow-[0_2px_8px_rgba(26,26,30,0.06)]">
           {/* Category Pills */}
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
             {CATEGORIES.map((cat) => {
@@ -188,10 +271,10 @@ export default function Discover() {
                   key={cat}
                   type="button"
                   onClick={() => setActiveCategory(cat)}
-                  className={`px-3.5 py-2 rounded-xl text-xs font-mono uppercase tracking-wider transition-all whitespace-nowrap cursor-pointer ${
+                  className={`px-3.5 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all whitespace-nowrap cursor-pointer ${
                     active
-                      ? 'bg-[#C9A84C] text-[#0D1B2A] font-bold shadow-[0_0_14px_rgba(201,168,76,0.35)]'
-                      : 'bg-white/[0.05] text-white/75 hover:bg-white/[0.1] hover:text-white border border-white/5'
+                      ? 'bg-[#E05A38] text-white shadow-sm'
+                      : 'bg-[#F5F2EB] text-[#75747A] hover:bg-[#EDE8DF] hover:text-[#36363D] border border-[#E6E0D6]'
                   }`}
                 >
                   {cat}
@@ -204,13 +287,13 @@ export default function Discover() {
           <div className="flex items-center gap-2">
             {/* Search Input */}
             <div className="relative flex-1 md:w-56">
-              <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-white/40" />
+              <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[#9E9DA3]" />
               <input
                 type="text"
-                placeholder="Search hidden gems..."
+                placeholder="Search experiences..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 rounded-xl bg-[#132030] border border-white/15 text-xs text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#C9A84C]/60"
+                className="w-full pl-9 pr-3 py-2 rounded-xl bg-[#F5F2EB] border border-[#E6E0D6] text-xs text-[#1A1A1E] placeholder-[#9E9DA3] focus:outline-none focus:border-[#E05A38] focus:ring-2 focus:ring-[#E05A38]/10"
               />
             </div>
 
@@ -219,12 +302,12 @@ export default function Discover() {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
-                className="px-3 py-2 rounded-xl bg-[#132030] border border-white/15 text-xs font-medium text-white focus:outline-none focus:ring-2 focus:ring-[#C9A84C]/60 cursor-pointer"
+                className="px-3 py-2 rounded-xl bg-[#F5F2EB] border border-[#E6E0D6] text-xs font-medium text-[#36363D] focus:outline-none focus:border-[#E05A38] cursor-pointer"
               >
-                <option value="fit" className="bg-[#0D1B2A]">Top Fit Score</option>
-                <option value="distance" className="bg-[#0D1B2A]">Shortest Distance</option>
-                <option value="duration" className="bg-[#0D1B2A]">Quickest</option>
-                <option value="price" className="bg-[#0D1B2A]">Lowest Price</option>
+                <option value="fit">Top Fit Score</option>
+                <option value="distance">Shortest Distance</option>
+                <option value="duration">Quickest</option>
+                <option value="price">Lowest Price</option>
               </select>
 
               {/* Refetch button */}
@@ -233,11 +316,22 @@ export default function Discover() {
                 onClick={() => refetch()}
                 disabled={isFetching}
                 title="Refresh recommendations"
-                className={`p-2 rounded-xl border border-white/15 bg-[#132030] text-white hover:bg-white/10 transition-colors cursor-pointer ${
-                  isFetching ? 'animate-spin text-[#C9A84C]' : ''
+                className={`p-2 rounded-xl border border-[#E6E0D6] bg-[#F5F2EB] text-[#75747A] hover:bg-[#EDE8DF] transition-colors cursor-pointer ${
+                  isFetching ? 'animate-spin text-[#E05A38]' : ''
                 }`}
               >
                 <RefreshCw className="w-3.5 h-3.5" />
+              </button>
+
+              {/* AI Mine Destination Button */}
+              <button
+                type="button"
+                onClick={() => setShowMineModal(true)}
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#E05A38] text-white text-xs font-semibold hover:bg-[#C85A32] shadow-sm transition-all whitespace-nowrap cursor-pointer hover:shadow-md"
+                title="Mine any destination worldwide with Google Gemini AI"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">AI Mine City</span>
               </button>
             </div>
           </div>
@@ -246,23 +340,23 @@ export default function Discover() {
         {/* Results Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <span className="font-serif text-xl font-bold text-white tracking-wide">
+            <span className="font-display text-xl font-bold text-[#1A1A1E]">
               Curated Local Discoveries
             </span>
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-[#C9A84C]/20 text-[#E5C365] border border-[#C9A84C]/30">
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-data font-bold bg-[#FDEEE9] text-[#E05A38] border border-[#E05A38]/20">
               {filteredItems.length} active
             </span>
           </div>
 
           {/* Mobile view toggle (List vs Map) */}
-          <div className="flex lg:hidden items-center bg-[#0A1420] rounded-xl p-1 border border-white/10 shadow-sm">
+          <div className="flex lg:hidden items-center bg-[#F5F2EB] rounded-xl p-1 border border-[#E6E0D6] shadow-sm">
             <button
               type="button"
               onClick={() => setMobileTab('list')}
               className={`flex items-center gap-1 px-3 py-1 rounded-lg text-xs font-semibold transition-colors ${
                 mobileTab === 'list'
-                  ? 'bg-[#C9A84C] text-[#0D1B2A]'
-                  : 'text-white/70 hover:text-white'
+                  ? 'bg-[#E05A38] text-white'
+                  : 'text-[#75747A] hover:text-[#36363D]'
               }`}
             >
               <ListIcon className="w-3.5 h-3.5" />
@@ -273,8 +367,8 @@ export default function Discover() {
               onClick={() => setMobileTab('map')}
               className={`flex items-center gap-1 px-3 py-1 rounded-lg text-xs font-semibold transition-colors ${
                 mobileTab === 'map'
-                  ? 'bg-[#C9A84C] text-[#0D1B2A]'
-                  : 'text-white/70 hover:text-white'
+                  ? 'bg-[#E05A38] text-white'
+                  : 'text-[#75747A] hover:text-[#36363D]'
               }`}
             >
               <MapIcon className="w-3.5 h-3.5" />
@@ -294,40 +388,37 @@ export default function Discover() {
           >
             {isLoading ? (
               // Loading Skeletons
-              <div className="space-y-4">
-                {[1, 2, 3].map((n) => (
-                  <div
-                    key={n}
-                    className="h-64 rounded-2xl bg-white/[0.04] animate-pulse border border-white/10"
-                  />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {[1, 2, 3, 4].map((n) => (
+                  <div key={n} className="skeleton h-72 rounded-2xl" />
                 ))}
               </div>
             ) : isError ? (
               // Error State
-              <div className="bg-[#0A1420]/80 rounded-2xl p-8 text-center border border-rose-500/30">
+              <div className="bento-card p-8 text-center border-rose-200">
                 <AlertCircle className="w-10 h-10 text-rose-400 mx-auto mb-3" />
-                <h3 className="font-serif text-lg font-bold text-white mb-1">
+                <h3 className="font-display text-lg font-bold text-[#1A1A1E] mb-1">
                   Could not load experiences
                 </h3>
-                <p className="text-xs text-white/60 mb-4">
+                <p className="text-xs text-[#75747A] mb-4">
                   {(error as Error)?.message || 'Something went wrong while ranking experiences.'}
                 </p>
                 <button
                   type="button"
                   onClick={() => refetch()}
-                  className="px-5 py-2.5 rounded-xl bg-[#C9A84C] text-[#0D1B2A] text-xs font-bold hover:bg-[#E5C365] transition-colors cursor-pointer"
+                  className="px-5 py-2.5 rounded-xl bg-[#E05A38] text-white text-xs font-bold hover:bg-[#E86B4B] transition-colors cursor-pointer"
                 >
                   Retry Search
                 </button>
               </div>
             ) : filteredItems.length === 0 ? (
               // Empty State
-              <div className="bg-[#0A1420]/80 backdrop-blur-xl rounded-2xl p-10 text-center border border-white/10">
-                <Compass className="w-12 h-12 text-[#C9A84C] mx-auto mb-3 opacity-80 animate-pulse" />
-                <h3 className="font-serif text-xl font-bold text-white mb-1">
+              <div className="bento-card p-10 text-center">
+                <Compass className="w-12 h-12 text-[#E05A38] mx-auto mb-3 opacity-70 animate-pulse" />
+                <h3 className="font-display text-xl font-bold text-[#1A1A1E] mb-1">
                   No experiences match your constraints
                 </h3>
-                <p className="text-xs text-white/70 max-w-md mx-auto mb-4 leading-relaxed">
+                <p className="text-xs text-[#75747A] max-w-md mx-auto mb-4 leading-relaxed">
                   Try extending your available time or adjusting your budget in the Constraints bar above to uncover more local gems.
                 </p>
                 <button
@@ -336,9 +427,9 @@ export default function Discover() {
                     setActiveCategory('All')
                     setSearchQuery('')
                   }}
-                  className="px-5 py-2.5 rounded-xl bg-[#C9A84C] text-[#0D1B2A] text-xs font-bold hover:bg-[#E5C365] cursor-pointer"
+                  className="px-5 py-2.5 rounded-xl bg-[#E05A38] text-white text-xs font-bold hover:bg-[#E86B4B] cursor-pointer"
                 >
-                  Reset Category Filters
+                  Reset Filters
                 </button>
               </div>
             ) : (
@@ -358,7 +449,7 @@ export default function Discover() {
 
           {/* Right Column: Interactive Leaflet Map (Sticky on Desktop) */}
           <div
-            className={`lg:col-span-5 lg:sticky lg:top-24 h-[calc(100vh-160px)] min-h-[520px] rounded-2xl overflow-hidden border border-white/15 shadow-2xl ${
+            className={`lg:col-span-5 lg:sticky lg:top-24 h-[calc(100vh-160px)] min-h-[520px] rounded-2xl overflow-hidden border border-[#E6E0D6] shadow-[var(--shadow-card)] ${
               mobileTab === 'list' ? 'hidden lg:block' : 'block'
             }`}
           >
@@ -369,46 +460,204 @@ export default function Discover() {
               center={
                 context.lat && context.lng
                   ? [context.lat, context.lng]
-                  : [35.6762, 139.6503]
+                  : [26.9124, 75.7873]
               }
             />
           </div>
         </div>
       </main>
 
-      {/* Stitch Spec: Floating Constraint Telemetry Bar HUD */}
-      <aside aria-label="Expedition telemetry HUD" className="fixed bottom-5 left-1/2 -translate-x-1/2 z-30 w-[92%] max-w-3xl bg-[#0A1420]/90 backdrop-blur-2xl border border-[#C9A84C]/40 rounded-2xl px-5 py-3.5 shadow-[0_12px_40px_rgba(0,0,0,0.8)] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+      {/* Floating Constraint Telemetry HUD */}
+      <aside aria-label="Expedition telemetry HUD" className="fixed bottom-5 left-1/2 -translate-x-1/2 z-30 w-[92%] max-w-3xl glass rounded-2xl px-5 py-3.5 shadow-[0_12px_40px_rgba(26,26,30,0.15)] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
         <div className="flex items-center gap-5">
           {/* Budget HUD */}
           <div className="flex flex-col gap-1">
-            <div className="flex items-center justify-between text-[11px] text-white/75 gap-3">
-              <span>Budget Burn:</span>
-              <span className="font-mono font-bold text-[#E5C365]">${context.remainingBudget || 100} remaining</span>
+            <div className="flex items-center justify-between text-[11px] text-[#75747A] gap-3">
+              <span>Budget Remaining:</span>
+              <span className="font-data font-bold text-[#E05A38]">₹{Number(context.remainingBudget || 2000).toLocaleString()}</span>
             </div>
-            <div className="w-28 sm:w-36 h-1.5 bg-white/10 rounded-full overflow-hidden">
-              <div className="h-full bg-gradient-to-r from-[#4EC9B0] to-[#C9A84C] rounded-full" style={{ width: '65%' }} />
+            <div className="eco-gauge-track w-28 sm:w-36">
+              <div className="eco-gauge-fill" style={{ width: '65%' }} />
             </div>
           </div>
 
           {/* Group & Pace */}
-          <div className="hidden md:flex flex-col gap-1 border-l border-white/10 pl-5">
-            <span className="text-[11px] text-white/75">Group Configuration:</span>
-            <span className="font-bold text-white flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-[#4EC9B0] animate-pulse" />
-              {context.groupSize} {context.groupSize === 1 ? 'Explorer' : 'Explorers'} · {context.availableMinutes}m window
+          <div className="hidden md:flex flex-col gap-1 border-l border-[#E6E0D6] pl-5">
+            <span className="label-caps text-[#9E9DA3]">Group Config</span>
+            <span className="font-semibold text-[#1A1A1E] flex items-center gap-1 text-xs">
+              <span className="w-2 h-2 rounded-full bg-[#6B8E7B] animate-pulse" />
+              {context.groupSize} {context.groupSize === 1 ? 'Explorer' : 'Explorers'} · {context.availableMinutes}m
             </span>
           </div>
+
+          {/* Circumstance Mode Badge */}
+          {context.circumstanceMode && context.circumstanceMode !== 'normal' && (
+            <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#FDEEE9] text-[#E05A38] font-bold text-[11px] border border-[#E05A38]/30 animate-pulse">
+              <Sparkles className="w-3 h-3" />
+              <span className="capitalize">{context.circumstanceMode.replace('_', ' ')}</span>
+            </div>
+          )}
         </div>
+
 
         {/* CTA to Review Itinerary */}
         <Link
           to="/itinerary"
-          className="bg-[#C9A84C] hover:bg-[#E5C365] active:bg-[#B8933E] text-[#0D1B2A] font-bold px-4 py-2 rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-[0_0_16px_rgba(201,168,76,0.35)] cursor-pointer whitespace-nowrap"
+          className="bg-[#E05A38] hover:bg-[#E86B4B] text-white font-semibold px-4 py-2 rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-sm cursor-pointer whitespace-nowrap hover:-translate-y-px"
         >
           <span>Review Itinerary</span>
           <ArrowRight className="w-3.5 h-3.5" />
         </Link>
       </aside>
+
+      {/* ── AI City Data Mining Modal (Powered by Google Gemini) ─────────────── */}
+      {showMineModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#1A1A1E]/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white border border-[#E6E0D6] rounded-3xl p-6 max-w-lg w-full shadow-2xl relative flex flex-col gap-5">
+            {/* Modal Header */}
+            <div className="flex items-start justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-[#FDEEE9] flex items-center justify-center text-[#E05A38] border border-[#E05A38]/20 shadow-sm">
+                  <Sparkles className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-display text-lg font-bold text-[#1A1A1E]">
+                    AI India Cultural Data Miner
+                  </h3>
+                  <p className="text-xs text-[#75747A]">
+                    Powered by Google Gemini AI · Real GPS & Fair Valuations across India
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowMineModal(false)
+                  setMiningStatus(null)
+                  setMineSuccessMsg(null)
+                }}
+                className="p-1.5 rounded-xl hover:bg-[#F5F2EB] text-[#75747A] transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <p className="text-xs text-[#525158] leading-relaxed">
+              Mine authentic hidden gems across India. Scout traditional artisan workshops, secret food gallis, ancient ghats, and heritage trails with exact geo-coordinates.
+            </p>
+
+            {/* Quick-Pick Popular Indian Cultural Hubs */}
+            <div className="flex flex-col gap-1.5">
+              <span className="label-caps text-[#9E9DA3]">Quick Mine Indian Hubs</span>
+              <div className="flex flex-wrap gap-1.5">
+                {[
+                  { city: 'Jaipur', country: 'India' },
+                  { city: 'Delhi', country: 'India' },
+                  { city: 'Varanasi', country: 'India' },
+                  { city: 'Mumbai', country: 'India' },
+                  { city: 'Kochi', country: 'India' },
+                  { city: 'Udaipur', country: 'India' },
+                  { city: 'Kolkata', country: 'India' },
+                  { city: 'Goa', country: 'India' },
+                ].map((hub) => (
+                  <button
+                    key={hub.city}
+                    type="button"
+                    disabled={isMining}
+                    onClick={() => handleMineDestination(undefined, hub.city, hub.country)}
+                    className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-[#F5F2EB] hover:bg-[#FDEEE9] text-[#36363D] hover:text-[#E05A38] border border-[#E6E0D6] transition-all cursor-pointer disabled:opacity-50"
+                  >
+                    {hub.city}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Custom Input Form */}
+            <form onSubmit={(e) => handleMineDestination(e)} className="flex flex-col gap-3.5 pt-1">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block label-caps text-[#75747A] mb-1">
+                    Destination City *
+                  </label>
+                  <div className="relative">
+                    <MapPin className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[#9E9DA3]" />
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Jaipur, Varanasi, Mysore"
+                      value={mineCity}
+                      onChange={(e) => setMineCity(e.target.value)}
+                      disabled={isMining}
+                      className="w-full pl-9 pr-3 py-2 rounded-xl bg-[#F5F2EB] border border-[#E6E0D6] text-xs text-[#1A1A1E] focus:outline-none focus:border-[#E05A38] focus:ring-2 focus:ring-[#E05A38]/10"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block label-caps text-[#75747A] mb-1">
+                    Country
+                  </label>
+                  <div className="relative">
+                    <Globe className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[#9E9DA3]" />
+                    <input
+                      type="text"
+                      placeholder="India"
+                      value={mineCountry || 'India'}
+                      onChange={(e) => setMineCountry(e.target.value)}
+                      disabled={isMining}
+                      className="w-full pl-9 pr-3 py-2 rounded-xl bg-[#F5F2EB] border border-[#E6E0D6] text-xs text-[#1A1A1E] focus:outline-none focus:border-[#E05A38] focus:ring-2 focus:ring-[#E05A38]/10"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Status or Success message */}
+              {miningStatus && (
+                <div className="p-3 rounded-xl bg-[#FDEEE9] border border-[#E05A38]/20 flex items-center gap-2.5 text-xs text-[#E05A38]">
+                  {isMining && <Loader2 className="w-4 h-4 animate-spin shrink-0" />}
+                  <span>{miningStatus}</span>
+                </div>
+              )}
+
+              {mineSuccessMsg && (
+                <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-800 font-medium">
+                  {mineSuccessMsg}
+                </div>
+              )}
+
+              {/* Action Buttons */}
+              <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#E6E0D6]">
+                <button
+                  type="button"
+                  onClick={() => setShowMineModal(false)}
+                  disabled={isMining}
+                  className="px-4 py-2 rounded-xl text-xs font-semibold text-[#75747A] hover:bg-[#F5F2EB] transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isMining || !mineCity.trim()}
+                  className="flex items-center gap-1.5 px-5 py-2 rounded-xl bg-[#E05A38] text-white text-xs font-semibold hover:bg-[#C85A32] shadow-sm transition-all disabled:opacity-50 cursor-pointer"
+                >
+                  {isMining ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <span>Mining with Gemini...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>Mine Authentic Gems</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

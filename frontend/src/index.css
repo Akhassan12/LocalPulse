@@ -1,61 +1,86 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Space+Grotesk:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,700&display=swap');
 @import "tailwindcss";
 @import "leaflet/dist/leaflet.css";
 
-/* ─── Tailwind v4 Theme Tokens ─────────────────────────────────────────────── */
+/* ─── Terracotta & Stone — Stitch Design Tokens ──────────────────────────── */
 @theme {
+  /* === Canvas & Surface === */
+  --color-canvas:         #FBF9F5;
+  --color-canvas-dim:     #F5F2EB;
+  --color-canvas-sand:    #EDE8DF;
+  --color-canvas-sand2:   #E6E0D6;
+
+  /* === Card & Elevation === */
+  --color-card:           #FFFFFF;
+  --color-card-border:    #E6E0D6;
+  --color-card-border2:   #D4CCC0;
+
+  /* === Primary: Terracotta Sunset === */
+  --color-terra:          #E05A38;
+  --color-terra-hover:    #E86B4B;
+  --color-terra-light:    #FDEEE9;
+  --color-terra-20:       rgba(224, 90, 56, 0.20);
+  --color-terra-12:       rgba(224, 90, 56, 0.12);
+
+  /* === Secondary: Forest Slate === */
+  --color-forest:         #3B5249;
+  --color-forest-hover:   #2E4039;
+  --color-forest-light:   #EDF2EF;
+  --color-forest-border:  rgba(107, 142, 123, 0.30);
+
+  /* === Tertiary: Alpine Sage === */
+  --color-sage:           #6B8E7B;
+  --color-sage-light:     #EDF2EF;
+
+  /* === Text === */
+  --color-ink:            #1A1A1E;
+  --color-ink-body:       #36363D;
+  --color-ink-muted:      #75747A;
+  --color-ink-ghost:      #9E9DA3;
+
+  /* === Legacy dark tokens (kept for backward compat) === */
   --color-navy:           #0D1B2A;
   --color-navy-dark:      #070E17;
   --color-navy-surface:   #132438;
-  --color-navy-80:        rgba(13, 27, 42, 0.8);
-  --color-navy-40:        rgba(13, 27, 42, 0.4);
-
   --color-brass:          #C9A84C;
   --color-brass-light:    #DFC272;
-  --color-brass-dark:     #A58632;
-  --color-brass-80:       rgba(201, 168, 76, 0.8);
-  --color-brass-20:       rgba(201, 168, 76, 0.2);
-
   --color-teal:           #4EC9B0;
-  --color-teal-dark:      #38B39A;
-  --color-teal-20:        rgba(78, 201, 176, 0.2);
+  --color-parchment:      #FBF9F5;
 
-  --color-parchment:      #F5EDD6;
-  --color-parchment-light:#FAF5EB;
-  --color-parchment-80:   rgba(245, 237, 214, 0.8);
-
-  --color-ink:            #1A2B3C;
-  --color-mist:           #E8F0F7;
-  --color-mist-40:        rgba(232, 240, 247, 0.4);
-
+  /* === Status === */
   --color-success:        #22C55E;
   --color-warning:        #F59E0B;
   --color-danger:         #EF4444;
 
-  --font-display:         'Playfair Display', Georgia, serif;
-  --font-body:            'Inter', system-ui, -apple-system, sans-serif;
-  --font-sans:            'Inter', system-ui, -apple-system, sans-serif;
+  /* === Fonts === */
+  --font-display:         'Plus Jakarta Sans', 'Playfair Display', Georgia, serif;
+  --font-body:            'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-sans:            'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-data:            'Space Grotesk', 'Inter', monospace;
 
+  /* === Shape === */
   --radius-sm:            6px;
-  --radius-md:            12px;
-  --radius-lg:            20px;
-  --radius-xl:            32px;
+  --radius-md:            10px;
+  --radius-lg:            16px;
+  --radius-xl:            24px;
+  --radius-2xl:           32px;
 
-  --shadow-card:          0 4px 24px rgba(13, 27, 42, 0.10);
-  --shadow-glow:          0 0 32px rgba(201, 168, 76, 0.28);
-  --shadow-deep:          0 12px 48px rgba(13, 27, 42, 0.32);
+  /* === Shadow === */
+  --shadow-card:          0 4px 24px rgba(26, 26, 30, 0.06), 0 1px 4px rgba(224, 90, 56, 0.04);
+  --shadow-card-hover:    0 12px 36px -8px rgba(26, 26, 30, 0.10), 0 4px 12px -2px rgba(224, 90, 56, 0.06);
+  --shadow-float:         0 20px 60px -12px rgba(26, 26, 30, 0.15);
+  --shadow-glow-terra:    0 0 0 3px rgba(224, 90, 56, 0.12);
 }
 
-/* ─── CSS Variables fallback & Reset ────────────────────────────────────────── */
+/* ─── CSS Variables Fallback ─────────────────────────────────────────────── */
 :root {
-  --color-navy:     #0D1B2A;
-  --color-brass:    #C9A84C;
-  --color-teal:     #4EC9B0;
-  --color-parchment:#F5EDD6;
-  --color-ink:      #1A2B3C;
-  --color-mist:     #E8F0F7;
-  --font-display:   'Playfair Display', Georgia, serif;
-  --font-body:      'Inter', system-ui, sans-serif;
+  --color-canvas:    #FBF9F5;
+  --color-terra:     #E05A38;
+  --color-forest:    #3B5249;
+  --color-ink:       #1A1A1E;
+  --font-display:    'Plus Jakarta Sans', Georgia, serif;
+  --font-body:       'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-data:       'Space Grotesk', monospace;
 }
 
 *, *::before, *::after {
@@ -72,109 +97,227 @@ html {
 
 body {
   font-family: var(--font-body);
-  background-color: var(--color-parchment);
+  background-color: var(--color-canvas);
   color: var(--color-ink);
   line-height: 1.6;
   min-height: 100dvh;
 }
 
-/* ─── Typography Helpers ────────────────────────────────────────────────────── */
-.font-display { font-family: var(--font-display); }
-.font-body    { font-family: var(--font-body); }
+/* ─── Typography Helpers ─────────────────────────────────────────────────── */
+.font-display  { font-family: var(--font-display); }
+.font-body     { font-family: var(--font-body); }
+.font-data     { font-family: var(--font-data); }
 
 h1, h2, h3, .heading {
   font-family: var(--font-display);
   letter-spacing: -0.02em;
 }
 
-/* ─── Scrollbar Styling ─────────────────────────────────────────────────────── */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: rgba(13, 27, 42, 0.05); }
-::-webkit-scrollbar-thumb { background: #C9A84C; border-radius: 999px; }
-::-webkit-scrollbar-thumb:hover { background: #A58632; }
+/* ─── Label Caps ─────────────────────────────────────────────────────────── */
+.label-caps {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
 
-/* ─── Focus Rings (Accessibility) ───────────────────────────────────────────── */
+/* ─── Scrollbar ──────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #EDE8DF; }
+::-webkit-scrollbar-thumb { background: #D4CCC0; border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: #6B8E7B; }
+
+/* ─── Focus Rings ────────────────────────────────────────────────────────── */
 :focus-visible {
-  outline: 2px solid #C9A84C;
+  outline: 2px solid #E05A38;
   outline-offset: 2px;
   border-radius: 8px;
 }
 
-/* ─── Glassmorphism Utilities ───────────────────────────────────────────────── */
+/* ─── Glass (warm light) ─────────────────────────────────────────────────── */
 .glass {
-  background: rgba(13, 27, 42, 0.65);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(201, 168, 76, 0.22);
+  background: rgba(251, 249, 245, 0.82);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border: 1px solid rgba(212, 204, 192, 0.50);
 }
 
 .glass-card {
-  background: rgba(19, 36, 56, 0.85);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid #E6E0D6;
+  box-shadow: 0 4px 24px rgba(26, 26, 30, 0.06), 0 1px 4px rgba(224, 90, 56, 0.04);
+}
+
+/* Dark glass (for dark modals / auth) */
+.glass-dark {
+  background: rgba(13, 27, 42, 0.85);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(201, 168, 76, 0.20);
   box-shadow: 0 16px 40px rgba(7, 14, 23, 0.45);
 }
 
-.glass-light {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(13, 27, 42, 0.08);
+/* ─── Bento Card ─────────────────────────────────────────────────────────── */
+.bento-card {
+  background: #FFFFFF;
+  border: 1px solid #E6E0D6;
+  border-radius: 24px;
+  box-shadow: var(--shadow-card);
+  transition: box-shadow 0.25s ease, transform 0.25s ease, border-color 0.20s ease;
+  overflow: hidden;
 }
 
-/* ─── Animations ────────────────────────────────────────────────────────────── */
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
+.bento-card:hover {
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-2px);
+  border-color: #D4CCC0;
+}
+
+/* ─── Chip / Pill Tags ───────────────────────────────────────────────────── */
+.chip-eco {
+  background: #EDF2EF;
+  border: 1px solid rgba(107, 142, 123, 0.30);
+  color: #3B5249;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 9999px;
+  padding: 3px 10px;
+}
+
+.chip-terra {
+  background: #FDEEE9;
+  color: #E05A38;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 9999px;
+  padding: 3px 10px;
+}
+
+.chip-neutral {
+  background: #EDE8DF;
+  color: #36363D;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  border-radius: 9999px;
+  padding: 3px 10px;
+}
+
+/* ─── Input Well ─────────────────────────────────────────────────────────── */
+.input-well {
+  height: 48px;
+  background: #FFFFFF;
+  border: 1px solid #E6E0D6;
+  border-radius: 10px;
+  padding: 0 16px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 15px;
+  color: #1A1A1E;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  outline: none;
+}
+.input-well::placeholder { color: #9E9DA3; }
+.input-well:focus {
+  border-color: #E05A38;
+  box-shadow: 0 0 0 3px rgba(224, 90, 56, 0.12);
+}
+
+/* ─── Eco Impact Gauge ───────────────────────────────────────────────────── */
+.eco-gauge-track { background: #EDE8DF; height: 6px; border-radius: 999px; overflow: hidden; }
+.eco-gauge-fill  { background: #6B8E7B; height: 100%; border-radius: 999px; transition: width 0.6s ease; }
+
+/* ─── Section Divider ────────────────────────────────────────────────────── */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, #E6E0D6, transparent);
+  margin: 0;
+}
+
+/* ─── Animations ─────────────────────────────────────────────────────────── */
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(16px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-
-@keyframes fadeIn {
+@keyframes fade-in {
   from { opacity: 0; }
   to   { opacity: 1; }
 }
-
-@keyframes shimmer {
-  0%   { background-position: -200% center; }
-  100% { background-position: 200% center; }
+@keyframes pulse-terra {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(224, 90, 56, 0.30); }
+  50%       { box-shadow: 0 0 0 8px rgba(224, 90, 56, 0); }
 }
-
-@keyframes pulse-brass {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(201, 168, 76, 0.45); }
-  50%       { box-shadow: 0 0 0 14px rgba(201, 168, 76, 0); }
-}
-
 @keyframes spin-slow {
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }
 }
-
-@keyframes float-subtle {
-  0%, 100% { transform: translateY(0px); }
-  50%      { transform: translateY(-6px); }
+@keyframes scroll-bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%       { transform: translateX(-50%) translateY(6px); }
+}
+@keyframes shimmer {
+  from { background-position: -200% 0; }
+  to   { background-position: 200% 0; }
+}
+@keyframes float-up {
+  0%   { transform: translateY(4px); opacity: 0.7; }
+  100% { transform: translateY(0); opacity: 1; }
 }
 
-.animate-fade-in-up  { animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
-.animate-fade-in     { animation: fadeIn 0.35s ease-out both; }
-.animate-pulse-brass { animation: pulse-brass 2.2s infinite; }
-.animate-spin-slow   { animation: spin-slow 24s linear infinite; }
-.animate-float       { animation: float-subtle 4s ease-in-out infinite; }
+.animate-fade-in-up  { animation: fade-in-up 0.5s ease both; }
+.animate-fade-in     { animation: fade-in 0.4s ease both; }
+.animate-pulse-terra { animation: pulse-terra 2.4s ease infinite; }
+.animate-spin-slow   { animation: spin-slow 20s linear infinite; }
+.animate-scroll-bounce { animation: scroll-bounce 1.6s ease infinite; }
+.animate-float-up    { animation: float-up 0.4s ease both; }
 
-/* ─── Leaflet Overrides ─────────────────────────────────────────────────────── */
-.leaflet-container {
-  font-family: var(--font-body) !important;
-  border-radius: 16px;
+.stagger > *:nth-child(1) { animation-delay: 0.0s; }
+.stagger > *:nth-child(2) { animation-delay: 0.08s; }
+.stagger > *:nth-child(3) { animation-delay: 0.16s; }
+.stagger > *:nth-child(4) { animation-delay: 0.24s; }
+.stagger > *:nth-child(5) { animation-delay: 0.32s; }
+.stagger > *:nth-child(6) { animation-delay: 0.40s; }
+
+/* ─── Skeleton Loader ────────────────────────────────────────────────────── */
+.skeleton {
+  background: linear-gradient(90deg, #EDE8DF 25%, #F5F2EB 50%, #EDE8DF 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease infinite;
+  border-radius: 8px;
 }
 
-.leaflet-popup-content-wrapper {
-  border-radius: 14px !important;
-  box-shadow: 0 16px 36px rgba(13, 27, 42, 0.25) !important;
-  border: 1px solid rgba(201, 168, 76, 0.25);
-  padding: 0 !important;
-  overflow: hidden;
+/* ─── Image hover zoom ───────────────────────────────────────────────────── */
+.img-zoom-wrap { overflow: hidden; }
+.img-zoom-wrap img { transition: transform 0.5s ease; }
+.img-zoom-wrap:hover img { transform: scale(1.04); }
+
+/* ─── Telemetry coord display ────────────────────────────────────────────── */
+.coord-display {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 11px;
+  color: #9E9DA3;
+  letter-spacing: 0.05em;
 }
 
-.leaflet-popup-content {
-  margin: 0 !important;
-  line-height: 1.4 !important;
+/* ─── Navbar override for warm theme ─────────────────────────────────────── */
+.navbar-warm {
+  background: rgba(251, 249, 245, 0.88);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border-bottom: 1px solid rgba(212, 204, 192, 0.60);
+  box-shadow: 0 1px 0 rgba(26, 26, 30, 0.04);
 }
+
+/* ─── Warm Section backgrounds ───────────────────────────────────────────── */
+.section-canvas { background: #FBF9F5; }
+.section-sand   { background: #F5F2EB; }
+.section-well   { background: #EDE8DF; }

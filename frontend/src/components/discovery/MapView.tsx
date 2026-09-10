@@ -19,33 +19,34 @@ interface MapViewProps {
   zoom?: number
 }
 
-// Custom SVG Pin Generator with Fit Score coloring
+// Custom SVG Pin Generator with Terracotta theme & Fit Score coloring
 function createPinIcon(score: number, isSelected: boolean) {
-  const color = score >= 80 ? '#10B981' : score >= 60 ? '#C9A84C' : '#0D1B2A'
-  const size = isSelected ? 42 : 32
+  const color = isSelected ? '#C85A32' : score >= 80 ? '#10B981' : score >= 60 ? '#E05A38' : '#36363D'
+  const size = isSelected ? 44 : 34
   const innerText = `${score}%`
 
   const svg = `
-    <svg width="${size}" height="${size + 8}" viewBox="0 0 40 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="${size}" height="${size + 10}" viewBox="0 0 40 50" fill="none" xmlns="http://www.w3.org/2000/svg">
       ${
         isSelected
-          ? `<circle cx="20" cy="20" r="18" fill="${color}" fill-opacity="0.25">
-              <animate attributeName="r" values="16;20;16" dur="2s" repeatCount="indefinite"/>
+          ? `<circle cx="20" cy="20" r="19" fill="${color}" fill-opacity="0.3">
+              <animate attributeName="r" values="16;22;16" dur="2s" repeatCount="indefinite"/>
+              <animate attributeName="fill-opacity" values="0.35;0.1;0.35" dur="2s" repeatCount="indefinite"/>
             </circle>`
           : ''
       }
-      <path d="M20 0C8.954 0 0 8.954 0 20C0 32 20 48 20 48C20 48 40 32 40 20C40 8.954 31.046 0 20 0Z" fill="${color}"/>
+      <path d="M20 0C8.954 0 0 8.954 0 20C0 32 20 48 20 48C20 48 40 32 40 20C40 8.954 31.046 0 20 0Z" fill="${color}" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))"/>
       <circle cx="20" cy="18" r="14" fill="#FFFFFF"/>
-      <text x="20" y="22" text-anchor="middle" fill="#0D1B2A" font-size="10" font-family="Inter, sans-serif" font-weight="bold">${innerText}</text>
+      <text x="20" y="22" text-anchor="middle" fill="#1A1A1E" font-size="10" font-family="Outfit, sans-serif" font-weight="800">${innerText}</text>
     </svg>
   `
 
   return L.divIcon({
     html: svg,
     className: 'custom-pin-marker',
-    iconSize: [size, size + 8],
-    iconAnchor: [size / 2, size + 8],
-    popupAnchor: [0, -(size + 8)],
+    iconSize: [size, size + 10],
+    iconAnchor: [size / 2, size + 10],
+    popupAnchor: [0, -(size + 10)],
   })
 }
 
@@ -68,7 +69,7 @@ export const MapView: React.FC<MapViewProps> = ({
   items,
   selectedId,
   onSelect,
-  center = [35.6762, 139.6503], // Default Tokyo
+  center = [26.9124, 75.7873], // Default Jaipur, India
   zoom = 13,
 }) => {
   const { isShortlisted, addItem, removeItem } = useItineraryStore()
@@ -116,23 +117,23 @@ export const MapView: React.FC<MapViewProps> = ({
               }}
             >
               <Popup className="custom-experience-popup">
-                <div className="w-56 p-1 text-[#0D1B2A]">
+                <div className="w-56 p-1 text-[#1A1A1E]">
                   <div className="flex items-center justify-between gap-1 mb-1">
-                    <span className="px-1.5 py-0.5 rounded text-[9px] uppercase font-bold tracking-wider bg-[#0D1B2A]/5 text-[#1A2B3C]">
+                    <span className="px-1.5 py-0.5 rounded text-[9px] uppercase font-bold tracking-wider bg-[#F5F2EB] text-[#75747A] border border-[#E6E0D6]">
                       {experience.category}
                     </span>
-                    <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded">
+                    <span className="text-[11px] font-bold text-[#E05A38] bg-[#FDEEE9] px-1.5 py-0.5 rounded border border-[#E05A38]/20">
                       {score}% Fit
                     </span>
                   </div>
 
-                  <h4 className="font-display text-sm font-bold leading-tight mb-1 text-[#0D1B2A]">
+                  <h4 className="font-display text-sm font-bold leading-tight mb-1 text-[#1A1A1E]">
                     {experience.title}
                   </h4>
 
-                  <p className="text-xs text-[#1A2B3C]/70 mb-2 flex items-center gap-2">
+                  <p className="text-xs text-[#75747A] mb-2 flex items-center gap-2">
                     <span className="flex items-center gap-0.5">
-                      <Clock className="w-3 h-3" /> {experience.duration_minutes}m
+                      <Clock className="w-3 h-3 text-[#E05A38]" /> {experience.duration_minutes}m
                     </span>
                     {item.walking_distance_km !== undefined && (
                       <span className="flex items-center gap-0.5 text-emerald-700">
@@ -141,10 +142,10 @@ export const MapView: React.FC<MapViewProps> = ({
                     )}
                   </p>
 
-                  <div className="flex items-center justify-between pt-1 border-t border-[#0D1B2A]/10">
+                  <div className="flex items-center justify-between pt-1.5 border-t border-[#E6E0D6]">
                     <Link
                       to={`/experiences/${experience.id}`}
-                      className="text-xs font-semibold text-[#0D1B2A] hover:text-[#C9A84C] flex items-center gap-0.5"
+                      className="text-xs font-semibold text-[#E05A38] hover:text-[#C85A32] flex items-center gap-0.5"
                     >
                       Details <ArrowUpRight className="w-3 h-3" />
                     </Link>
@@ -170,7 +171,7 @@ export const MapView: React.FC<MapViewProps> = ({
                           })
                         }
                       }}
-                      className="text-xs p-1 rounded hover:bg-[#0D1B2A]/5 text-[#0D1B2A]"
+                      className="text-xs p-1 rounded-lg hover:bg-[#F5F2EB] text-[#1A1A1E] transition-colors cursor-pointer"
                       title={shortlisted ? 'Remove from Itinerary' : 'Save to Itinerary'}
                     >
                       {shortlisted ? (

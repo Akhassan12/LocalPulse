@@ -1,8 +1,7 @@
 /**
  * pages/Auth.tsx
- * Professional, dedicated Authentication Page (Sign In & Sign Up)
- * Designed with rich expedition styling, dual-column visual storytelling,
- * Supabase integration, quick demo credentials, and seamless navigation.
+ * Professional Authentication Page — Terracotta & Stone Design.
+ * Full-screen dual-column: cinematic left panel + clean right form.
  */
 import React, { useState, useEffect } from 'react'
 import { Link, useNavigate, useLocation, useSearchParams } from 'react-router-dom'
@@ -20,10 +19,10 @@ import {
   Zap,
   CheckCircle2,
   AlertCircle,
+  MapPin,
 } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../hooks/useAuth'
-import Button from '../components/ui/Button'
 
 interface AuthPageProps {
   defaultTab?: 'login' | 'signup'
@@ -35,34 +34,26 @@ export default function Auth({ defaultTab }: AuthPageProps) {
   const location = useLocation()
   const { user } = useAuth()
 
-  // Determine initial tab from prop or query param
   const initialTab = (searchParams.get('tab') as 'login' | 'signup') || defaultTab || 'login'
   const [tab, setTab] = useState<'login' | 'signup'>(initialTab)
 
-  const [email, setEmail] = useState('')
+  const [email, setEmail]       = useState('')
   const [password, setPassword] = useState('')
-  const [name, setName] = useState('')
+  const [name, setName]         = useState('')
   const [showPass, setShowPass] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState<string | null>(null)
+  const [loading, setLoading]   = useState(false)
+  const [error, setError]       = useState<string | null>(null)
+  const [success, setSuccess]   = useState<string | null>(null)
 
-  // Redirect destination after authentication
   const from = (location.state as { from?: { pathname: string } })?.from?.pathname || '/discover'
 
-  // If already logged in, automatically navigate to destination
   useEffect(() => {
-    if (user) {
-      navigate(from, { replace: true })
-    }
+    if (user) navigate(from, { replace: true })
   }, [user, navigate, from])
 
-  // Sync tab if search params change
   useEffect(() => {
     const qTab = searchParams.get('tab')
-    if (qTab === 'login' || qTab === 'signup') {
-      setTab(qTab)
-    }
+    if (qTab === 'login' || qTab === 'signup') setTab(qTab)
   }, [searchParams])
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -70,27 +61,19 @@ export default function Auth({ defaultTab }: AuthPageProps) {
     setError(null)
     setSuccess(null)
     setLoading(true)
-
     try {
       if (tab === 'login') {
-        const { error: err } = await supabase.auth.signInWithPassword({
-          email: email.trim(),
-          password,
-        })
+        const { error: err } = await supabase.auth.signInWithPassword({ email: email.trim(), password })
         if (err) throw err
         navigate(from, { replace: true })
       } else {
         const { error: err } = await supabase.auth.signUp({
           email: email.trim(),
           password,
-          options: {
-            data: {
-              display_name: name.trim() || email.split('@')[0],
-            },
-          },
+          options: { data: { display_name: name.trim() || email.split('@')[0] } },
         })
         if (err) throw err
-        setSuccess('Account created successfully! Check your inbox to confirm, or try logging in.')
+        setSuccess('Account created! Check your inbox to confirm, then sign in.')
       }
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Authentication encountered an issue.')
@@ -99,299 +82,332 @@ export default function Auth({ defaultTab }: AuthPageProps) {
     }
   }
 
-  // Quick fill demo explorer
   const handleFillDemo = () => {
     setEmail('traveler@localpulse.app')
     setPassword('LocalPulse2026!')
-    if (tab === 'signup') {
-      setName('Alex Vance')
-    }
+    if (tab === 'signup') setName('Alex Vance')
     setError(null)
   }
 
+  const switchTab = (t: 'login' | 'signup') => {
+    setTab(t)
+    setError(null)
+    setSuccess(null)
+  }
+
+  const FEATURES = [
+    {
+      icon: Zap,
+      color: '#E05A38',
+      bg: 'rgba(224,90,56,0.15)',
+      title: 'Dynamic Fit-Score Engine',
+      desc: 'Scores 50+ experiences across Tokyo & Oaxaca based on your time window, budget, and group size.',
+    },
+    {
+      icon: Sparkles,
+      color: '#6B8E7B',
+      bg: 'rgba(107,142,123,0.15)',
+      title: 'BazaarLink AI Vision & Barter',
+      desc: 'Snap any market item to get valuations, baggage weight impact, and local bargaining phrases.',
+    },
+    {
+      icon: ShieldCheck,
+      color: '#3B5249',
+      bg: 'rgba(59,82,73,0.15)',
+      title: 'Private & Zero Tourist-Traps',
+      desc: 'Your itinerary and inventory are secured with Supabase Row-Level Security.',
+    },
+  ]
+
   return (
-    <div className="min-h-screen bg-[#070E17] text-white flex flex-col justify-between selection:bg-[#C9A84C] selection:text-[#0D1B2A]">
-      {/* Top minimal header */}
-      <header className="w-full px-6 py-5 flex items-center justify-between border-b border-white/10 z-20">
-        <Link to="/" className="flex items-center gap-3 group" aria-label="LocalPulse home">
-          <div className="w-10 h-10 rounded-xl bg-[#C9A84C] flex items-center justify-center group-hover:shadow-[0_0_20px_rgba(201,168,76,0.5)] transition-shadow">
-            <Map size={20} className="text-[#0D1B2A]" />
-          </div>
-          <span className="font-display text-2xl font-bold tracking-tight text-white">
-            Local<span className="text-[#C9A84C]">Pulse</span>
-          </span>
-        </Link>
-
-        <Link
-          to="/discover"
-          className="text-sm font-medium text-white/70 hover:text-[#C9A84C] flex items-center gap-1.5 transition-colors"
-        >
-          <span>Explore as Guest</span>
-          <ArrowRight size={16} />
-        </Link>
-      </header>
-
-      {/* Main layout container */}
-      <main className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-12 relative overflow-hidden">
-        {/* Background glow ambiance */}
+    <div className="min-h-screen flex" style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
+      {/* ── LEFT PANEL: Cinematic hero ─────────────────────────────── */}
+      <div className="hidden lg:flex lg:w-[52%] xl:w-[55%] relative flex-col bg-[#1A1A1E] overflow-hidden">
+        {/* Background image */}
         <div
-          aria-hidden
-          className="absolute -top-40 -left-40 w-[600px] h-[600px] bg-[#C9A84C]/10 rounded-full blur-[140px] pointer-events-none"
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1400&q=85')" }}
         />
-        <div
-          aria-hidden
-          className="absolute -bottom-40 -right-40 w-[600px] h-[600px] bg-[#4EC9B0]/10 rounded-full blur-[140px] pointer-events-none"
-        />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#1A1A1E]/85 via-[#1A1A1E]/70 to-[#E05A38]/20" />
 
-        <div className="max-w-5xl w-full grid lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
-          {/* Left Column: Visual Storytelling & Platform Benefits */}
-          <div className="lg:col-span-6 hidden lg:flex flex-col justify-center space-y-8 pr-4">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#C9A84C]/15 border border-[#C9A84C]/30 text-[#C9A84C] text-xs font-semibold uppercase tracking-wider w-fit">
-              <Compass size={14} className="animate-spin-slow" />
+        {/* Content */}
+        <div className="relative z-10 flex flex-col h-full px-10 xl:px-16 py-10">
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-3 group w-fit">
+            <div className="w-10 h-10 rounded-xl bg-[#E05A38] flex items-center justify-center group-hover:shadow-[0_0_20px_rgba(224,90,56,0.5)] transition-shadow">
+              <Map size={20} className="text-white" />
+            </div>
+            <span className="font-bold text-2xl text-white tracking-tight">
+              Local<span className="text-[#E05A38]">Pulse</span>
+            </span>
+          </Link>
+
+          {/* Hero copy — centered vertically */}
+          <div className="flex-1 flex flex-col justify-center py-12">
+            {/* Pill badge */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#E05A38]/15 border border-[#E05A38]/30 text-[#E05A38] text-xs font-semibold uppercase tracking-wider w-fit mb-8">
+              <Compass size={13} className="animate-spin-slow" />
               <span>Intelligent Local Discovery</span>
             </div>
 
-            <div>
-              <h1 className="font-display text-4xl xl:text-5xl font-bold text-white leading-tight mb-4">
-                Unlock the Pulse of Every <span className="text-[#C9A84C] italic">Neighborhood.</span>
-              </h1>
-              <p className="text-white/70 text-base leading-relaxed">
-                Connect your real travel limits — free hours, cash runway, and pack weight — with hand-crafted, authentic market experiences.
+            <h1 className="text-4xl xl:text-5xl font-bold text-white leading-[1.15] mb-5" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", letterSpacing: '-0.02em' }}>
+              Unlock the Pulse<br />
+              of Every{' '}
+              <span className="text-[#E05A38] italic">Neighborhood.</span>
+            </h1>
+            <p className="text-white/65 text-base leading-relaxed mb-10 max-w-md">
+              Connect your real travel limits — free hours, cash runway, and pack weight — with hand-crafted local market experiences.
+            </p>
+
+            {/* Feature list */}
+            <div className="flex flex-col gap-4">
+              {FEATURES.map(({ icon: Icon, color, bg, title, desc }) => (
+                <div
+                  key={title}
+                  className="flex items-start gap-4 p-4 rounded-2xl border border-white/[0.08] hover:border-white/[0.15] transition-colors"
+                  style={{ background: 'rgba(255,255,255,0.04)' }}
+                >
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: bg }}>
+                    <Icon size={18} style={{ color }} />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-semibold text-white mb-0.5">{title}</h4>
+                    <p className="text-xs text-white/55 leading-relaxed">{desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Social proof */}
+            <div className="mt-10 flex items-center gap-4">
+              <div className="flex -space-x-2">
+                {[47, 52, 23, 61, 12].map((n) => (
+                  <img
+                    key={n}
+                    src={`https://i.pravatar.cc/40?img=${n}`}
+                    className="w-9 h-9 rounded-full border-2 border-[#1A1A1E] object-cover"
+                    alt="Explorer"
+                  />
+                ))}
+              </div>
+              <div>
+                <p className="text-white/90 text-sm font-semibold">2,400+ explorers</p>
+                <p className="text-white/45 text-xs">already discovering local pulse</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom left coords */}
+          <div className="flex items-center gap-2 text-white/30 text-[11px]" style={{ fontFamily: "'Space Grotesk', monospace" }}>
+            <MapPin size={11} className="text-[#E05A38]/60" />
+            <span>35.6762° N, 139.6503° E  ·  17.0732° N, -96.7266° W</span>
+          </div>
+        </div>
+      </div>
+
+      {/* ── RIGHT PANEL: Auth form ─────────────────────────────────── */}
+      <div className="flex-1 lg:w-[48%] xl:w-[45%] flex flex-col bg-[#FBF9F5]">
+        {/* Mobile header */}
+        <div className="lg:hidden flex items-center justify-between px-6 py-5 border-b border-[#E6E0D6]">
+          <Link to="/" className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-[#E05A38] flex items-center justify-center">
+              <Map size={18} className="text-white" />
+            </div>
+            <span className="font-bold text-xl text-[#1A1A1E]">Local<span className="text-[#E05A38]">Pulse</span></span>
+          </Link>
+          <Link to="/discover" className="text-sm text-[#75747A] hover:text-[#E05A38] flex items-center gap-1 transition-colors">
+            Explore as Guest <ArrowRight size={15} />
+          </Link>
+        </div>
+
+        {/* Form area — centered vertically */}
+        <div className="flex-1 flex flex-col items-center justify-center px-6 sm:px-10 lg:px-12 xl:px-16 py-10">
+          <div className="w-full max-w-md">
+
+            {/* Desktop top link */}
+            <div className="hidden lg:flex justify-end mb-8">
+              <Link to="/discover" className="text-sm text-[#75747A] hover:text-[#E05A38] flex items-center gap-1.5 transition-colors">
+                Explore as Guest <ArrowRight size={15} />
+              </Link>
+            </div>
+
+            {/* Heading */}
+            <div className="mb-8">
+              <h2 className="text-3xl font-bold text-[#1A1A1E] mb-2" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", letterSpacing: '-0.02em' }}>
+                {tab === 'login' ? 'Welcome back, Explorer' : 'Join the Expedition'}
+              </h2>
+              <p className="text-[#75747A] text-sm">
+                {tab === 'login'
+                  ? 'Access your itinerary, saved spots, and baggage runway.'
+                  : 'Personalize your travel constraints and discover authentic hubs.'}
               </p>
             </div>
 
-            {/* Feature highlights */}
-            <div className="space-y-4 pt-2">
-              <div className="flex items-start gap-3.5 p-3 rounded-2xl bg-white/[0.04] border border-white/10 hover:border-[#C9A84C]/30 transition-colors">
-                <div className="w-9 h-9 rounded-xl bg-[#C9A84C]/20 flex items-center justify-center shrink-0 mt-0.5">
-                  <Zap size={18} className="text-[#C9A84C]" />
-                </div>
-                <div>
-                  <h4 className="text-sm font-semibold text-white">Dynamic Fit-Score Engine</h4>
-                  <p className="text-xs text-white/60 mt-0.5 leading-relaxed">
-                    Instantly scores 80+ experiences across Tokyo & Oaxaca based on your physical location and schedule.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3.5 p-3 rounded-2xl bg-white/[0.04] border border-white/10 hover:border-[#C9A84C]/30 transition-colors">
-                <div className="w-9 h-9 rounded-xl bg-[#4EC9B0]/20 flex items-center justify-center shrink-0 mt-0.5">
-                  <Sparkles size={18} className="text-[#4EC9B0]" />
-                </div>
-                <div>
-                  <h4 className="text-sm font-semibold text-white">BazaarLink AI Vision & Barter</h4>
-                  <p className="text-xs text-white/60 mt-0.5 leading-relaxed">
-                    Snap any market item to get honest valuations, baggage weight impact, and local bargaining phrases.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3.5 p-3 rounded-2xl bg-white/[0.04] border border-white/10 hover:border-[#C9A84C]/30 transition-colors">
-                <div className="w-9 h-9 rounded-xl bg-[#22C55E]/20 flex items-center justify-center shrink-0 mt-0.5">
-                  <ShieldCheck size={18} className="text-[#22C55E]" />
-                </div>
-                <div>
-                  <h4 className="text-sm font-semibold text-white">Private & Zero Tourist-Traps</h4>
-                  <p className="text-xs text-white/60 mt-0.5 leading-relaxed">
-                    Your itineraries and inventory are secured with Supabase Row-Level Security.
-                  </p>
-                </div>
-              </div>
+            {/* Tab toggle */}
+            <div className="flex rounded-xl bg-[#F5F2EB] p-1 mb-8 border border-[#E6E0D6]">
+              {(['login', 'signup'] as const).map((t) => (
+                <button
+                  key={t}
+                  type="button"
+                  onClick={() => switchTab(t)}
+                  className={`flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 cursor-pointer ${
+                    tab === t
+                      ? 'bg-[#E05A38] text-white shadow-sm'
+                      : 'text-[#75747A] hover:text-[#36363D]'
+                  }`}
+                >
+                  {t === 'login' ? 'Sign In' : 'Create Account'}
+                </button>
+              ))}
             </div>
-          </div>
 
-          {/* Right Column: Interactive Sign In / Log In Card */}
-          <div className="lg:col-span-6 w-full max-w-md mx-auto">
-            <div className="glass-card rounded-[28px] p-6 sm:p-8 relative">
-              {/* Tab Selector */}
-              <div className="flex rounded-xl bg-[#0D1B2A] p-1 mb-6 border border-white/10">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setTab('login')
-                    setError(null)
-                    setSuccess(null)
-                  }}
-                  className={`flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 cursor-pointer ${
-                    tab === 'login'
-                      ? 'bg-[#C9A84C] text-[#0D1B2A] shadow-md'
-                      : 'text-white/60 hover:text-white'
-                  }`}
-                >
-                  Sign In
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setTab('signup')
-                    setError(null)
-                    setSuccess(null)
-                  }}
-                  className={`flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 cursor-pointer ${
-                    tab === 'signup'
-                      ? 'bg-[#C9A84C] text-[#0D1B2A] shadow-md'
-                      : 'text-white/60 hover:text-white'
-                  }`}
-                >
-                  Create Account
-                </button>
+            {/* Alerts */}
+            {error && (
+              <div role="alert" className="mb-5 p-3.5 rounded-xl bg-[#FFF5F5] border border-[#FCA5A5] text-sm text-[#DC2626] flex items-start gap-2">
+                <AlertCircle size={16} className="shrink-0 mt-0.5" />
+                <span>{error}</span>
               </div>
-
-              {/* Title & subtitle */}
-              <div className="mb-6">
-                <h2 className="font-display text-2xl font-bold text-white">
-                  {tab === 'login' ? 'Welcome Back, Explorer' : 'Join the Expedition'}
-                </h2>
-                <p className="text-xs sm:text-sm text-white/60 mt-1">
-                  {tab === 'login'
-                    ? 'Access your personal itinerary, saved spots, and baggage runway.'
-                    : 'Personalize your travel constraints and discover authentic hubs.'}
-                </p>
+            )}
+            {success && (
+              <div role="alert" className="mb-5 p-3.5 rounded-xl bg-[#F0FDF4] border border-[#86EFAC] text-sm text-[#16A34A] flex items-start gap-2">
+                <CheckCircle2 size={16} className="shrink-0 mt-0.5" />
+                <span>{success}</span>
               </div>
+            )}
 
-              {/* Error Alert */}
-              {error && (
-                <div
-                  role="alert"
-                  className="mb-5 p-3 rounded-xl bg-[#EF4444]/15 border border-[#EF4444]/30 text-xs text-[#EF4444] flex items-start gap-2 animate-fade-in"
-                >
-                  <AlertCircle size={16} className="shrink-0 mt-0.5" />
-                  <span>{error}</span>
-                </div>
-              )}
-
-              {/* Success Alert */}
-              {success && (
-                <div
-                  role="alert"
-                  className="mb-5 p-3 rounded-xl bg-[#22C55E]/15 border border-[#22C55E]/30 text-xs text-[#22C55E] flex items-start gap-2 animate-fade-in"
-                >
-                  <CheckCircle2 size={16} className="shrink-0 mt-0.5" />
-                  <span>{success}</span>
-                </div>
-              )}
-
-              {/* Form */}
-              <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-                {tab === 'signup' && (
-                  <div>
-                    <label className="block text-xs font-semibold text-white/80 mb-1.5">
-                      Your Full Name
-                    </label>
-                    <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-white/40">
-                        <User size={16} />
-                      </div>
-                      <input
-                        type="text"
-                        required
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        placeholder="Alex Vance"
-                        autoComplete="name"
-                        className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/[0.07] border border-white/15 text-white placeholder-white/30 text-sm focus:outline-none focus:border-[#C9A84C] focus:ring-1 focus:ring-[#C9A84C] transition-all"
-                      />
-                    </div>
-                  </div>
-                )}
-
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+              {tab === 'signup' && (
                 <div>
-                  <label className="block text-xs font-semibold text-white/80 mb-1.5">
-                    Email Address
+                  <label className="block text-xs font-semibold text-[#36363D] mb-1.5">
+                    Full Name
                   </label>
                   <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-white/40">
-                      <Mail size={16} />
+                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#9E9DA3]">
+                      <User size={16} />
                     </div>
                     <input
-                      type="email"
+                      type="text"
                       required
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="alex@expedition.org"
-                      autoComplete="email"
-                      className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/[0.07] border border-white/15 text-white placeholder-white/30 text-sm focus:outline-none focus:border-[#C9A84C] focus:ring-1 focus:ring-[#C9A84C] transition-all"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Alex Vance"
+                      autoComplete="name"
+                      className="w-full pl-10 pr-4 py-3 rounded-xl bg-white border border-[#E6E0D6] text-[#1A1A1E] placeholder-[#C4C3C9] text-sm focus:outline-none focus:border-[#E05A38] focus:ring-2 focus:ring-[#E05A38]/10 transition-all"
                     />
                   </div>
                 </div>
+              )}
 
-                <div>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <label className="block text-xs font-semibold text-white/80">
-                      Password
-                    </label>
-                    {tab === 'login' && (
-                      <span className="text-[11px] text-white/50">
-                        Must be at least 6 characters
-                      </span>
-                    )}
+              <div>
+                <label className="block text-xs font-semibold text-[#36363D] mb-1.5">
+                  Email Address
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#9E9DA3]">
+                    <Mail size={16} />
                   </div>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-white/40">
-                      <Lock size={16} />
-                    </div>
-                    <input
-                      type={showPass ? 'text' : 'password'}
-                      required
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="••••••••"
-                      autoComplete={tab === 'login' ? 'current-password' : 'new-password'}
-                      className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-white/[0.07] border border-white/15 text-white placeholder-white/30 text-sm focus:outline-none focus:border-[#C9A84C] focus:ring-1 focus:ring-[#C9A84C] transition-all"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPass(!showPass)}
-                      aria-label={showPass ? 'Hide password' : 'Show password'}
-                      className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-white/40 hover:text-white transition-colors cursor-pointer"
-                    >
-                      {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
-                    </button>
-                  </div>
+                  <input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="alex@expedition.org"
+                    autoComplete="email"
+                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-white border border-[#E6E0D6] text-[#1A1A1E] placeholder-[#C4C3C9] text-sm focus:outline-none focus:border-[#E05A38] focus:ring-2 focus:ring-[#E05A38]/10 transition-all"
+                  />
                 </div>
-
-                <Button
-                  type="submit"
-                  variant="primary"
-                  size="lg"
-                  loading={loading}
-                  className="w-full mt-2 font-bold justify-center"
-                  icon={<ArrowRight size={18} />}
-                  iconPosition="right"
-                >
-                  {tab === 'login' ? 'Sign In to LocalPulse' : 'Create Your Free Account'}
-                </Button>
-              </form>
-
-              {/* Quick Demo Helper */}
-              <div className="mt-5 pt-4 border-t border-white/10 flex flex-col gap-2.5">
-                <button
-                  type="button"
-                  onClick={handleFillDemo}
-                  className="w-full py-2 px-3 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] border border-white/10 text-white/70 hover:text-white text-xs font-medium transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
-                >
-                  <Sparkles size={14} className="text-[#C9A84C]" />
-                  <span>Fill Demo Account Credentials</span>
-                </button>
-
-                <p className="text-[11px] text-center text-white/40">
-                  By continuing, you agree to LocalPulse's community guidelines & privacy terms.
-                </p>
               </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="block text-xs font-semibold text-[#36363D]">
+                    Password
+                  </label>
+                  {tab === 'login' && (
+                    <span className="text-[11px] text-[#9E9DA3]">Min. 6 characters</span>
+                  )}
+                </div>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#9E9DA3]">
+                    <Lock size={16} />
+                  </div>
+                  <input
+                    type={showPass ? 'text' : 'password'}
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    autoComplete={tab === 'login' ? 'current-password' : 'new-password'}
+                    className="w-full pl-10 pr-10 py-3 rounded-xl bg-white border border-[#E6E0D6] text-[#1A1A1E] placeholder-[#C4C3C9] text-sm focus:outline-none focus:border-[#E05A38] focus:ring-2 focus:ring-[#E05A38]/10 transition-all"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPass(!showPass)}
+                    aria-label={showPass ? 'Hide password' : 'Show password'}
+                    className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-[#9E9DA3] hover:text-[#E05A38] transition-colors cursor-pointer"
+                  >
+                    {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
+              </div>
+
+              {/* CTA Button */}
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full py-3.5 rounded-xl bg-[#E05A38] text-white font-semibold text-sm flex items-center justify-center gap-2 hover:bg-[#E86B4B] hover:-translate-y-px transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none cursor-pointer mt-2"
+              >
+                {loading ? (
+                  <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                  </svg>
+                ) : (
+                  <>
+                    {tab === 'login' ? 'Sign In to LocalPulse' : 'Create Your Free Account'}
+                    <ArrowRight size={16} />
+                  </>
+                )}
+              </button>
+            </form>
+
+            {/* Demo helper */}
+            <div className="mt-6 pt-5 border-t border-[#E6E0D6]">
+              <button
+                type="button"
+                onClick={handleFillDemo}
+                className="w-full py-2.5 px-4 rounded-xl bg-[#F5F2EB] hover:bg-[#EDE8DF] border border-[#E6E0D6] text-[#36363D] text-xs font-medium transition-colors flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <Sparkles size={13} className="text-[#E05A38]" />
+                <span>Fill Demo Account Credentials</span>
+              </button>
+              <p className="text-[11px] text-center text-[#9E9DA3] mt-4">
+                By continuing, you agree to LocalPulse's community guidelines & privacy terms.
+              </p>
             </div>
+
+            {/* Switch tab link */}
+            <p className="text-center text-sm text-[#75747A] mt-5">
+              {tab === 'login' ? "Don't have an account? " : 'Already have an account? '}
+              <button
+                type="button"
+                onClick={() => switchTab(tab === 'login' ? 'signup' : 'login')}
+                className="text-[#E05A38] font-semibold hover:underline cursor-pointer"
+              >
+                {tab === 'login' ? 'Create one free' : 'Sign in here'}
+              </button>
+            </p>
           </div>
         </div>
-      </main>
 
-      {/* Footer bar */}
-      <footer className="w-full px-6 py-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between text-xs text-white/40 gap-2">
-        <span>&copy; {new Date().getFullYear()} LocalPulse Inc. All rights reserved.</span>
-        <div className="flex items-center gap-4">
-          <Link to="/" className="hover:text-[#C9A84C] transition-colors">Home</Link>
-          <Link to="/discover" className="hover:text-[#C9A84C] transition-colors">Explore</Link>
-          <Link to="/onboarding" className="hover:text-[#C9A84C] transition-colors">Setup Profile</Link>
+        {/* Bottom copyright (right panel only) */}
+        <div className="px-6 sm:px-10 lg:px-12 xl:px-16 py-5 border-t border-[#E6E0D6]">
+          <p className="text-xs text-[#9E9DA3] text-center">
+            © {new Date().getFullYear()} LocalPulse Inc. · Built for real travelers.
+          </p>
         </div>
-      </footer>
+      </div>
     </div>
   )
 }

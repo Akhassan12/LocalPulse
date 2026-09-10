@@ -15,7 +15,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.config import settings
-from app.routers import public, traveler, physics, provider, recommendations, itinerary
+from app.routers import public, traveler, physics, provider, recommendations, itinerary, concierge
 
 # ── Structured logging ──────────────────────────────────────────────────────
 structlog.configure(
@@ -33,6 +33,32 @@ log = structlog.get_logger()
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     log.info("localpulse.startup", env=settings.APP_ENV)
+    try:
+        from app.database import Base, engine, async_session_factory
+        import app.models
+        from sqlalchemy import select, func
+        from app.models import Experience as ExperienceModel, MarketValuation
+        from app.seeds.seed_data import SEED_EXPERIENCES, SEED_MARKET_VALUATIONS
+
+        # Ensure all tables exist
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+
+        # Auto-seed database if empty
+        async with async_session_factory() as session:
+            count_res = await session.execute(select(func.count(ExperienceModel.id)))
+            count = count_res.scalar() or 0
+            if count == 0:
+                log.info("localpulse.auto_seeding_database", count=count)
+                for exp_data in SEED_EXPERIENCES:
+                    session.add(ExperienceModel(**exp_data))
+                for val_data in SEED_MARKET_VALUATIONS:
+                    session.add(MarketValuation(**val_data))
+                await session.commit()
+                log.info("localpulse.auto_seeding_complete", experiences=len(SEED_EXPERIENCES))
+    except Exception as e:
+        log.warning("localpulse.startup_seed_warning", error=str(e))
+
     yield
     log.info("localpulse.shutdown")
 
@@ -50,8 +76,8 @@ app = FastAPI(
 # ── CORS ─────────────────────────────────────────────────────────────────────
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.cors_origins_list,
-    allow_origin_regex=r"https://.*\.vercel\.app|http://localhost:\d+",
+    allow_origins=["*"] if settings.APP_ENV != "production" else settings.cors_origins_list + ["https://localhost:5173", "http://localhost:5173"],
+    allow_origin_regex=r"https://.*\.vercel\.app|http://localhost:\d+|https://.*\.onrender\.com",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -79,9 +105,16 @@ async def log_requests(request: Request, call_next):
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
     log.error("http.unhandled_exception", path=request.url.path, error=str(exc))
+    origin = request.headers.get("origin", "*")
     return JSONResponse(
         status_code=500,
-        content={"error": "internal_server_error", "detail": "An unexpected error occurred."},
+        content={"error": "internal_server_error", "detail": str(exc)},
+        headers={
+            "Access-Control-Allow-Origin": origin,
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Allow-Methods": "*",
+            "Access-Control-Allow-Headers": "*",
+        },
     )
 
 
@@ -96,6 +129,7 @@ api_v1.include_router(traveler.router, prefix="/me", tags=["Traveler"])
 api_v1.include_router(itinerary.router, tags=["Itinerary"])
 api_v1.include_router(physics.router, tags=["Physics & Finance"])
 api_v1.include_router(provider.router, prefix="/providers", tags=["Provider"])
+api_v1.include_router(concierge.router, tags=["AI Concierge"])
 
 app.include_router(api_v1)
 app.include_router(public.router, tags=["Public"])
@@ -104,6 +138,8 @@ app.include_router(traveler.router, prefix="/me", tags=["Traveler"])
 app.include_router(itinerary.router, tags=["Itinerary"])
 app.include_router(physics.router, tags=["Physics & Finance"])
 app.include_router(provider.router, prefix="/providers", tags=["Provider"])
+app.include_router(concierge.router, tags=["AI Concierge"])
+
  
  
 if __name__ == "__main__":

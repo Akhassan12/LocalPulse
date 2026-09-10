@@ -166,3 +166,41 @@ async def get_experience(
         created_at=exp.created_at,
         updated_at=exp.updated_at,
     )
+
+
+from pydantic import BaseModel, Field
+
+class MineExperiencesRequest(BaseModel):
+    city: str = Field(..., description="Target city to mine authentic experiences for")
+    country: Optional[str] = Field(None, description="Country name")
+    category: Optional[str] = Field(None, description="Optional category focus")
+    count: int = Field(default=4, ge=1, le=8, description="Number of gems to mine")
+
+
+@router.post(
+    "/experiences/mine",
+    summary="Mine authentic local experiences for any city using Google Gemini AI",
+)
+async def mine_experiences(
+    payload: MineExperiencesRequest,
+    session: AsyncSession = Depends(get_db),
+):
+    """
+    Use Google Gemini to discover and mine real-world authentic hidden gems for any city.
+    Automatically saves newly discovered gems to the database and returns them for live map rendering.
+    """
+    from app.services.ai_miner import AIMinerService
+    mined = await AIMinerService.mine_experiences_for_city(
+        city=payload.city,
+        country=payload.country,
+        category=payload.category,
+        count=payload.count,
+        session=session,
+    )
+    return {
+        "status": "success",
+        "city": payload.city,
+        "count": len(mined),
+        "experiences": mined,
+    }
+

@@ -209,26 +209,26 @@ export default function ProviderDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FAF5EB] text-[#0D1B2A]">
+    <div className="min-h-screen bg-[#FBF9F5] text-[#1A1A1E]">
       <Navbar />
 
       <main className="pt-24 pb-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {loading ? (
           <div className="py-24 text-center">
-            <div className="w-10 h-10 border-3 border-[#2D6A4F] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-            <p className="text-xs text-[#1A2B3C]/60">Loading provider portal...</p>
+            <div className="w-10 h-10 border-3 border-[#E05A38] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+            <p className="text-xs text-[#75747A]">Loading provider portal...</p>
           </div>
         ) : !provider ? (
           /* Provider Onboarding / Registration Form */
           <div className="max-w-xl mx-auto py-12">
-            <div className="bg-white rounded-3xl p-8 border border-[#0D1B2A]/10 shadow-sm text-center">
-              <div className="w-16 h-16 rounded-2xl bg-[#E0EFC7] flex items-center justify-center mx-auto mb-4 border border-[#2D6A4F]/20">
-                <Store className="w-8 h-8 text-[#2D6A4F]" />
+            <div className="bento-card p-8 text-center">
+              <div className="w-16 h-16 rounded-2xl bg-[#FDEEE9] flex items-center justify-center mx-auto mb-4 border border-[#E05A38]/20">
+                <Store className="w-8 h-8 text-[#E05A38]" />
               </div>
-              <h1 className="text-2xl font-display font-extrabold text-[#0D1B2A]">
+              <h1 className="text-2xl font-display font-extrabold text-[#1A1A1E]">
                 Host with LocalPulse
               </h1>
-              <p className="text-xs text-[#1A2B3C]/70 mt-2 mb-6">
+              <p className="text-xs text-[#75747A] mt-2 mb-6">
                 Connect directly with mindful travelers willing to exchange fair cash or valuable barter assets for your authentic heritage knowledge.
               </p>
 
@@ -242,7 +242,7 @@ export default function ProviderDashboard() {
                     required
                     value={regForm.business_name}
                     onChange={(e) => setRegForm({ ...regForm, business_name: e.target.value })}
-                    className="w-full text-xs bg-[#FAF5EB] border border-[#0D1B2A]/10 rounded-xl px-3.5 py-2.5 text-[#0D1B2A] focus:outline-none focus:ring-1 focus:ring-[#2D6A4F]"
+                    className="w-full text-xs bg-[#F5F2EB] border border-[#E6E0D6] rounded-xl px-3.5 py-2.5 text-[#1A1A1E] focus:outline-none focus:ring-1 focus:ring-[#E05A38] focus:border-[#E05A38]"
                     placeholder="e.g. Taller de Cerámica Coyotepec"
                   />
                 </div>
@@ -256,7 +256,7 @@ export default function ProviderDashboard() {
                     required
                     value={regForm.contact_email}
                     onChange={(e) => setRegForm({ ...regForm, contact_email: e.target.value })}
-                    className="w-full text-xs bg-[#FAF5EB] border border-[#0D1B2A]/10 rounded-xl px-3.5 py-2.5 text-[#0D1B2A] focus:outline-none focus:ring-1 focus:ring-[#2D6A4F]"
+                    className="w-full text-xs bg-[#F5F2EB] border border-[#E6E0D6] rounded-xl px-3.5 py-2.5 text-[#1A1A1E] focus:outline-none focus:ring-1 focus:ring-[#E05A38] focus:border-[#E05A38]"
                     placeholder="artisan@domain.com"
                   />
                 </div>
@@ -269,7 +269,7 @@ export default function ProviderDashboard() {
                     rows={3}
                     value={regForm.description}
                     onChange={(e) => setRegForm({ ...regForm, description: e.target.value })}
-                    className="w-full text-xs bg-[#FAF5EB] border border-[#0D1B2A]/10 rounded-xl px-3.5 py-2.5 text-[#0D1B2A] focus:outline-none focus:ring-1 focus:ring-[#2D6A4F]"
+                    className="w-full text-xs bg-[#F5F2EB] border border-[#E6E0D6] rounded-xl px-3.5 py-2.5 text-[#1A1A1E] focus:outline-none focus:ring-1 focus:ring-[#E05A38] focus:border-[#E05A38]"
                     placeholder="Tell travelers what makes your workshop unique..."
                   />
                 </div>
@@ -277,7 +277,7 @@ export default function ProviderDashboard() {
                 <button
                   type="submit"
                   disabled={isRegistering}
-                  className="w-full py-3 rounded-xl bg-[#2D6A4F] text-white font-bold text-xs hover:bg-[#245640] shadow-md transition-all flex items-center justify-center gap-2"
+                  className="w-full py-3 rounded-xl bg-[#E05A38] text-white font-bold text-xs hover:bg-[#E86B4B] shadow-sm transition-all flex items-center justify-center gap-2"
                 >
                   {isRegistering ? 'Registering...' : 'Complete Provider Registration'}
                 </button>
@@ -288,25 +288,25 @@ export default function ProviderDashboard() {
           /* Active Provider Dashboard */
           <div className="space-y-8">
             {/* Header */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#0D1B2A]/10">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#E6E0D6]">
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#E0EFC7] text-[#2D6A4F] flex items-center gap-1">
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#EDF2EF] text-[#3B5249] flex items-center gap-1">
                     <CheckCircle2 className="w-3 h-3" /> Verified Host
                   </span>
-                  <span className="text-xs text-[#1A2B3C]/60">{provider.contact_email}</span>
+                  <span className="text-xs text-[#75747A]">{provider.contact_email}</span>
                 </div>
-                <h1 className="text-3xl sm:text-4xl font-display font-extrabold text-[#0D1B2A]">
+                <h1 className="text-3xl sm:text-4xl font-display font-extrabold text-[#1A1A1E]">
                   {provider.business_name}
                 </h1>
-                <p className="text-xs sm:text-sm text-[#1A2B3C]/70 mt-1">
+                <p className="text-xs sm:text-sm text-[#75747A] mt-1">
                   Manage experiences, view traveler carrying fits, and review incoming barter demands.
                 </p>
               </div>
 
               <Link
                 to="/provider/experiences/new"
-                className="px-5 py-3 rounded-xl bg-[#2D6A4F] text-white font-bold text-xs flex items-center gap-2 hover:bg-[#245640] shadow-sm transition-all self-start md:self-auto"
+                className="px-5 py-3 rounded-xl bg-[#E05A38] text-white font-bold text-xs flex items-center gap-2 hover:bg-[#E86B4B] shadow-sm transition-all self-start md:self-auto hover:-translate-y-px"
               >
                 <Plus className="w-4 h-4" /> Add Experience Listing
               </Link>
@@ -314,45 +314,45 @@ export default function ProviderDashboard() {
 
             {/* Performance Stats Cards */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="bg-white p-5 rounded-2xl border border-[#0D1B2A]/10 shadow-sm">
-                <span className="block text-[11px] font-bold text-[#1A2B3C]/60 uppercase tracking-wider flex items-center gap-1 mb-1">
-                  <Store className="w-3.5 h-3.5 text-[#2D6A4F]" /> Active Listings
+              <div className="bento-card p-5">
+                <span className="block text-[11px] font-bold text-[#75747A] uppercase tracking-wider flex items-center gap-1 mb-1">
+                  <Store className="w-3.5 h-3.5 text-[#E05A38]" /> Active Listings
                 </span>
-                <span className="text-2xl font-display font-extrabold text-[#0D1B2A]">
+                <span className="text-2xl font-display font-extrabold text-[#1A1A1E]">
                   {experiences.length}
                 </span>
-                <span className="block text-[10px] text-[#2D6A4F] mt-1">All live on Discovery</span>
+                <span className="block text-[10px] text-[#3B5249] mt-1">All live on Discovery</span>
               </div>
 
-              <div className="bg-white p-5 rounded-2xl border border-[#0D1B2A]/10 shadow-sm">
-                <span className="block text-[11px] font-bold text-[#1A2B3C]/60 uppercase tracking-wider flex items-center gap-1 mb-1">
-                  <TrendingUp className="w-3.5 h-3.5 text-[#C9A84C]" /> Traveler Fit Rate
+              <div className="bento-card p-5">
+                <span className="block text-[11px] font-bold text-[#75747A] uppercase tracking-wider flex items-center gap-1 mb-1">
+                  <TrendingUp className="w-3.5 h-3.5 text-[#E05A38]" /> Traveler Fit Rate
                 </span>
-                <span className="text-2xl font-display font-extrabold text-[#0D1B2A]">88%</span>
-                <span className="block text-[10px] text-[#1A2B3C]/60 mt-1">Weight & budget matched</span>
+                <span className="text-2xl font-display font-extrabold text-[#1A1A1E]">88%</span>
+                <span className="block text-[10px] text-[#75747A] mt-1">Weight & budget matched</span>
               </div>
 
-              <div className="bg-white p-5 rounded-2xl border border-[#0D1B2A]/10 shadow-sm">
-                <span className="block text-[11px] font-bold text-[#1A2B3C]/60 uppercase tracking-wider flex items-center gap-1 mb-1">
-                  <Package className="w-3.5 h-3.5 text-[#2D6A4F]" /> Barter Demands
+              <div className="bento-card p-5">
+                <span className="block text-[11px] font-bold text-[#75747A] uppercase tracking-wider flex items-center gap-1 mb-1">
+                  <Package className="w-3.5 h-3.5 text-[#3B5249]" /> Barter Demands
                 </span>
-                <span className="text-2xl font-display font-extrabold text-[#0D1B2A]">14</span>
-                <span className="block text-[10px] text-[#2D6A4F] mt-1">Active traveler offers</span>
+                <span className="text-2xl font-display font-extrabold text-[#1A1A1E]">14</span>
+                <span className="block text-[10px] text-[#3B5249] mt-1">Active traveler offers</span>
               </div>
 
-              <div className="bg-white p-5 rounded-2xl border border-[#0D1B2A]/10 shadow-sm">
-                <span className="block text-[11px] font-bold text-[#1A2B3C]/60 uppercase tracking-wider flex items-center gap-1 mb-1">
-                  <Users className="w-3.5 h-3.5 text-[#0D1B2A]" /> Monthly Travelers
+              <div className="bento-card p-5">
+                <span className="block text-[11px] font-bold text-[#75747A] uppercase tracking-wider flex items-center gap-1 mb-1">
+                  <Users className="w-3.5 h-3.5 text-[#1A1A1E]" /> Monthly Travelers
                 </span>
-                <span className="text-2xl font-display font-extrabold text-[#0D1B2A]">46</span>
-                <span className="block text-[10px] text-[#1A2B3C]/60 mt-1">Direct bookings</span>
+                <span className="text-2xl font-display font-extrabold text-[#1A1A1E]">46</span>
+                <span className="block text-[10px] text-[#75747A] mt-1">Direct bookings</span>
               </div>
             </div>
 
             {/* Experience Listings Section */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <h2 className="text-lg font-display font-bold text-[#0D1B2A]">
+                <h2 className="text-lg font-display font-bold text-[#1A1A1E]">
                   Hosted Cultural Experiences
                 </h2>
                 <span className="text-xs text-[#1A2B3C]/60">
@@ -364,7 +364,7 @@ export default function ProviderDashboard() {
                 {experiences.map((exp) => (
                   <div
                     key={exp.id}
-                    className="bg-white rounded-2xl p-5 border border-[#0D1B2A]/10 shadow-sm flex flex-col justify-between gap-4 hover:border-[#2D6A4F]/30 transition-all"
+                  className="bento-card p-5 flex flex-col justify-between gap-4 hover:border-[#E05A38]/30 transition-all"
                   >
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">

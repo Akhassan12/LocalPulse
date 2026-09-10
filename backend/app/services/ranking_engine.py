@@ -354,16 +354,30 @@ class RankingEngine:
         walk_minutes: int,
         category: str,
         tags: list[str],
+        circumstance_mode: Optional[str] = None,
     ) -> str:
         """
-        Picks the top 2-3 scoring factors and formats them into an intuitive sentence.
+        Picks the top 2-3 scoring factors and formats them into an intuitive sentence,
+        highlighting circumstance adaptations if active.
         """
+        circumstance_prefix = ""
+        if circumstance_mode == "monsoon_rain":
+            circumstance_prefix = "🌧️ Weather Adapted: "
+        elif circumstance_mode == "heatwave":
+            circumstance_prefix = "☀️ Cool Refuge: "
+        elif circumstance_mode == "time_crunch":
+            circumstance_prefix = "⏱️ Rapid Reroute: "
+        elif circumstance_mode == "budget_saver":
+            circumstance_prefix = "💸 Budget Gem: "
+        elif circumstance_mode == "family_mode":
+            circumstance_prefix = "👨‍👩‍👧 Family Favorite: "
+
         factors = [
-            ("time", breakdown.time_score, f"fits your schedule with a {walk_minutes}-min walk"),
-            ("budget", breakdown.budget_score, "well within your remaining budget"),
-            ("quality", breakdown.quality_score, "highly rated with trusted traveler reviews"),
+            ("time", breakdown.time_score, f"fits your schedule ({walk_minutes}-min walk)"),
+            ("budget", breakdown.budget_score, "well within your target budget"),
+            ("quality", breakdown.quality_score, "highly rated with verified local reviews"),
             ("interest", breakdown.interest_score, f"matches your interests ({', '.join(tags[:2]) if tags else category})"),
-            ("accessibility", breakdown.accessibility_score, "meets your accessibility needs"),
+            ("accessibility", breakdown.accessibility_score, "meets your accessibility requirements"),
         ]
 
         # Sort by score descending
@@ -371,10 +385,10 @@ class RankingEngine:
 
         top_clauses = [f[2] for f in factors[:2] if f[1] >= Decimal("60.0")]
         if not top_clauses:
-            return "Good all-around fit for your current location and timeframe."
+            return f"{circumstance_prefix}Solid fit for your location and available window."
 
         joined = " and ".join(top_clauses)
-        return f"Top pick: {joined.capitalize()}."
+        return f"{circumstance_prefix}Top pick: {joined}."
 
     # ── 10. Master Rank Function ────────────────────────────────────────────────
     def rank(
@@ -384,9 +398,10 @@ class RankingEngine:
         context: LiveContext,
     ) -> list[RankedExperience]:
         """
-        Filter, evaluate, and rank candidate experiences.
+        Filter, evaluate, and rank candidate experiences with circumstance adaptation.
         """
         ranked_list: list[RankedExperience] = []
+        mode = context.circumstance_mode
 
         for exp in experiences:
             # 1. Pre-filter active status
@@ -398,7 +413,8 @@ class RankingEngine:
                 continue
 
             # Calculate individual factor scores
-            interest_s = self.score_interest_fit(traveler_profile.interests, exp.tags)
+            interests_to_use = context.interests if context.interests else traveler_profile.interests
+            interest_s = self.score_interest_fit(interests_to_use, exp.tags)
             time_s = self.score_time_fit(exp.duration_minutes, context.available_minutes)
             budget_s = self.score_budget_fit(
                 exp.price_min,
@@ -417,7 +433,7 @@ class RankingEngine:
             )
             quality_s = self.score_quality_fit(exp.rating_avg, exp.rating_count)
             access_s = self.score_accessibility_fit(
-                traveler_profile.accessibility_needs,
+                context.accessibility_needs if context.accessibility_needs else traveler_profile.accessibility_needs,
                 exp.accessibility_tags,
                 context.group_size,
                 exp.capacity,
@@ -427,6 +443,42 @@ class RankingEngine:
                 traveler_profile.max_carry_capacity_kg,
                 traveler_profile.current_carried_weight_kg,
             )
+
+            # ── Dynamic Circumstance Adaptation Modifier ────────────────────────
+            circumstance_multiplier = Decimal("1.0")
+            exp_text = f"{exp.title} {exp.description} {' '.join(exp.tags)} {exp.category}".lower()
+
+            if mode in ("monsoon_rain", "heatwave"):
+                # Boost sheltered / indoor ateliers, havelis, workshops, food
+                is_indoor = any(k in exp_text for k in ["indoor", "workshop", "studio", "haveli", "museum", "baithak", "sweets", "chai", "silk", "craft"])
+                is_open_air = any(k in exp_text for k in ["boat", "river", "open-air", "trail", "stepwell", "akhada", "walking tour"])
+                if is_indoor:
+                    circumstance_multiplier *= Decimal("1.25")
+                elif is_open_air:
+                    circumstance_multiplier *= Decimal("0.60")
+
+            elif mode == "time_crunch":
+                # Severe priority for duration <= 45m and close distance
+                if exp.duration_minutes <= 45 and walk_mins <= 12:
+                    circumstance_multiplier *= Decimal("1.30")
+                elif exp.duration_minutes > 90 or walk_mins > 20:
+                    circumstance_multiplier *= Decimal("0.50")
+
+            elif mode == "budget_saver":
+                # Free or under 250 INR
+                p_min = exp.price_min if exp.price_min is not None else Decimal("0.0")
+                if p_min <= Decimal("250.0"):
+                    circumstance_multiplier *= Decimal("1.30")
+                elif p_min > Decimal("1000.0"):
+                    circumstance_multiplier *= Decimal("0.60")
+
+            elif mode == "family_mode":
+                # Kid & family friendly hands-on crafts, food, puppets
+                is_family_friendly = any(k in exp_text for k in ["family", "kid", "pottery", "block print", "craft", "sweet", "puppet", "heritage", "story"])
+                if is_family_friendly:
+                    circumstance_multiplier *= Decimal("1.25")
+                if "akhada" in exp_text or "nightlife" in exp_text:
+                    circumstance_multiplier *= Decimal("0.60")
 
             breakdown = FitBreakdown(
                 interest_score=interest_s,
@@ -448,13 +500,13 @@ class RankingEngine:
                 + (self.weights.accessibility_fit * access_s)
             )
 
-            # Apply capacity modifier (for market/shopping)
-            final_score = (base_score * cap_modifier).quantize(
+            # Apply capacity modifier and circumstance modifier
+            final_score = (base_score * cap_modifier * circumstance_multiplier).quantize(
                 Decimal("0.1"), rounding=ROUND_HALF_UP
             )
             final_score = min(Decimal("100.0"), max(Decimal("0.0"), final_score))
 
-            explanation = self.generate_explanation(breakdown, walk_mins, exp.category, exp.tags)
+            explanation = self.generate_explanation(breakdown, walk_mins, exp.category, exp.tags, mode)
 
             ranked_list.append(
                 RankedExperience(
@@ -470,3 +522,4 @@ class RankingEngine:
         # Sort descending by fit_score
         ranked_list.sort(key=lambda r: r.fit_score, reverse=True)
         return ranked_list
+

@@ -110,35 +110,34 @@ export const ExperienceCard: React.FC<ExperienceCardProps> = ({
   const formatPrice = () => {
     const min = Number(experience.price_min) || 0
     const max = Number(experience.price_max) || min
-    const curr = experience.currency || 'USD'
     if (min === 0 && max === 0) return 'Free'
-    if (min === max) return `${curr} ${min}`
-    return `${curr} ${min} – ${max}`
+    if (min === max) return `₹${min.toLocaleString()}`
+    return `₹${min.toLocaleString()} – ₹${max.toLocaleString()}`
   }
 
   return (
     <div
       id={`experience-${experience.id}`}
       onClick={handleCardClick}
-      className={`group relative rounded-2xl border transition-all duration-300 overflow-hidden cursor-pointer backdrop-blur-xl ${
+      className={`group relative rounded-2xl border transition-all duration-300 overflow-hidden cursor-pointer bg-white ${
         isSelected
-          ? 'bg-[#132030] border-[#C9A84C] ring-2 ring-[#C9A84C]/40 shadow-2xl -translate-y-1'
-          : 'bg-[#0A1420]/80 hover:bg-[#132030]/90 border-white/10 hover:border-[#C9A84C]/50 hover:shadow-xl hover:-translate-y-0.5'
+          ? 'border-[#E05A38] ring-2 ring-[#E05A38]/20 shadow-[var(--shadow-card-hover)] -translate-y-1'
+          : 'border-[#E6E0D6] hover:border-[#E05A38]/30 hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-0.5'
       }`}
     >
-      {/* Top Banner Image with gradient */}
-      <div className="relative h-48 w-full overflow-hidden bg-[#0A1420]">
+      {/* Top Banner Image */}
+      <div className="relative h-44 w-full overflow-hidden bg-[#F5F2EB]">
         <img
           src={imageUrl}
           alt={experience.title}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           loading="lazy"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0A1420] via-black/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#1A1A1E]/60 via-transparent to-transparent" />
 
-        {/* Top Badges: Category & Shortlist Button */}
+        {/* Category + shortlist button */}
         <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
-          <span className="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold tracking-wider uppercase bg-[#0D1B2A]/80 backdrop-blur-md text-[#4EC9B0] border border-[#4EC9B0]/30 shadow-sm">
+          <span className="chip-terra capitalize">
             {experience.category?.replace('_', ' ')}
           </span>
 
@@ -148,18 +147,18 @@ export const ExperienceCard: React.FC<ExperienceCardProps> = ({
             title={shortlisted ? 'Remove from Itinerary' : 'Add to Itinerary'}
             className={`p-2 rounded-xl backdrop-blur-md transition-all shadow-md ${
               shortlisted
-                ? 'bg-[#C9A84C] text-[#0D1B2A] ring-2 ring-[#C9A84C]/60 scale-105'
-                : 'bg-black/50 text-white/80 hover:text-white hover:bg-black/80 border border-white/10'
+                ? 'bg-[#E05A38] text-white ring-2 ring-[#E05A38]/40 scale-105'
+                : 'bg-white/80 text-[#75747A] hover:text-[#E05A38] hover:bg-white border border-[#E6E0D6]'
             }`}
           >
             {shortlisted ? <BookmarkCheck className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}
           </button>
         </div>
 
-        {/* Bottom Image Overlay: City & Rating */}
+        {/* City + Rating overlay */}
         <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white text-xs">
           <div className="flex items-center gap-1.5 text-white/90 bg-black/40 backdrop-blur-md px-2.5 py-1 rounded-lg border border-white/10">
-            <MapPin className="w-3.5 h-3.5 text-[#C9A84C]" />
+            <MapPin className="w-3.5 h-3.5 text-[#E05A38]" />
             <span className="font-medium text-xs">{experience.city}</span>
           </div>
 
@@ -179,7 +178,7 @@ export const ExperienceCard: React.FC<ExperienceCardProps> = ({
       <div className="p-5 flex flex-col justify-between space-y-4">
         <div>
           <div className="flex items-start justify-between gap-3 mb-2">
-            <h3 className="font-serif text-lg font-bold text-white leading-snug group-hover:text-[#C9A84C] transition-colors line-clamp-2">
+            <h3 className="font-display text-base font-bold text-[#1A1A1E] leading-snug group-hover:text-[#E05A38] transition-colors line-clamp-2">
               {experience.title}
             </h3>
             {/* Fit Score Dial */}
@@ -189,28 +188,32 @@ export const ExperienceCard: React.FC<ExperienceCardProps> = ({
           </div>
 
           {/* Quick Metrics Bar */}
-          <div className="flex flex-wrap items-center gap-2.5 text-xs text-white/70 mb-3">
+          <div className="flex flex-wrap items-center gap-2 text-xs text-[#75747A] mb-3">
             <span className="flex items-center gap-1">
-              <Clock className="w-3.5 h-3.5 text-[#C9A84C]" />
+              <Clock className="w-3.5 h-3.5 text-[#E05A38]" />
               {experience.duration_minutes}m
             </span>
-            <span className="w-1 h-1 rounded-full bg-white/30" />
-            <span className="font-mono font-bold text-[#E5C365]">{formatPrice()}</span>
+            <span className="w-1 h-1 rounded-full bg-[#D4CCC0]" />
+            <span className="font-data font-bold text-[#E05A38]">{formatPrice()}</span>
             {walking_distance_km !== undefined && (
               <>
-                <span className="w-1 h-1 rounded-full bg-white/30" />
-                <span className="flex items-center gap-1 text-[#4EC9B0] font-mono text-[11px]">
-                  <Footprints className="w-3.5 h-3.5" />
-                  {Number(walking_distance_km).toFixed(1)} km (~{estimated_walk_minutes}m walk)
+                <span className="w-1 h-1 rounded-full bg-[#D4CCC0]" />
+                <span className="flex items-center gap-1 text-[#3B5249] font-data text-[11px] font-semibold">
+                  <Footprints className="w-3.5 h-3.5 text-[#3B5249]" />
+                  {Number(walking_distance_km) < 1
+                    ? `${(Number(walking_distance_km) * 1000).toFixed(0)}m`
+                    : `${Number(walking_distance_km).toFixed(1)}km`}
+                  {estimated_walk_minutes > 0 && ` • ${estimated_walk_minutes}m walk`}
                 </span>
               </>
             )}
           </div>
 
+
           {/* AI Explanation Pill */}
           {explanation && (
-            <div className="mb-3 px-3 py-2 rounded-xl bg-white/[0.04] border border-[#C9A84C]/25 text-[11px] text-[#F5EDD6]/90 flex items-start gap-2 leading-relaxed">
-              <Sparkles className="w-3.5 h-3.5 text-[#C9A84C] flex-shrink-0 mt-0.5" />
+            <div className="mb-3 px-3 py-2 rounded-xl bg-[#FDEEE9] border border-[#E05A38]/15 text-[11px] text-[#36363D] flex items-start gap-2 leading-relaxed">
+              <Sparkles className="w-3.5 h-3.5 text-[#E05A38] flex-shrink-0 mt-0.5" />
               <span className="line-clamp-2 italic">{explanation}</span>
             </div>
           )}
@@ -221,7 +224,7 @@ export const ExperienceCard: React.FC<ExperienceCardProps> = ({
               {experience.tags.slice(0, 3).map((tag, idx) => (
                 <span
                   key={idx}
-                  className="px-2 py-0.5 rounded-md text-[10px] font-mono uppercase bg-white/[0.05] text-white/70 border border-white/5"
+                  className="chip-neutral text-[10px] py-0.5 px-2"
                 >
                   #{tag}
                 </span>
@@ -230,15 +233,15 @@ export const ExperienceCard: React.FC<ExperienceCardProps> = ({
           )}
         </div>
 
-        {/* Footer Actions: Prominent Aligned Dual Buttons */}
-        <div className="pt-3 border-t border-white/10 flex items-center gap-2.5">
+        {/* Footer Actions */}
+        <div className="pt-3 border-t border-[#F5F2EB] flex items-center gap-2.5">
           <button
             type="button"
             onClick={handleToggleShortlist}
-            className={`flex-1 py-2.5 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-md ${
+            className={`flex-1 py-2.5 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
               shortlisted
-                ? 'bg-[#4EC9B0] hover:bg-[#38b39a] text-[#0D1B2A] shadow-[0_0_12px_rgba(78,201,176,0.3)]'
-                : 'bg-[#C9A84C] hover:bg-[#E5C365] active:bg-[#B8933E] text-[#0D1B2A] shadow-[0_0_12px_rgba(201,168,76,0.25)]'
+                ? 'bg-[#3B5249] text-white hover:bg-[#2E4039]'
+                : 'bg-[#E05A38] text-white hover:bg-[#E86B4B] shadow-sm'
             }`}
           >
             {shortlisted ? (
@@ -257,7 +260,7 @@ export const ExperienceCard: React.FC<ExperienceCardProps> = ({
           <Link
             to={`/experiences/${experience.id}`}
             onClick={(e) => e.stopPropagation()}
-            className="py-2.5 px-3.5 rounded-xl text-xs font-semibold bg-white/[0.07] hover:bg-white/[0.14] border border-white/15 text-white hover:text-[#4EC9B0] transition-all flex items-center justify-center gap-1 cursor-pointer"
+            className="py-2.5 px-3.5 rounded-xl text-xs font-semibold bg-[#F5F2EB] hover:bg-[#EDE8DF] border border-[#E6E0D6] text-[#36363D] hover:text-[#1A1A1E] transition-all flex items-center justify-center gap-1 cursor-pointer"
           >
             <span>Details</span>
             <ArrowUpRight className="w-3.5 h-3.5" />

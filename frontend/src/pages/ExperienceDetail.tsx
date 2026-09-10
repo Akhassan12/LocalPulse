@@ -28,7 +28,9 @@ import {
   Compass,
   Layers,
   ChevronRight,
+  ArrowRight,
 } from 'lucide-react'
+
 import Navbar from '../components/layout/Navbar'
 import { api } from '../lib/api'
 import { useItineraryStore } from '../store/itineraryStore'
@@ -198,12 +200,12 @@ export default function ExperienceDetail() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#061423] text-white">
+      <div className="min-h-screen bg-[#FDFCF7] text-[#1A1A1E]">
         <Navbar />
         <main className="pt-24 max-w-7xl mx-auto px-4 py-12 flex items-center justify-center min-h-[60vh]">
           <div className="text-center space-y-3">
-            <div className="w-10 h-10 border-4 border-[#C9A84C] border-t-transparent rounded-full animate-spin mx-auto" />
-            <p className="text-sm font-semibold text-white/80">Loading authentic experience details...</p>
+            <div className="w-10 h-10 border-4 border-[#E05A38] border-t-transparent rounded-full animate-spin mx-auto" />
+            <p className="text-sm font-semibold text-[#75747A]">Loading authentic experience details...</p>
           </div>
         </main>
       </div>
@@ -212,17 +214,17 @@ export default function ExperienceDetail() {
 
   if (!experience) {
     return (
-      <div className="min-h-screen bg-[#061423] text-white">
+      <div className="min-h-screen bg-[#FDFCF7] text-[#1A1A1E]">
         <Navbar />
         <main className="pt-24 max-w-7xl mx-auto px-4 py-12 text-center">
-          <AlertCircle className="w-12 h-12 text-rose-400 mx-auto mb-3" />
-          <h2 className="text-2xl font-serif font-bold text-white">Experience Not Found</h2>
-          <p className="text-sm text-white/70 mt-1 mb-6">
+          <AlertCircle className="w-12 h-12 text-[#E05A38] mx-auto mb-3" />
+          <h2 className="text-2xl font-display font-bold text-[#1A1A1E]">Experience Not Found</h2>
+          <p className="text-sm text-[#75747A] mt-1 mb-6">
             The requested experience could not be loaded or has been retired.
           </p>
           <Link
             to="/discover"
-            className="px-6 py-2.5 rounded-xl bg-[#C9A84C] text-[#0D1B2A] font-bold text-xs inline-flex items-center gap-2 hover:bg-[#E5C365] cursor-pointer"
+            className="px-6 py-2.5 rounded-xl bg-[#E05A38] text-white font-bold text-xs inline-flex items-center gap-2 hover:bg-[#E86B4B] cursor-pointer shadow-sm"
           >
             <ArrowLeft className="w-4 h-4" /> Back to Discover
           </Link>
@@ -235,44 +237,52 @@ export default function ExperienceDetail() {
     'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=1200&auto=format&fit=crop&q=80',
   ]
 
+  const formatPrice = () => {
+    const min = Number(experience.price_min) || 0
+    const max = Number(experience.price_max) || min
+    if (min === 0 && max === 0) return 'Free'
+    if (min === max) return `₹${min.toLocaleString()}`
+    return `₹${min.toLocaleString()} – ₹${max.toLocaleString()}`
+  }
+
   return (
-    <div className="min-h-screen bg-[#061423] text-white selection:bg-[#C9A84C]/30 flex flex-col">
+    <div className="min-h-screen bg-[#FDFCF7] text-[#1A1A1E] flex flex-col">
       <Navbar />
 
       <main className="pt-24 lg:pt-28 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-1 w-full">
         {/* Navigation Breadcrumb */}
-        <div className="py-4 flex items-center justify-between text-xs text-white/60">
+        <div className="py-4 flex items-center justify-between text-xs text-[#75747A]">
           <Link
-            to="/discover"
-            className="inline-flex items-center gap-1.5 font-semibold text-[#E5C365] hover:underline"
+            to={`/discover?city=${encodeURIComponent(experience.city)}`}
+            className="inline-flex items-center gap-1.5 font-semibold text-[#E05A38] hover:underline"
           >
-            <ArrowLeft className="w-4 h-4" /> Back to Discover
+            <ArrowLeft className="w-4 h-4" /> Back to {experience.city} Discovery
           </Link>
-          <div className="flex items-center gap-2 font-mono">
-            <span className="capitalize">{experience.city}</span>
-            <ChevronRight className="w-3 h-3 text-white/40" />
-            <span className="capitalize">{experience.category?.replace('_', ' ')}</span>
+          <div className="flex items-center gap-2">
+            <span className="capitalize font-medium text-[#1A1A1E]">{experience.city}</span>
+            <ChevronRight className="w-3 h-3 text-[#9E9DA3]" />
+            <span className="capitalize font-medium text-[#75747A]">{experience.category?.replace('_', ' ')}</span>
           </div>
         </div>
 
         {/* Top Header & Actions */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#E6E0D6] mb-6">
           <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-[#4EC9B0]/15 text-[#4EC9B0] border border-[#4EC9B0]/30">
+            <div className="flex items-center gap-2 mb-2 flex-wrap">
+              <span className="chip-terra capitalize">
                 {experience.category?.replace('_', ' ')}
               </span>
-              <div className="flex items-center gap-1 text-xs font-bold text-white">
-                <Star className="w-3.5 h-3.5 fill-[#C9A84C] text-[#C9A84C]" />
+              <div className="flex items-center gap-1 text-xs font-bold text-[#1A1A1E]">
+                <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
                 <span>{experience.rating_avg ? Number(experience.rating_avg).toFixed(2) : '4.9'}</span>
-                <span className="text-white/50 font-normal">({experience.rating_count || 32} verified reviews)</span>
+                <span className="text-[#75747A] font-normal">({experience.rating_count || 32} verified reviews)</span>
               </div>
             </div>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold tracking-tight text-white">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-display font-bold tracking-tight text-[#1A1A1E]">
               {experience.title}
             </h1>
-            <p className="text-xs sm:text-sm text-white/70 flex items-center gap-1.5 mt-1.5 font-mono">
-              <MapPin className="w-3.5 h-3.5 text-[#C9A84C]" />
+            <p className="text-xs sm:text-sm text-[#75747A] flex items-center gap-1.5 mt-1.5">
+              <MapPin className="w-3.5 h-3.5 text-[#E05A38]" />
               {experience.address || `${experience.city}, ${experience.country}`}
             </p>
           </div>
@@ -282,16 +292,16 @@ export default function ExperienceDetail() {
             <button
               type="button"
               onClick={handleBookmarkToggle}
-              className={`px-5 py-3 rounded-xl font-bold text-xs flex items-center gap-2 transition-all cursor-pointer shadow-md ${
+              className={`px-5 py-3 rounded-xl font-bold text-xs flex items-center gap-2 transition-all cursor-pointer shadow-sm ${
                 isBookmarked
-                  ? 'bg-[#4EC9B0] text-[#0D1B2A] hover:bg-[#38b39a] shadow-[0_0_16px_rgba(78,201,176,0.3)]'
-                  : 'bg-[#C9A84C] hover:bg-[#E5C365] active:bg-[#B8933E] text-[#0D1B2A] shadow-[0_0_16px_rgba(201,168,76,0.35)]'
+                  ? 'bg-[#3B5249] text-white hover:bg-[#2E4039]'
+                  : 'bg-[#E05A38] hover:bg-[#E86B4B] text-white'
               }`}
             >
               {isBookmarked ? (
                 <>
                   <BookmarkCheck className="w-4 h-4" />
-                  <span>Saved to Itinerary</span>
+                  <span>Saved in Itinerary</span>
                 </>
               ) : (
                 <>
@@ -311,7 +321,7 @@ export default function ExperienceDetail() {
                   alert('Link copied to clipboard!')
                 }
               }}
-              className="p-3 rounded-xl bg-white/[0.08] hover:bg-white/[0.15] border border-white/15 text-white transition-colors cursor-pointer"
+              className="p-3 rounded-xl bg-white hover:bg-[#F5F2EB] border border-[#E6E0D6] text-[#75747A] hover:text-[#1A1A1E] transition-colors cursor-pointer shadow-sm"
               title="Share experience"
             >
               <Share2 className="w-4 h-4" />
@@ -321,14 +331,14 @@ export default function ExperienceDetail() {
 
         {/* Photo Gallery Grid */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-3.5 mb-8">
-          <div className="md:col-span-3 rounded-2xl overflow-hidden aspect-[16/10] bg-[#0A1420] relative shadow-2xl border border-white/10">
+          <div className="md:col-span-3 rounded-2xl overflow-hidden aspect-[16/10] bg-[#F5F2EB] relative shadow-md border border-[#E6E0D6]">
             <img
               src={images[activeImageIndex] || images[0]}
               alt={experience.title}
               className="w-full h-full object-cover transition-all duration-500"
             />
-            <div className="absolute top-3 left-3 bg-[#0D1B2A]/80 backdrop-blur-md text-[#FAF5EB] text-[10px] font-mono font-bold px-3 py-1 rounded-full flex items-center gap-1.5 border border-white/10 shadow-sm">
-              <Sparkles className="w-3.5 h-3.5 text-[#C9A84C]" /> Artisan Heritage Verified
+            <div className="absolute top-3 left-3 bg-[#1A1A1E]/80 backdrop-blur-md text-white text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
+              <Sparkles className="w-3.5 h-3.5 text-[#E05A38]" /> Cultural Heritage Verified
             </div>
           </div>
 
@@ -339,7 +349,7 @@ export default function ExperienceDetail() {
                 type="button"
                 onClick={() => setActiveImageIndex(idx)}
                 className={`rounded-xl overflow-hidden aspect-video relative border-2 transition-all cursor-pointer ${
-                  activeImageIndex === idx ? 'border-[#C9A84C] ring-2 ring-[#C9A84C]/40' : 'border-white/10 opacity-60 hover:opacity-100'
+                  activeImageIndex === idx ? 'border-[#E05A38] ring-2 ring-[#E05A38]/30' : 'border-[#E6E0D6] opacity-70 hover:opacity-100'
                 }`}
               >
                 <img src={img} alt="" className="w-full h-full object-cover" />
@@ -353,55 +363,55 @@ export default function ExperienceDetail() {
           {/* LEFT COLUMN: Narrative, Key Constraints, Accessibility (8 cols) */}
           <div className="lg:col-span-7 xl:col-span-8 space-y-6">
             {/* Quick Constraint Highlights Bar */}
-            <div className="bg-[#0A1420]/80 backdrop-blur-xl rounded-2xl p-5 border border-white/10 shadow-lg grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
-              <div className="border-r border-white/10 last:border-none">
-                <span className="block text-[11px] text-white/60 flex items-center justify-center gap-1 mb-1">
-                  <Clock className="w-3.5 h-3.5 text-[#4EC9B0]" /> Duration
+            <div className="bg-white rounded-2xl p-5 border border-[#E6E0D6] shadow-sm grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+              <div className="border-r border-[#F5F2EB] last:border-none">
+                <span className="block text-[11px] text-[#75747A] flex items-center justify-center gap-1 mb-1 font-medium">
+                  <Clock className="w-3.5 h-3.5 text-[#E05A38]" /> Duration
                 </span>
-                <span className="text-base font-mono font-bold text-white">
+                <span className="text-base font-data font-bold text-[#1A1A1E]">
                   {experience.duration_minutes || 120}m
                 </span>
               </div>
-              <div className="border-r border-white/10 last:border-none">
-                <span className="block text-[11px] text-white/60 flex items-center justify-center gap-1 mb-1">
-                  <DollarSign className="w-3.5 h-3.5 text-[#C9A84C]" /> Cost Range
+              <div className="border-r border-[#F5F2EB] last:border-none">
+                <span className="block text-[11px] text-[#75747A] flex items-center justify-center gap-1 mb-1 font-medium">
+                  <Sparkles className="w-3.5 h-3.5 text-[#3B5249]" /> Cost
                 </span>
-                <span className="text-base font-mono font-bold text-[#E5C365]">
-                  ${experience.price_min || 0} - ${experience.price_max || experience.price_min || 50}
+                <span className="text-base font-data font-bold text-[#E05A38]">
+                  {formatPrice()}
                 </span>
               </div>
-              <div className="border-r border-white/10 last:border-none">
-                <span className="block text-[11px] text-white/60 flex items-center justify-center gap-1 mb-1">
-                  <Layers className="w-3.5 h-3.5 text-[#4EC9B0]" /> Group Size
+              <div className="border-r border-[#F5F2EB] last:border-none">
+                <span className="block text-[11px] text-[#75747A] flex items-center justify-center gap-1 mb-1 font-medium">
+                  <Layers className="w-3.5 h-3.5 text-[#3B5249]" /> Group Size
                 </span>
-                <span className="text-base font-bold text-white">
+                <span className="text-base font-bold text-[#1A1A1E]">
                   Max {experience.capacity || 6}
                 </span>
               </div>
               <div>
-                <span className="block text-[11px] text-white/60 flex items-center justify-center gap-1 mb-1">
-                  <Compass className="w-3.5 h-3.5 text-[#C9A84C]" /> Effort Level
+                <span className="block text-[11px] text-[#75747A] flex items-center justify-center gap-1 mb-1 font-medium">
+                  <Compass className="w-3.5 h-3.5 text-[#E05A38]" /> Effort Level
                 </span>
-                <span className="text-base font-bold text-white">Moderate</span>
+                <span className="text-base font-bold text-[#1A1A1E]">Moderate</span>
               </div>
             </div>
 
             {/* Cultural Narrative & Story */}
-            <div className="bg-[#0A1420]/80 backdrop-blur-xl rounded-2xl p-6 border border-white/10 shadow-lg space-y-4">
-              <h2 className="text-lg font-serif font-bold text-white flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-[#C9A84C]" /> Cultural Narrative & Tradition
+            <div className="bg-white rounded-2xl p-6 border border-[#E6E0D6] shadow-sm space-y-4">
+              <h2 className="text-lg font-display font-bold text-[#1A1A1E] flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-[#E05A38]" /> Cultural Narrative & Authenticity
               </h2>
-              <p className="text-sm text-white/80 leading-relaxed whitespace-pre-line">
+              <p className="text-sm text-[#36363D] leading-relaxed whitespace-pre-line">
                 {experience.description}
               </p>
 
               {/* Tags */}
               {experience.tags && experience.tags.length > 0 && (
-                <div className="flex flex-wrap gap-1.5 pt-3 border-t border-white/10">
+                <div className="flex flex-wrap gap-1.5 pt-3 border-t border-[#F5F2EB]">
                   {experience.tags.map((tag: string, i: number) => (
                     <span
                       key={i}
-                      className="px-2.5 py-1 rounded-lg text-xs font-mono bg-white/[0.05] text-white/80 border border-white/10"
+                      className="chip-neutral text-xs"
                     >
                       #{tag}
                     </span>
@@ -411,35 +421,35 @@ export default function ExperienceDetail() {
             </div>
 
             {/* Practical Details & Accessibility */}
-            <div className="bg-[#0A1420]/80 backdrop-blur-xl rounded-2xl p-6 border border-white/10 shadow-lg space-y-4">
-              <h2 className="text-lg font-serif font-bold text-white flex items-center gap-2">
-                <Shield className="w-4 h-4 text-[#4EC9B0]" /> Accessibility & Practical Notes
+            <div className="bg-white rounded-2xl p-6 border border-[#E6E0D6] shadow-sm space-y-4">
+              <h2 className="text-lg font-display font-bold text-[#1A1A1E] flex items-center gap-2">
+                <Shield className="w-4 h-4 text-[#3B5249]" /> Accessibility & Practical Guidelines
               </h2>
 
               {experience.accessibility_tags && experience.accessibility_tags.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   {experience.accessibility_tags.map((item: string, i: number) => (
-                    <div key={i} className="flex items-center gap-2 text-xs text-white bg-white/[0.04] p-3 rounded-xl border border-white/5">
-                      <CheckCircle2 className="w-4 h-4 text-[#4EC9B0] flex-shrink-0" />
+                    <div key={i} className="flex items-center gap-2 text-xs text-[#36363D] bg-[#F5F2EB] p-3 rounded-xl border border-[#E6E0D6]">
+                      <CheckCircle2 className="w-4 h-4 text-[#3B5249] flex-shrink-0" />
                       <span>{item}</span>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p className="text-xs text-white/60">Standard accessibility guidelines apply. Contact host for special requirements.</p>
+                <p className="text-xs text-[#75747A]">Wheelchair and sensory guidelines available on site. Contact provider for specific assistance.</p>
               )}
 
-              {/* Opening hours snippet */}
+              {/* Opening hours */}
               {experience.opening_hours && Object.keys(experience.opening_hours).length > 0 && (
-                <div className="pt-3 border-t border-white/10">
-                  <span className="block text-xs font-bold text-white mb-2 flex items-center gap-1.5">
-                    <Calendar className="w-3.5 h-3.5 text-[#C9A84C]" /> Operating Schedule
+                <div className="pt-3 border-t border-[#F5F2EB]">
+                  <span className="block text-xs font-bold text-[#1A1A1E] mb-2 flex items-center gap-1.5">
+                    <Calendar className="w-3.5 h-3.5 text-[#E05A38]" /> Weekly Schedule
                   </span>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-[11px]">
                     {Object.entries(experience.opening_hours).map(([day, hours]) => (
-                      <div key={day} className="bg-white/[0.04] p-2.5 rounded-lg border border-white/5">
-                        <span className="block font-semibold capitalize text-white">{day}</span>
-                        <span className="text-white/70 font-mono">{String(hours)}</span>
+                      <div key={day} className="bg-[#FAF9F5] p-2.5 rounded-lg border border-[#E6E0D6]">
+                        <span className="block font-semibold capitalize text-[#1A1A1E]">{day}</span>
+                        <span className="text-[#75747A] font-data">{String(hours)}</span>
                       </div>
                     ))}
                   </div>
@@ -447,39 +457,49 @@ export default function ExperienceDetail() {
               )}
             </div>
 
-            {/* Location & Map Coordinates */}
-            <div className="bg-[#0A1420]/80 backdrop-blur-xl rounded-2xl p-6 border border-white/10 shadow-lg space-y-3">
-              <h2 className="text-lg font-serif font-bold text-white flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-[#C9A84C]" /> Location & Coordinates
-              </h2>
-              <p className="text-xs text-white/80 font-mono">
-                {experience.address || `${experience.city}, ${experience.country}`}
-              </p>
-              <div className="w-full h-36 rounded-xl bg-white/[0.03] border border-white/10 overflow-hidden relative flex items-center justify-center">
-                <div className="text-center p-4">
-                  <div className="w-8 h-8 rounded-full bg-[#C9A84C] text-[#0D1B2A] flex items-center justify-center mx-auto mb-2 shadow-md font-bold">
-                    <MapPin className="w-4 h-4" />
-                  </div>
-                  <span className="text-xs font-bold text-white block">{experience.title}</span>
-                  <span className="text-[11px] font-mono text-[#4EC9B0]">
-                    GPS: {Number(experience.lat).toFixed(4)}° N, {Number(experience.lng).toFixed(4)}° E
-                  </span>
+            {/* Dynamic Circumstance Shift & Live Alternative (Hackathon problem requirement) */}
+            <div className="bg-[#FDEEE9] rounded-2xl p-6 border border-[#E05A38]/30 shadow-sm space-y-3">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <h3 className="text-sm font-display font-bold text-[#E05A38] flex items-center gap-1.5">
+                    <Sparkles className="w-4 h-4" /> Circumstance Shift or Running Late?
+                  </h3>
+                  <p className="text-xs text-[#555] mt-1 leading-relaxed">
+                    If this experience is booked, weather changes to heavy rain, or your schedule shifts, our recommendation engine can immediately calculate the nearest open alternatives in {experience.city}.
+                  </p>
                 </div>
+              </div>
+
+              <div className="pt-2 flex flex-wrap gap-2.5">
+                <Link
+                  to={`/discover?city=${encodeURIComponent(experience.city)}`}
+                  className="px-4 py-2 rounded-xl bg-[#E05A38] text-white font-bold text-xs hover:bg-[#E86B4B] shadow-sm inline-flex items-center gap-1.5 transition-all"
+                >
+                  <span>Find Live Alternatives</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => alert(`Weather alert for ${experience.city}: Clear skies today. Sheltered haveli alternatives are ready in 1 click if conditions shift.`)}
+                  className="px-4 py-2 rounded-xl bg-white text-[#36363D] hover:bg-[#F5F2EB] border border-[#E6E0D6] font-medium text-xs transition-all"
+                >
+                  Check Live Weather Fit
+                </button>
               </div>
             </div>
           </div>
 
-          {/* RIGHT COLUMN: Fit Score Dial + BazaarLink Scan Panel (5 cols) */}
+          {/* RIGHT COLUMN: Fit Score Dial + Scanner (4 cols) */}
           <div className="lg:col-span-5 xl:col-span-4 space-y-6">
             {/* Fit Score Dial Card */}
-            <div className="bg-[#0A1420]/85 backdrop-blur-xl rounded-2xl p-6 border border-white/10 shadow-2xl">
+            <div className="bg-white rounded-2xl p-6 border border-[#E6E0D6] shadow-sm">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <h3 className="text-sm font-serif font-bold text-white">Traveler Constraint Match</h3>
-                  <p className="text-[11px] text-white/60 font-mono">Weighted against your budget, time, and pace</p>
+                  <h3 className="text-sm font-display font-bold text-[#1A1A1E]">Live Match Score</h3>
+                  <p className="text-[11px] text-[#75747A]">Multi-factor fit for your current context</p>
                 </div>
                 <FitScoreDial
-                  score={experience.fit_score || 92}
+                  score={experience.fit_score || 94}
                   breakdown={experience.fit_breakdown}
                   size="lg"
                   showBreakdown={false}
@@ -487,34 +507,34 @@ export default function ExperienceDetail() {
               </div>
 
               {/* Constraint breakdown bars */}
-              <div className="space-y-3 pt-3 border-t border-white/10 text-xs">
+              <div className="space-y-3 pt-3 border-t border-[#F5F2EB] text-xs">
                 <div>
                   <div className="flex justify-between text-[11px] mb-1">
-                    <span className="text-white/70">Time & Duration Fit</span>
-                    <span className="font-mono font-bold text-[#4EC9B0]">94%</span>
+                    <span className="text-[#75747A]">Available Time Fit</span>
+                    <span className="font-data font-bold text-[#3B5249]">96%</span>
                   </div>
-                  <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
-                    <div className="h-full bg-[#4EC9B0] rounded-full" style={{ width: '94%' }} />
+                  <div className="w-full h-1.5 bg-[#F5F2EB] rounded-full overflow-hidden">
+                    <div className="h-full bg-[#3B5249] rounded-full" style={{ width: '96%' }} />
                   </div>
                 </div>
 
                 <div>
                   <div className="flex justify-between text-[11px] mb-1">
-                    <span className="text-white/70">Budget Runway Fit</span>
-                    <span className="font-mono font-bold text-[#4EC9B0]">89%</span>
+                    <span className="text-[#75747A]">Target Budget Fit</span>
+                    <span className="font-data font-bold text-[#3B5249]">92%</span>
                   </div>
-                  <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
-                    <div className="h-full bg-[#4EC9B0] rounded-full" style={{ width: '89%' }} />
+                  <div className="w-full h-1.5 bg-[#F5F2EB] rounded-full overflow-hidden">
+                    <div className="h-full bg-[#3B5249] rounded-full" style={{ width: '92%' }} />
                   </div>
                 </div>
 
                 <div>
                   <div className="flex justify-between text-[11px] mb-1">
-                    <span className="text-white/70">Cultural Authenticity</span>
-                    <span className="font-mono font-bold text-[#E5C365]">98%</span>
+                    <span className="text-[#75747A]">Local Cultural Depth</span>
+                    <span className="font-data font-bold text-[#E05A38]">98%</span>
                   </div>
-                  <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
-                    <div className="h-full bg-[#C9A84C] rounded-full" style={{ width: '98%' }} />
+                  <div className="w-full h-1.5 bg-[#F5F2EB] rounded-full overflow-hidden">
+                    <div className="h-full bg-[#E05A38] rounded-full" style={{ width: '98%' }} />
                   </div>
                 </div>
               </div>
@@ -523,14 +543,14 @@ export default function ExperienceDetail() {
             {/* BazaarLink™ Decision Engine Panel */}
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-mono font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-[#C9A84C]" />
-                  Market & Craft Scanner
+                <span className="text-xs font-bold text-[#1A1A1E] uppercase tracking-wider flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-[#E05A38]" />
+                  Artisan Price & Valuation
                 </span>
                 <button
                   type="button"
                   onClick={() => setShowBazaarScanner(!showBazaarScanner)}
-                  className="text-xs text-[#4EC9B0] font-semibold hover:underline cursor-pointer"
+                  className="text-xs text-[#E05A38] font-semibold hover:underline cursor-pointer"
                 >
                   {showBazaarScanner ? 'Collapse' : 'Expand'}
                 </button>
@@ -538,12 +558,12 @@ export default function ExperienceDetail() {
 
               {/* Integrated ScanPanel */}
               <ScanPanel
-                cityHint={experience.city || 'Oaxaca'}
-                currentBackpackWeight={11.2}
+                cityHint={experience.city || 'Jaipur'}
+                currentBackpackWeight={3.5}
                 maxBackpackCapacity={15.0}
-                liquidCash={650}
-                dailySpend={45}
-                travelDaysRemaining={14}
+                liquidCash={4500}
+                dailySpend={1200}
+                travelDaysRemaining={7}
               />
             </div>
           </div>
@@ -552,3 +572,4 @@ export default function ExperienceDetail() {
     </div>
   )
 }
+

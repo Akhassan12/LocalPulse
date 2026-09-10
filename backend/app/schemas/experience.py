@@ -4,7 +4,7 @@ app/schemas/experience.py — Pydantic models for experiences and live ranking
 from __future__ import annotations
 
 from decimal import Decimal
-from typing import Optional, Any, Literal
+from typing import Optional, Any, Literal, List
 from uuid import UUID
 from datetime import datetime, time
 from pydantic import BaseModel, ConfigDict, Field, model_validator
@@ -46,7 +46,7 @@ class ExperienceBase(BaseModel):
     rating_count: int = Field(default=0, ge=0)
     uniqueness_score: Decimal = Field(default=Decimal("0.5"), ge=0, le=1)
     is_active: bool = True
-    source: Literal["provider", "scraped", "seed"] = "seed"
+    source: Literal["provider", "scraped", "seed", "gemini_ai", "ai_mined"] = "seed"
 
 
 class Experience(ExperienceBase):
@@ -66,6 +66,11 @@ class LiveContext(BaseModel):
     group_size: int = Field(default=1, ge=1)
     current_time: datetime = Field(default_factory=datetime.utcnow)
     show_closed: bool = False
+    city: Optional[str] = None
+    circumstance_mode: Optional[str] = None  # "normal", "monsoon_rain", "time_crunch", "budget_saver", "family_mode", "heatwave"
+    traveler_type: Optional[str] = None  # "solo", "couple", "family", "friends"
+    accessibility_needs: Optional[List[str]] = None
+    interests: Optional[List[str]] = None
 
 
 class FitBreakdown(BaseModel):

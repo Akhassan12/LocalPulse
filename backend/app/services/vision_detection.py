@@ -352,7 +352,7 @@ class ItemDetectionService:
                 },
             }
 
-            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key={api_key}"
             async with httpx.AsyncClient(timeout=30.0) as client:
                 res = await client.post(url, json=payload)
                 res.raise_for_status()

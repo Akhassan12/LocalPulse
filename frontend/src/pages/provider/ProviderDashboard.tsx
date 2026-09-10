@@ -243,7 +243,7 @@ export default function ProviderDashboard() {
                     value={regForm.business_name}
                     onChange={(e) => setRegForm({ ...regForm, business_name: e.target.value })}
                     className="w-full text-xs bg-[#F5F2EB] border border-[#E6E0D6] rounded-xl px-3.5 py-2.5 text-[#1A1A1E] focus:outline-none focus:ring-1 focus:ring-[#E05A38] focus:border-[#E05A38]"
-                    placeholder="e.g. Taller de Cerámica Coyotepec"
+                    placeholder="e.g. Bagru Natural Dye Textile Guild"
                   />
                 </div>
 

@@ -261,15 +261,14 @@ export default function Discover() {
     <div className="min-h-screen bg-[#FBF9F5] text-[#1A1A1E] flex flex-col">
       <Navbar />
 
-      <main className="pt-28 lg:pt-32 pb-28 px-4 sm:px-6 lg:px-8 flex-1 max-w-7xl w-full mx-auto flex flex-col gap-5">
+      <main className="pt-28 lg:pt-32 pb-36 px-4 sm:px-6 lg:px-8 flex-1 max-w-7xl w-full mx-auto flex flex-col gap-6">
         {/* Top interactive live context bar */}
         <ContextBar />
 
-
         {/* Discovery Filter & Search Toolbar */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white border border-[#E6E0D6] p-3 rounded-2xl shadow-[0_2px_8px_rgba(26,26,30,0.06)]">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white border border-[#E6E0D6] p-3.5 rounded-2xl shadow-[0_2px_12px_rgba(26,26,30,0.06)]">
           {/* Category Pills */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
             {CATEGORIES.map((cat) => {
               const active = activeCategory === cat
               return (
@@ -277,7 +276,7 @@ export default function Discover() {
                   key={cat}
                   type="button"
                   onClick={() => setActiveCategory(cat)}
-                  className={`px-3.5 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all whitespace-nowrap cursor-pointer ${
+                  className={`px-4 py-1.5 rounded-full text-xs font-semibold capitalize transition-all whitespace-nowrap cursor-pointer ${
                     active
                       ? 'bg-[#E05A38] text-white shadow-sm'
                       : 'bg-[#F5F2EB] text-[#75747A] hover:bg-[#EDE8DF] hover:text-[#36363D] border border-[#E6E0D6]'
@@ -290,9 +289,9 @@ export default function Discover() {
           </div>
 
           {/* Search & Sort Controls */}
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5">
             {/* Search Input */}
-            <div className="relative flex-1 md:w-56">
+            <div className="relative flex-1 min-w-[140px] md:w-56">
               <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[#9E9DA3]" />
               <input
                 type="text"
@@ -304,7 +303,7 @@ export default function Discover() {
             </div>
 
             {/* Sort selector */}
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-2 shrink-0">
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
@@ -333,7 +332,7 @@ export default function Discover() {
               <button
                 type="button"
                 onClick={() => setShowMineModal(true)}
-                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#E05A38] text-white text-xs font-semibold hover:bg-[#C85A32] shadow-sm transition-all whitespace-nowrap cursor-pointer hover:shadow-md"
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-[#E05A38] to-[#E86B4B] text-white text-xs font-semibold hover:from-[#C85A32] hover:to-[#E05A38] shadow-sm transition-all whitespace-nowrap cursor-pointer hover:shadow-md shrink-0"
                 title="Mine any destination worldwide with Google Gemini AI"
               >
                 <Sparkles className="w-3.5 h-3.5" />
@@ -474,7 +473,7 @@ export default function Discover() {
       </main>
 
       {/* Floating Constraint Telemetry HUD */}
-      <aside aria-label="Expedition telemetry HUD" className="fixed bottom-5 left-1/2 -translate-x-1/2 z-30 w-[92%] max-w-3xl glass rounded-2xl px-5 py-3.5 shadow-[0_12px_40px_rgba(26,26,30,0.15)] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+      <aside aria-label="Expedition telemetry HUD" className="fixed bottom-6 left-1/2 -translate-x-1/2 z-30 w-[92%] max-w-3xl glass-card rounded-2xl px-6 py-3.5 shadow-[0_16px_48px_rgba(26,26,30,0.14)] border border-[#E6E0D6] flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs">
         <div className="flex items-center gap-5">
           {/* Budget HUD */}
           <div className="flex flex-col gap-1">

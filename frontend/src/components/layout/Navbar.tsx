@@ -168,10 +168,10 @@ export default function Navbar() {
                 )}
               </div>
             ) : (
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2.5">
                 <Link
                   to="/login"
-                  className={`px-4 py-2 rounded-xl text-sm font-semibold border transition-all ${
+                  className={`px-4 py-2 rounded-full text-sm font-semibold border transition-all ${
                     isTransparent || isDarkPage
                       ? 'border-white/30 text-white hover:bg-white/10'
                       : 'border-[#E6E0D6] text-[#36363D] hover:bg-[#EDE8DF]'
@@ -181,7 +181,7 @@ export default function Navbar() {
                 </Link>
                 <Link
                   to="/signup"
-                  className="px-4 py-2 rounded-xl bg-[#E05A38] text-white text-sm font-semibold hover:bg-[#E86B4B] shadow-sm transition-all hover:-translate-y-px"
+                  className="px-5 py-2 rounded-full bg-[#E05A38] text-white text-sm font-semibold hover:bg-[#E86B4B] shadow-sm transition-all hover:scale-105 active:scale-95"
                 >
                   Get Started
                 </Link>

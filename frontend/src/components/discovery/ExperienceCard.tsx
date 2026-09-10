@@ -126,18 +126,22 @@ export const ExperienceCard: React.FC<ExperienceCardProps> = ({
       }`}
     >
       {/* Top Banner Image */}
-      <div className="relative h-44 w-full overflow-hidden bg-[#F5F2EB]">
+      <div className="relative h-48 w-full overflow-hidden bg-[#EDE8DF]">
         <img
           src={imageUrl}
           alt={experience.title}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           loading="lazy"
+          onError={(e) => {
+            ;(e.currentTarget as HTMLImageElement).src =
+              'https://images.unsplash.com/photo-1528164344705-475426879c0d?auto=format&fit=crop&w=800&q=80'
+          }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#1A1A1E]/60 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#1A1A1E]/70 via-black/10 to-transparent" />
 
         {/* Category + shortlist button */}
         <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
-          <span className="chip-terra capitalize">
+          <span className="chip-terra capitalize shadow-sm">
             {experience.category?.replace('_', ' ')}
           </span>
 
@@ -145,10 +149,10 @@ export const ExperienceCard: React.FC<ExperienceCardProps> = ({
             type="button"
             onClick={handleToggleShortlist}
             title={shortlisted ? 'Remove from Itinerary' : 'Add to Itinerary'}
-            className={`p-2 rounded-xl backdrop-blur-md transition-all shadow-md ${
+            className={`p-2 rounded-xl backdrop-blur-md transition-all shadow-md cursor-pointer ${
               shortlisted
                 ? 'bg-[#E05A38] text-white ring-2 ring-[#E05A38]/40 scale-105'
-                : 'bg-white/80 text-[#75747A] hover:text-[#E05A38] hover:bg-white border border-[#E6E0D6]'
+                : 'bg-white/85 text-[#75747A] hover:text-[#E05A38] hover:bg-white border border-[#E6E0D6]'
             }`}
           >
             {shortlisted ? <BookmarkCheck className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}
@@ -157,17 +161,17 @@ export const ExperienceCard: React.FC<ExperienceCardProps> = ({
 
         {/* City + Rating overlay */}
         <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white text-xs">
-          <div className="flex items-center gap-1.5 text-white/90 bg-black/40 backdrop-blur-md px-2.5 py-1 rounded-lg border border-white/10">
+          <div className="flex items-center gap-1.5 text-white/95 bg-black/45 backdrop-blur-md px-2.5 py-1 rounded-lg border border-white/15 shadow-sm">
             <MapPin className="w-3.5 h-3.5 text-[#E05A38]" />
             <span className="font-medium text-xs">{experience.city}</span>
           </div>
 
           {experience.rating_avg && Number(experience.rating_avg) > 0 && (
-            <div className="flex items-center gap-1.5 bg-black/50 backdrop-blur-md px-2.5 py-1 rounded-lg border border-white/10">
+            <div className="flex items-center gap-1.5 bg-black/50 backdrop-blur-md px-2.5 py-1 rounded-lg border border-white/15 shadow-sm">
               <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
               <span className="font-bold text-xs">{Number(experience.rating_avg).toFixed(1)}</span>
               {experience.rating_count && (
-                <span className="text-white/60 text-[10px]">({experience.rating_count})</span>
+                <span className="text-white/70 text-[10px]">({experience.rating_count})</span>
               )}
             </div>
           )}
@@ -177,12 +181,12 @@ export const ExperienceCard: React.FC<ExperienceCardProps> = ({
       {/* Card Body */}
       <div className="p-5 flex flex-col justify-between space-y-4">
         <div>
-          <div className="flex items-start justify-between gap-3 mb-2">
+          <div className="flex items-start justify-between gap-3 mb-2.5">
             <h3 className="font-display text-base font-bold text-[#1A1A1E] leading-snug group-hover:text-[#E05A38] transition-colors line-clamp-2">
               {experience.title}
             </h3>
             {/* Fit Score Dial */}
-            <div className="flex-shrink-0" onClick={(e) => e.stopPropagation()}>
+            <div className="flex-shrink-0 w-11 h-11 flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
               <FitScoreDial score={fit_score} breakdown={breakdown} size="sm" />
             </div>
           </div>
@@ -209,7 +213,6 @@ export const ExperienceCard: React.FC<ExperienceCardProps> = ({
             )}
           </div>
 
-
           {/* AI Explanation Pill */}
           {explanation && (
             <div className="mb-3 px-3 py-2 rounded-xl bg-[#FDEEE9] border border-[#E05A38]/15 text-[11px] text-[#36363D] flex items-start gap-2 leading-relaxed">
@@ -224,7 +227,7 @@ export const ExperienceCard: React.FC<ExperienceCardProps> = ({
               {experience.tags.slice(0, 3).map((tag, idx) => (
                 <span
                   key={idx}
-                  className="chip-neutral text-[10px] py-0.5 px-2"
+                  className="chip-neutral text-[10px] py-0.5 px-2 font-medium"
                 >
                   #{tag}
                 </span>
@@ -234,11 +237,11 @@ export const ExperienceCard: React.FC<ExperienceCardProps> = ({
         </div>
 
         {/* Footer Actions */}
-        <div className="pt-3 border-t border-[#F5F2EB] flex items-center gap-2.5">
+        <div className="pt-3.5 border-t border-[#F5F2EB] flex items-center gap-2">
           <button
             type="button"
             onClick={handleToggleShortlist}
-            className={`flex-1 py-2.5 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+            className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer select-none min-h-[36px] ${
               shortlisted
                 ? 'bg-[#3B5249] text-white hover:bg-[#2E4039]'
                 : 'bg-[#E05A38] text-white hover:bg-[#E86B4B] shadow-sm'
@@ -246,13 +249,13 @@ export const ExperienceCard: React.FC<ExperienceCardProps> = ({
           >
             {shortlisted ? (
               <>
-                <BookmarkCheck className="w-4 h-4" />
-                <span>In Itinerary</span>
+                <BookmarkCheck className="w-3.5 h-3.5 flex-shrink-0" />
+                <span className="whitespace-nowrap font-medium">In Plan</span>
               </>
             ) : (
               <>
-                <Bookmark className="w-4 h-4" />
-                <span>Add to Itinerary</span>
+                <Bookmark className="w-3.5 h-3.5 flex-shrink-0" />
+                <span className="whitespace-nowrap font-medium">Add to Plan</span>
               </>
             )}
           </button>
@@ -260,10 +263,10 @@ export const ExperienceCard: React.FC<ExperienceCardProps> = ({
           <Link
             to={`/experiences/${experience.id}`}
             onClick={(e) => e.stopPropagation()}
-            className="py-2.5 px-3.5 rounded-xl text-xs font-semibold bg-[#F5F2EB] hover:bg-[#EDE8DF] border border-[#E6E0D6] text-[#36363D] hover:text-[#1A1A1E] transition-all flex items-center justify-center gap-1 cursor-pointer"
+            className="py-2 px-3 rounded-xl text-xs font-semibold bg-[#F5F2EB] hover:bg-[#EDE8DF] border border-[#E6E0D6] text-[#36363D] hover:text-[#1A1A1E] transition-all flex items-center justify-center gap-1 flex-shrink-0 cursor-pointer select-none min-h-[36px]"
           >
-            <span>Details</span>
-            <ArrowUpRight className="w-3.5 h-3.5" />
+            <span className="whitespace-nowrap">Details</span>
+            <ArrowUpRight className="w-3.5 h-3.5 flex-shrink-0" />
           </Link>
         </div>
       </div>

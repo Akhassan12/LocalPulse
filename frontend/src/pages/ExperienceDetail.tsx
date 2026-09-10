@@ -39,28 +39,27 @@ import ScanPanel from '../components/bazaarlink/ScanPanel'
 
 // Fallback seed catalog for offline / direct deep-linking
 const FALLBACK_CATALOG: Record<string, any> = {
-  'oaxaca-weaving': {
-    id: 'oaxaca-weaving',
-    title: 'Zapotec Natural Dye Weaving Workshop',
+  'jaipur-bagru-block-printing': {
+    id: 'jaipur-bagru-block-printing',
+    title: 'Bagru Natural Dye Hand-Block Printing Workshop',
     description:
-      'Learn the ancient art of wool spinning, indigo and cochineal fermentation, and backstrap loom weaving in the legendary Zapotec weaving pueblo of Teotitlán del Valle. Led by Master Weaver Maestro Porfirio Gutierrez, this immersive workshop teaches you how local plants, minerals, and tree barks yield hundreds of vibrant, non-toxic colors while preserving Mesoamerican cultural heritage.',
-    category: 'artisan_craft',
-    city: 'Oaxaca',
-    country: 'Mexico',
-    address: 'Avenida Hidalgo 42, Teotitlán del Valle, Oaxaca',
-    lat: 17.0267,
-    lng: -96.5235,
-    price_min: 45,
-    price_max: 75,
-    currency: 'USD',
+      'Learn the multi-century art of wood-block carving, natural vegetable dyeing, and mud-resist printing in the artisan enclave of Bagru, near Jaipur. Guided by National Award-winning master artisans, you will hand-stamp raw khadi cotton using hard teakwood blocks and organic indigo vats.',
+    category: 'culture',
+    city: 'Jaipur',
+    country: 'India',
+    address: 'Chhipa Mohalla, Bagru, Jaipur, Rajasthan 303007',
+    lat: 26.8124,
+    lng: 75.5473,
+    price_min: 1200,
+    price_max: 2400,
+    currency: 'INR',
     duration_minutes: 180,
-    rating_avg: 4.95,
-    rating_count: 142,
+    rating_avg: 4.96,
+    rating_count: 154,
     uniqueness_score: 0.98,
     images: [
+      'https://images.unsplash.com/photo-1528164344705-475426879c0d?w=1200&auto=format&fit=crop&q=80',
       'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=1200&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1544816155-12df9643f363?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1606787366850-de6330128bfc?w=800&auto=format&fit=crop&q=80',
     ],
     opening_hours: {
       monday: '09:00 - 17:00',
@@ -70,56 +69,52 @@ const FALLBACK_CATALOG: Record<string, any> = {
       friday: '09:00 - 17:00',
       saturday: '10:00 - 16:00',
     },
-    capacity: 6,
-    accessibility_tags: ['Step-free ground access', 'Shaded courtyard', 'Sensory-rich tactile workshop'],
-    tags: ['Zapotec Tradition', 'Natural Dyes', 'Textile Arts', 'Master Artisan', 'Hands-On'],
-    fit_score: 94,
+    capacity: 8,
+    accessibility_tags: ['Step-free ground courtyard', 'Tactile artisan guidance', 'Shaded drying area'],
+    tags: ['Bagru Block Print', 'Natural Dyes', 'Chhipa Community', 'Master Craftsman', 'Khadi Fabric'],
+    fit_score: 95,
     fit_breakdown: {
-      time_score: 0.92,
-      budget_score: 0.88,
+      time_score: 0.94,
+      budget_score: 0.92,
       interest_score: 0.98,
-      distance_score: 0.95,
+      distance_score: 0.93,
       quality_score: 0.99,
     },
   },
-  'kyoto-kintsugi': {
-    id: 'kyoto-kintsugi',
-    title: 'Wabi-Sabi Kintsugi Gold Joinery Studio',
+  'varanasi-dawn-raga-boat': {
+    id: 'varanasi-dawn-raga-boat',
+    title: 'Varanasi Dawn Boat Raga & Sacred Ghat Aarti',
     description:
-      'Practice the revered 15th-century Japanese philosophy of kintsugi—repairing broken ceramics with natural urushi lacquer dusted with real 24k gold powder. Embrace impermanence and resilience in a historic machiya townhouse overlooking a serene moss rock garden.',
-    category: 'artisan_craft',
-    city: 'Kyoto',
-    country: 'Japan',
-    address: 'Kamigyo Ward, Kyoto',
-    lat: 35.0312,
-    lng: 135.7538,
-    price_min: 65,
-    price_max: 95,
-    currency: 'USD',
-    duration_minutes: 150,
+      'Drift silently across the sacred Ganges at sunrise as classical shehnai and morning Bhairav ragas resonate along the stone steps of ancient ghats. Experience the spiritual heartbeat of Kashi, visiting Manikarnika Ghat, Dashashwamedh, and historic riverside akharas with a fifth-generation boatman.',
+    category: 'culture',
+    city: 'Varanasi',
+    country: 'India',
+    address: 'Dashashwamedh Ghat, Godowlia, Varanasi, Uttar Pradesh 221001',
+    lat: 25.3076,
+    lng: 83.0104,
+    price_min: 800,
+    price_max: 1800,
+    currency: 'INR',
+    duration_minutes: 120,
     rating_avg: 4.98,
-    rating_count: 218,
+    rating_count: 230,
     uniqueness_score: 0.99,
     images: [
-      'https://images.unsplash.com/photo-1615486511484-92e172cc4fe0?w=1200&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?w=1200&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1571536802807-30451e3955d8?w=1200&auto=format&fit=crop&q=80',
     ],
     opening_hours: {
-      tuesday: '10:00 - 18:00',
-      wednesday: '10:00 - 18:00',
-      thursday: '10:00 - 18:00',
-      friday: '10:00 - 18:00',
-      saturday: '10:00 - 17:00',
+      everyday: '05:30 - 08:30',
     },
-    capacity: 4,
-    accessibility_tags: ['Quiet environment', 'Seated tatami or chair options', 'Multilingual instruction'],
-    tags: ['Kintsugi', 'Zen Philosophy', 'Ceramics', 'Gold Lacquer', 'Machiya House'],
-    fit_score: 96,
+    capacity: 6,
+    accessibility_tags: ['Life jackets provided', 'Gentle step assistance', 'Morning serene atmosphere'],
+    tags: ['Morning Raga', 'Ganges Sunrise', 'Spiritual Kashi', 'Historic Ghats', 'Local Boatman'],
+    fit_score: 97,
     fit_breakdown: {
-      time_score: 0.95,
-      budget_score: 0.86,
+      time_score: 0.96,
+      budget_score: 0.94,
       interest_score: 0.99,
-      distance_score: 0.96,
+      distance_score: 0.97,
       quality_score: 1.0,
     },
   },
@@ -149,8 +144,8 @@ export default function ExperienceDetail() {
           setExperience({
             ...res.data,
             images: [
+              'https://images.unsplash.com/photo-1528164344705-475426879c0d?w=1200&auto=format&fit=crop&q=80',
               'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=1200&auto=format&fit=crop&q=80',
-              'https://images.unsplash.com/photo-1544816155-12df9643f363?w=800&auto=format&fit=crop&q=80',
             ],
             fit_score: 91,
             fit_breakdown: {
@@ -164,7 +159,7 @@ export default function ExperienceDetail() {
       } catch (err) {
         console.warn('Backend experience fetch failed, checking fallback catalog:', err)
         if (isMounted) {
-          const fallback = (id && FALLBACK_CATALOG[id]) || FALLBACK_CATALOG['oaxaca-weaving']
+          const fallback = (id && FALLBACK_CATALOG[id]) || FALLBACK_CATALOG['jaipur-bagru-block-printing']
           setExperience(fallback)
         }
       } finally {
@@ -189,11 +184,11 @@ export default function ExperienceDetail() {
         title: experience.title,
         category: experience.category,
         price: `${experience.price_min || 0}`,
-        currency: experience.currency || 'USD',
+        currency: experience.currency || 'INR',
         durationMinutes: experience.duration_minutes || 120,
-        city: experience.city || 'Oaxaca',
-        lat: Number(experience.lat) || 17.06,
-        lng: Number(experience.lng) || -96.72,
+        city: experience.city || 'Jaipur',
+        lat: Number(experience.lat) || 26.9124,
+        lng: Number(experience.lng) || 75.7873,
       })
     }
   }

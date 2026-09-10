@@ -61,18 +61,22 @@ export const FitScoreDial: React.FC<FitScoreDialProps> = ({
 
   return (
     <div
-      className={`relative inline-flex items-center justify-center ${className}`}
+      style={{ width: dim, height: dim }}
+      className={`relative inline-flex items-center justify-center flex-shrink-0 ${className}`}
       onMouseEnter={() => setTooltipOpen(true)}
       onMouseLeave={() => setTooltipOpen(false)}
     >
-      <div className="relative cursor-pointer transition-transform hover:scale-105">
-        <svg width={dim} height={dim} className="transform -rotate-90">
-          {/* Background circle */}
+      <div
+        style={{ width: dim, height: dim }}
+        className="relative cursor-pointer transition-transform duration-200 hover:scale-105 flex items-center justify-center"
+      >
+        <svg width={dim} height={dim} className="transform -rotate-90 block">
+          {/* Background track circle */}
           <circle
             cx={dim / 2}
             cy={dim / 2}
             r={radius}
-            stroke="#E2E8F0"
+            stroke="#EDE8DF"
             strokeWidth={strokeWidth}
             fill="transparent"
           />
@@ -91,17 +95,17 @@ export const FitScoreDial: React.FC<FitScoreDialProps> = ({
           />
         </svg>
 
-        {/* Inner score percentage */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
+        {/* Inner score percentage — locked dead-center */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none select-none">
           <span
-            className={`font-semibold tracking-tight text-[#0D1B2A] ${
+            className={`font-data font-bold tracking-tight text-[#1A1A1E] leading-none tabular-nums ${
               size === 'sm' ? 'text-xs' : size === 'lg' ? 'text-xl' : 'text-sm'
             }`}
           >
             {numScore}%
           </span>
           {size === 'lg' && (
-            <span className="text-[9px] uppercase tracking-wider text-[#1A2B3C]/60 font-medium -mt-1">
+            <span className="text-[9px] uppercase tracking-wider text-[#75747A] font-semibold mt-0.5">
               Fit
             </span>
           )}

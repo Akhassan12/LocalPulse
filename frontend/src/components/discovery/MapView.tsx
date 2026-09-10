@@ -35,9 +35,9 @@ function createPinIcon(score: number, isSelected: boolean) {
             </circle>`
           : ''
       }
-      <path d="M20 0C8.954 0 0 8.954 0 20C0 32 20 48 20 48C20 48 40 32 40 20C40 8.954 31.046 0 20 0Z" fill="${color}" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))"/>
-      <circle cx="20" cy="18" r="14" fill="#FFFFFF"/>
-      <text x="20" y="22" text-anchor="middle" fill="#1A1A1E" font-size="10" font-family="Outfit, sans-serif" font-weight="800">${innerText}</text>
+      <path d="M20 0C8.954 0 0 8.954 0 20C0 32 20 48 20 48C20 48 40 32 40 20C40 8.954 31.046 0 20 0Z" fill="${color}" filter="drop-shadow(0 3px 6px rgba(0,0,0,0.25))"/>
+      <circle cx="20" cy="18" r="13" fill="#FFFFFF"/>
+      <text x="20" y="18" text-anchor="middle" dominant-baseline="central" fill="#1A1A1E" font-size="10.5" font-family="'Space Grotesk', system-ui, sans-serif" font-weight="700">${innerText}</text>
     </svg>
   `
 
